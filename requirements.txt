@@ -10,4 +10,5 @@ cryptography
 ReportLab
 Flask-SocketIO
 python-socketio
+Flask-Limiter
 python-engineio
