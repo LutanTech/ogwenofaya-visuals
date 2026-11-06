@@ -323,8 +323,12 @@ def project(slug):
         related_projects=related_projects
     )
 
-FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
-
+if os.name=="nt":
+    FFMPEG=os.environ.get("FFMPEG","ffmpeg")
+else:
+    FFMPEG=os.environ.get("FFMPEG","/home3/tunujournl/repositories/ogwenofaya-visuals/bin/ffmpeg")
+    
+    
 def checkProcess():
     try:
         subprocess.run([FFMPEG, "-version"], check=True, capture_output=True, text=True)
