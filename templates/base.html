@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logos/logo.png') }}">
+  <meta name="description" content="OgwenofayaVisuals creates films, photography and visual stories that move people.">
+  <title>{% block title %}{{ site_name|default('OgwenofayaVisuals') }} — Stories in Motion{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root{--ink:#07111f;--ink-2:#0b1728;--paper:#f5f8fc;--white:#fff;--muted:#9aa9bb;--blue:#368bff;--blue-2:#65b5ff;--line:rgba(255,255,255,.12);--dark-line:rgba(9,24,43,.12);--radius:20px;--max:1200px;--shadow:0 24px 70px rgba(5,19,37,.18)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button,input,textarea,select{font:inherit}.container{width:min(var(--max),calc(100% - 48px));margin-inline:auto}.eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--blue);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.eyebrow:before{content:'';width:24px;height:1px;background:currentColor}.section{padding:105px 0}.section-heading{max-width:670px;margin-bottom:42px}.section-heading h2{font:800 clamp(2.2rem,4vw,3.75rem)/1.06 'Manrope',sans-serif;letter-spacing:-.055em;margin:14px 0}.section-heading p{color:#66758a;font-size:1.03rem;line-height:1.8;margin:0}.btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;padding:14px 20px;border-radius:999px;background:var(--blue);color:#fff;font-weight:700;font-size:.91rem;border:1px solid var(--blue);transition:.2s ease}.btn:hover{background:#1875ec;transform:translateY(-2px);box-shadow:0 10px 28px rgba(54,139,255,.28)}.btn-outline{background:transparent;border-color:rgba(255,255,255,.38)}.btn-outline:hover{background:#fff;color:var(--ink);border-color:#fff}.btn-dark{background:var(--ink);border-color:var(--ink)}.btn-dark:hover{background:#102947;border-color:#102947}.site-header{position:sticky;top:0;z-index:50;background:rgba(7,17,31,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}.nav-wrap{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:inline-flex;align-items:center;gap:11px;color:#fff;font:800 1rem 'Manrope',sans-serif;letter-spacing:-.035em}.brand img{width:42px;height:42px;object-fit:contain;border-radius:50%}.brand-name span{color:var(--blue-2)}.nav-links{display:flex;align-items:center;gap:28px;color:#c0cad6;font-size:.86rem}.nav-links a{transition:color .2s}.nav-links a:hover{color:#fff}.nav-cta{padding:11px 16px;font-size:.82rem}.menu-toggle{display:none;border:0;background:none;color:white;font-size:1.4rem}.flash-stack{position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:100;width:min(540px,calc(100% - 32px))}.flash-message{background:#fff;border-left:4px solid var(--blue);padding:15px 18px;margin-bottom:10px;border-radius:10px;box-shadow:0 12px 40px #07111f26;font-size:.92rem}.site-footer{background:#050c16;color:#d8e1ec;padding:58px 0 22px;border-top:1px solid rgba(255,255,255,.08)}.footer-main{display:grid;grid-template-columns:1.4fr .75fr 1fr;gap:54px;padding-bottom:42px}.footer-about .brand{margin-bottom:17px}.footer-about p{max-width:350px;color:#91a1b4;font-size:.9rem;line-height:1.8;margin:0}.footer-heading{font:700 .78rem 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin:7px 0 18px}.footer-links,.footer-contact{display:grid;gap:13px}.footer-links a,.footer-contact a{display:flex;align-items:center;gap:11px;color:#aab8c9;font-size:.88rem;transition:color .2s}.footer-links a:hover,.footer-contact a:hover{color:var(--blue-2)}.footer-contact i{width:17px;color:var(--blue-2)}.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:19px;display:flex;align-items:center;justify-content:space-between;gap:20px}.footer-copy{font-size:.8rem;color:#8090a4}.footer-social{display:flex;gap:17px;color:#b9c7d8}.footer-social a:hover{color:var(--blue-2)}
+    @media(max-width:800px){.container{width:min(var(--max),calc(100% - 36px))}.section{padding:78px 0}.nav-wrap{min-height:70px}.menu-toggle{display:block}.nav-links{display:none;position:absolute;left:0;right:0;top:70px;padding:22px 24px 26px;background:#07111f;align-items:stretch;flex-direction:column;gap:19px;border-bottom:1px solid var(--line)}.nav-links.is-open{display:flex}.nav-cta{display:inline-flex;width:max-content}.footer-main{grid-template-columns:1fr 1fr;gap:34px;padding-bottom:32px}.footer-about{grid-column:1/-1}.footer-bottom{align-items:flex-start;flex-direction:column}.brand img{width:38px;height:38px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+    {% block extra_css %}{% endblock %}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="{{ site_name|default('OgwenofayaVisuals') }} home">
+        <img src="{{ url_for('static', filename='logos/logo.png') }}" alt="OgwenofayaVisuals logo">
+        <span class="brand-name">Ogwenofaya<span>Visuals</span></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" onclick="const n=document.getElementById('primary-nav');const o=n.classList.toggle('is-open');this.setAttribute('aria-expanded',o)"><i class="fa-solid fa-bars"></i></button>
+      <nav class="nav-links" id="primary-nav" aria-label="Main navigation">
+        <a href="{{ url_for('index') }}#work">Work</a><a href="{{ url_for('index') }}#services">Services</a><a href="{{ url_for('index') }}#about">About</a><a href="{{ url_for('index') }}#testimonials">Testimonials</a>
+        <a class="btn nav-cta" href="{{ url_for('index') }}#contact">Start a project <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </nav>
+    </div>
+  </header>
+  {% with messages = get_flashed_messages() %}{% if messages %}<div class="flash-stack" role="status">{% for message in messages %}<div class="flash-message"><i class="fa-solid fa-circle-check" style="color:var(--blue);margin-right:8px"></i>{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-about">
+          <a class="brand" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logos/logo.png') }}" alt=""><span class="brand-name">Ogwenofaya<span>Visuals</span></span></a>
+          <p>Creative film and photography for people, brands and organisations with a story to tell. Thoughtful visuals, from the first idea to the final frame.</p>
+        </div>
+        <div>
+          <h2 class="footer-heading">Explore</h2>
+          <nav class="footer-links" aria-label="Footer navigation"><a href="{{ url_for('index') }}#work">Selected work</a><a href="{{ url_for('index') }}#services">Our services</a><a href="{{ url_for('index') }}#about">About the studio</a><a href="{{ url_for('index') }}#contact">Start a project</a></nav>
+        </div>
+        <div>
+          <h2 class="footer-heading">Get in touch</h2>
+          <div class="footer-contact"><a href="mailto:hermontroons@gmail.com"><i class="fa-regular fa-envelope"></i><span>hermontroons@gmail.com</span></a><a href="tel:0102322447"><i class="fa-solid fa-phone"></i><span>0102322447</span></a><a href="{{ url_for('index') }}#contact"><i class="fa-solid fa-location-dot"></i><span>Kenya · East Africa</span></a></div>
+        </div>
+      </div>
+      <div class="footer-bottom"><div class="footer-copy">© {{ year|default(2026) }} OgwenofayaVisuals. All rights reserved.</div><div class="footer-social" aria-label="Social links"><a href="mailto:hermontroons@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a><a href="tel:0102322447" aria-label="Call"><i class="fa-solid fa-phone"></i></a><a href="{{ url_for('index') }}#work" aria-label="Portfolio"><i class="fa-solid fa-camera"></i></a></div></div>
+    </div>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

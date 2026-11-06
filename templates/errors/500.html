@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Server Error — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+.error-page{background:#070d16;color:#f4f7fb;min-height:75vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.error-card{max-width:540px;width:100%;background:#0c1522;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:48px 32px;box-shadow:0 22px 65px rgba(0,0,0,.4)}
+.error-code{font:800 clamp(3.5rem,8vw,5.5rem)/1 'Manrope',sans-serif;color:#ff5b5b;margin:0 0 12px;letter-spacing:-.04em}
+.error-card h1{font:700 1.35rem 'Manrope',sans-serif;margin:0 0 10px;color:#fff}
+.error-card p{color:#9aaabd;font-size:.9rem;line-height:1.7;margin:0 0 28px}
+.error-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.error-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;font-weight:700;font-size:.85rem;text-decoration:none;transition:all .2s ease}
+.error-btn-primary{background:#368bff;color:#fff}
+.error-btn-primary:hover{background:#5ba7ff}
+.error-btn-secondary{background:#111d2b;color:#c3d0df;border:1px solid rgba(255,255,255,.12)}
+.error-btn-secondary:hover{background:#1b2d42;color:#fff}
+{% endblock %}
+{% block content %}
+<main class="error-page">
+  <div class="error-card">
+    <div class="error-code">500</div>
+    <h1>Unexpected Server Error</h1>
+    <p>Something went wrong on our end while processing your request. Our system has logged the incident and we are working to fix it.</p>
+    <div class="error-actions">
+      <a href="javascript:location.reload();" class="error-btn error-btn-primary"><i class="fa-solid fa-rotate-right"></i> Reload Page</a>
+      <a href="{{ url_for('index') }}" class="error-btn error-btn-secondary"><i class="fa-solid fa-house"></i> Back to Home</a>
+    </div>
+  </div>
+</main>
+{% endblock %}

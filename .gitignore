@@ -1,0 +1,5 @@
+/static/resources
+/client_secret.json
+/__pycache__
+/instance
+/migrations

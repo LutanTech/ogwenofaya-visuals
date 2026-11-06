@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+{% block title %}All Projects — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+.panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 20px; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle); }
+.panel-head h1 { font: 700 1.1rem 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+.panel-head h1 i { color: var(--accent-cyan); }
+.table-scroll { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.data-table th { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+.data-table td { padding: 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; font-size: 0.78rem; color: var(--text-main); }
+.data-table tr:hover td { background: rgba(255, 255, 255, 0.012); }
+.table-main-title { font-weight: 700; color: var(--text-main); display: block; }
+.table-sub-title { display: block; color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }
+.table-thumb { width: 36px; height: 28px; object-fit: cover; border-radius: 4px; background: var(--bg-base); border: 1px solid var(--border-subtle); }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 600; color: var(--accent-cyan); background: var(--accent-cyan-glow); border: 1px solid rgba(34, 211, 238, 0.2); }
+.badge.muted { color: var(--text-muted); background: transparent; border-color: var(--border-subtle); }
+.actions-cell { display: flex; align-items: center; gap: 8px; }
+.btn-action { border: 1px solid var(--border-active); background: var(--bg-surface-hover); color: var(--text-main); border-radius: 4px; padding: 5px 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.btn-action:hover { border-color: var(--accent-cyan); }
+.delete-btn { border: 0; background: transparent; color: var(--text-muted); border-radius: 4px; padding: 5px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
+.delete-btn:hover { background: var(--danger-bg); color: var(--danger); }
+.empty-state { text-align: center; color: var(--text-muted); padding: 30px; }
+{% endblock %}
+
+{% set title = "All Portfolio Projects" %}
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div>
+      <h1><i class="fa-solid fa-layer-group"></i> Portfolio Projects</h1>
+      <p>Manage, edit, or delete items currently published in your portfolio.</p>
+    </div>
+    <a href="{{ url_for('add_project_page') }}" class="btn-action" style="background:var(--accent-cyan); color:#060913; border:0;"><i class="fa-solid fa-plus"></i> Add Project</a>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Category</th>
+          <th>Created</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:10px;">
+              {% if project.image %}
+                <img class="table-thumb" src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="">
+              {% else %}
+                <span class="table-thumb" style="display:grid; place-items:center;"><i class="fa-solid fa-image" style="color:var(--text-muted)"></i></span>
+              {% endif %}
+              <div>
+                <span class="table-main-title">{{ project.title }}</span>
+                <span class="table-sub-title">/{{ project.slug }}</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge muted">{{ project.category }}</span></td>
+          <td>{% if project.created_at %}{{ project.created_at.strftime('%b %d, %Y') }}{% else %}—{% endif %}</td>
+          <td>
+            {% if project.featured %}
+              <span class="badge"><i class="fa-solid fa-star"></i> Featured</span>
+            {% else %}
+              <span class="badge muted">Standard</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="actions-cell">
+              <a href="{{ url_for('edit_project', id=project.id) }}" class="btn-action"><i class="fa-solid fa-pen"></i> Edit</a>
+              <form action="{{ url_for('delete_project', id=project.id) }}" method="post" onsubmit="return confirm('Delete this project?')">
+                <button class="delete-btn" type="submit"><i class="fa-regular fa-trash-can"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5"><div class="empty-state"><i class="fa-regular fa-folder-open" style="font-size:1.5rem; margin-bottom:8px; display:block;"></i>No projects found.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

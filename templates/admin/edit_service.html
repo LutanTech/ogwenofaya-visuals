@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block title %}Edit Service — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+.panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 24px; max-width: 700px; margin: 0 auto; }
+.panel-head { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; }
+.panel-head h1 { font: 700 1.1rem 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+.panel-head h1 i { color: var(--accent-cyan); }
+.panel-head p { color: var(--text-muted); font-size: 0.75rem; margin: 3px 0 0; }
+
+.form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.form-field label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+.form-field input, .form-field textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-base); color: var(--text-main); font-size: 0.82rem; }
+.form-field textarea { min-height: 100px; resize: vertical; }
+.form-field input:focus, .form-field textarea:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 2px var(--accent-cyan-glow); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border: 1px solid var(--border-active); border-radius: 6px; background: var(--bg-surface-hover); color: var(--text-main); font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.15s ease; }
+.btn:hover { background: var(--border-active); border-color: var(--accent-cyan); }
+.btn-accent { background: var(--accent-cyan); border-color: var(--accent-cyan); color: #060913; }
+.btn-accent:hover { background: #67e8f9; border-color: #67e8f9; }
+{% endblock %}
+
+{% set title = "Edit Service" %}
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div>
+      <h1><i class="fa-solid fa-pen-to-square"></i> Edit Service</h1>
+      <p>Modify service name, description, or ordering priority.</p>
+    </div>
+    <a href="{{ url_for('control') }}" class="btn" style="padding: 6px 12px; font-size:0.75rem;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+  </div>
+  <form class="form-grid" method="post">
+    <div class="form-field"><label for="service-title">Service Title *</label><input id="service-title" name="title" value="{{ service.title }}" required maxlength="150"></div>
+    <div class="form-field"><label for="service-description">Description</label><textarea id="service-description" name="description">{{ service.description or '' }}</textarea></div>
+    <div class="form-field"><label for="service-position">Display Sequence Order</label><input id="service-position" name="position" type="number" value="{{ service.position }}"></div>
+    <div class="form-field" style="margin-top:6px;">
+      <button class="btn btn-accent" type="submit"><i class="fa-solid fa-floppy-disk"></i> Update Service</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

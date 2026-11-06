@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+{% block title %}All Services — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+.panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 20px; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle); }
+.panel-head h1 { font: 700 1.1rem 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+.panel-head h1 i { color: var(--accent-cyan); }
+.table-scroll { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+.data-table th { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+.data-table td { padding: 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; font-size: 0.78rem; color: var(--text-main); }
+.data-table tr:hover td { background: rgba(255, 255, 255, 0.012); }
+.table-main-title { font-weight: 700; color: var(--text-main); display: block; }
+.table-sub-title { display: block; color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 600; color: var(--text-muted); background: transparent; border: 1px solid var(--border-subtle); }
+.actions-cell { display: flex; align-items: center; gap: 8px; }
+.btn-action { border: 1px solid var(--border-active); background: var(--bg-surface-hover); color: var(--text-main); border-radius: 4px; padding: 5px 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.btn-action:hover { border-color: var(--accent-cyan); }
+.delete-btn { border: 0; background: transparent; color: var(--text-muted); border-radius: 4px; padding: 5px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
+.delete-btn:hover { background: var(--danger-bg); color: var(--danger); }
+.empty-state { text-align: center; color: var(--text-muted); padding: 30px; }
+{% endblock %}
+
+{% set title = "All Services" %}
+{% block content %}
+<div class="panel">
+  <div class="panel-head">
+    <div>
+      <h1><i class="fa-solid fa-list-check"></i> Studio Services</h1>
+      <p>Configure and edit your public studio service offerings.</p>
+    </div>
+    <a href="{{ url_for('add_service_page') }}" class="btn-action" style="background:var(--accent-cyan); color:#060913; border:0;"><i class="fa-solid fa-plus"></i> Add Service</a>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Service Title & Description</th>
+          <th>Sequence Order</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+        <tr>
+          <td>
+            <span class="table-main-title">{{ service.title }}</span>
+            {% if service.description %}<span class="table-sub-title">{{ service.description }}</span>{% endif %}
+          </td>
+          <td><span class="badge">{{ service.position }}</span></td>
+          <td>
+            <div class="actions-cell">
+              <a href="{{ url_for('edit_service', id=service.id) }}" class="btn-action"><i class="fa-solid fa-pen"></i> Edit</a>
+              <form action="{{ url_for('delete_service', id=service.id) }}" method="post" onsubmit="return confirm('Delete this service?')">
+                <button class="delete-btn" type="submit"><i class="fa-regular fa-trash-can"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3"><div class="empty-state">No services added yet.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

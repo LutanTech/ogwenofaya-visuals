@@ -1,0 +1,525 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+.project-page{background:#070d16;color:#f4f7fb;min-height:75vh;padding:33px 0 88px}.project-container{max-width:1400px}.project-topline{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.project-back{display:inline-flex;align-items:center;gap:10px;color:#aab7c7;font-size:.87rem;font-weight:600}.project-back:hover{color:#fff}.project-back i{color:#5ba7ff}.project-category{display:inline-flex;align-items:center;gap:9px;color:#9bcaff;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}.project-category:before{content:'';width:20px;height:1px;background:#368bff}.project-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:23px}.project-head h1{font:800 clamp(2.35rem,5.6vw,4.6rem)/.98 'Manrope',sans-serif;letter-spacing:-.07em;margin:11px 0 0}.project-head-copy{min-width:0}.project-meta{display:flex;gap:11px;align-items:center;color:#8b9caf;font-size:.8rem;margin-top:16px}.project-meta .meta-dot{height:4px;width:4px;background:#368bff;border-radius:50%}.project-summary{color:#a3b1c1;line-height:1.75;font-size:.88rem;max-width:390px;margin:0}.watch-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,365px);gap:17px;align-items:start}.watch-main{min-width:0}.project-video-shell{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:17px;background:#010408;box-shadow:0 22px 65px rgba(0,0,0,.35)}.project-video{display:block;width:100%;aspect-ratio:16/9;max-height:76vh;object-fit:contain;background:#02060b}.video-loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:12px;background:rgba(3,8,14,.78);color:#e6f2ff;font-size:.9rem;z-index:2}.video-loading.is-visible{display:flex}.video-loading i{color:#65b5ff}.player-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 15px;background:#0b1420;border-top:1px solid rgba(255,255,255,.08)}.player-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.84rem}.player-title i{color:#68b2ff}.player-controls{display:flex;align-items:center;gap:9px}.player-controls label{color:#8293a7;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}.player-controls select{max-width:180px;padding:8px 28px 8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#101d2c;color:#eaf3ff;font-size:.77rem}.player-controls select:disabled{opacity:.58}.blob-note{color:#72849a;font-size:.7rem}.video-info{padding:17px 3px 0}.video-info h2{font:700 1rem 'Manrope',sans-serif;margin:0 0 6px}.video-info p{color:#9aaabd;line-height:1.7;font-size:.86rem;margin:0;white-space:pre-line}.comments-panel{background:#0c1522;border:1px solid rgba(255,255,255,.1);border-radius:17px;overflow:hidden;min-height:390px;display:flex;flex-direction:column}.comments-header{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.09)}.comments-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.comments-title-row h2{font:700 1.02rem 'Manrope',sans-serif;margin:0}.comments-count{color:#8596aa;font-size:.76rem}.comments-sort{display:flex;align-items:center;gap:8px;margin-top:14px;color:#8495a9;font-size:.74rem}.comments-sort i{color:#6eaef7}.comments-list{padding:5px 17px;max-height:410px;overflow:auto;flex:1}.comment-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:11px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.07)}.comment-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#1d5b9e,#10253e);color:#d8ecff;font-size:.75rem;font-weight:700}.comment-author{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.comment-author strong{font-size:.78rem;color:#eef4fa}.comment-author time{font-size:.68rem;color:#8090a4}.comment-text{color:#c2ccda;font-size:.79rem;line-height:1.6;margin:6px 0 0;overflow-wrap:anywhere}.comment-empty{flex:1;display:grid;place-items:center;text-align:center;padding:32px 22px;color:#8798ac}.comment-empty i{color:#5ba7ff;font-size:1.45rem;margin-bottom:13px}.comment-empty strong{display:block;color:#e7edf5;font:700 .9rem 'Manrope',sans-serif;margin-bottom:7px}.comment-empty p{font-size:.78rem;line-height:1.6;margin:0}
+
+.comment-form-shell{padding:14px 17px 17px;border-top:1px solid rgba(255,255,255,.09);background:#09101a}
+.comment-form-grid{display:flex;flex-direction:column;gap:10px}
+.comment-textarea{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:#0d1827;color:#fff;font-size:0.8rem;min-height:75px;resize:none}
+.comment-textarea:focus{outline:none;border-color:#368bff}
+.comment-submit-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border:0;border-radius:8px;background:#368bff;color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;transition:background 0.15s ease}
+.comment-submit-btn:hover{background:#5ba7ff}
+
+.related-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:53px 0 19px}.related-heading h2{font:700 clamp(1.35rem,2.5vw,1.8rem) 'Manrope',sans-serif;letter-spacing:-.045em;margin:0}.related-heading p{color:#8797aa;font-size:.78rem;margin:0}.related-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-flow:dense;gap:12px}.related-card{position:relative;isolation:isolate;grid-column:span 4;min-height:230px;aspect-ratio:1.1;display:block;border-radius:14px;overflow:hidden;background:linear-gradient(145deg,#102542,#1767ae 58%,#091321);border:1px solid rgba(255,255,255,.08);color:#fff}.related-card:nth-child(5n+1){grid-column:span 7;aspect-ratio:1.55}.related-card:nth-child(5n+2){grid-column:span 5;aspect-ratio:1.22}.related-card:nth-child(5n+3),.related-card:nth-child(5n+4),.related-card:nth-child(5n){grid-column:span 4;aspect-ratio:1.05}.related-card img{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s,filter .35s;filter:saturate(.88)}.related-card:after{content:'';position:absolute;z-index:-1;inset:20% 0 0;background:linear-gradient(0deg,rgba(3,9,16,.92),rgba(3,9,16,.02))}.related-card:hover img{transform:scale(1.045);filter:saturate(1.08)}.related-card-copy{position:absolute;left:19px;right:19px;bottom:17px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}.related-card-category{display:block;color:#9acaff;font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:7px}.related-card-title{display:block;font:700 clamp(1rem,1.7vw,1.35rem)/1.16 'Manrope',sans-serif;letter-spacing:-.025em}.related-card-arrow{flex:0 0 35px;width:35px;height:35px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.5);transition:all .2s}.related-card:hover .related-card-arrow{background:#368bff;border-color:#368bff}.related-no-image{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.55);font-size:2rem}
+.project-gallery{margin-top:30px}.project-gallery-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 13px}.project-gallery-heading h2{font:700 1.05rem 'Manrope',sans-serif;margin:0}.project-gallery-heading span{color:#8293a7;font-size:.73rem}.project-photo-grid{columns:3;column-gap:12px}.project-photo-card{display:inline-block;width:100%;margin:0 0 12px;break-inside:avoid;overflow:hidden;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#0b1420;vertical-align:top;cursor:pointer;position:relative}.project-photo-card img{display:block;width:100%;height:auto;object-fit:contain;transition:transform .35s,filter .25s;filter:saturate(.92)}.project-photo-card:hover img{transform:scale(1.025);filter:saturate(1.08)}
+.video-card-badge{position:absolute;bottom:10px;right:10px;background:rgba(4,12,22,0.8);border:1px solid rgba(255,255,255,0.2);padding:4px 8px;border-radius:6px;font-size:0.65rem;font-weight:700;color:#65b5ff;display:flex;align-items:center;gap:5px}
+
+.video-overlay-modal{position:fixed;inset:0;z-index:9999;background:rgba(3,7,13,0.88);backdrop-filter:blur(8px);display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s ease}.video-overlay-modal.is-active{opacity:1;pointer-events:auto}
+.video-overlay-content{width:100%;max-width:900px;position:relative}
+.video-overlay-close{position:absolute;top:-45px;right:0;background:transparent;border:0;color:#fff;font-size:1.2rem;cursor:pointer;padding:8px}
+
+.project-empty{padding:55px 22px;border:1px dashed rgba(255,255,255,.16);border-radius:16px;text-align:center;color:#9aabbe;background:#0c1522}.project-empty i{font-size:1.7rem;color:#65b5ff;margin-bottom:13px}.project-empty h2{font:700 1.1rem 'Manrope',sans-serif;color:#fff;margin:0 0 8px}.project-empty p{margin:0;font-size:.85rem}.project-next{margin-top:46px;padding:25px 27px;border:1px solid rgba(255,255,255,.11);border-radius:16px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:linear-gradient(100deg,#0c1b2c,#0b1420)}.project-next h2{font:700 1.15rem 'Manrope',sans-serif;margin:0 0 6px}.project-next p{margin:0;color:#92a2b5;font-size:.84rem}.project-next .btn{white-space:nowrap}
+@media(max-width:980px){.watch-layout{grid-template-columns:minmax(0,1fr) 310px;gap:13px}.project-summary{max-width:310px}.project-photo-grid{columns:2}}
+@media(max-width:760px){.project-head{align-items:flex-start;flex-direction:column;gap:13px}.project-summary{max-width:680px}.watch-layout{grid-template-columns:1fr}.comments-panel{min-height:0}.comments-list{max-height:340px}.comment-empty{min-height:165px}.related-card:nth-child(n){grid-column:span 6;aspect-ratio:1.1}.related-card:first-child{grid-column:span 12;aspect-ratio:1.5}.related-card:only-child{grid-column:1/-1;aspect-ratio:16/9}}
+@media(min-width:500px){
+  .project-summary{display:none}
+}
+@media(max-width:580px){.project-page{padding:25px 0 62px}.project-topline{margin-bottom:26px}.project-head h1{font-size:clamp(2.35rem,12vw,3.8rem)}.project-video-shell,.comments-panel{border-radius:13px}.project-video{aspect-ratio:16/10}.player-toolbar{align-items:flex-start;flex-direction:column;padding:12px}.player-controls{width:100%;justify-content:space-between}.player-controls select{max-width:62%}.player-ui{gap:8px;padding-inline:10px}.player-ui select{max-width:82px;padding-inline:6px}.related-heading{align-items:flex-start;flex-direction:column;margin-top:40px}.related-grid{gap:8px}.related-card:nth-child(n){grid-column:span 6;aspect-ratio:.86;min-height:145px;border-radius:9px}.related-card:first-child{grid-column:span 12;aspect-ratio:1.22}.related-card:only-child{grid-column:1/-1;aspect-ratio:4/3}.project-photo-grid{columns:2;column-gap:8px}.project-photo-card{margin-bottom:8px}.project-next{align-items:flex-start;flex-direction:column;padding:21px}.project-next .btn{width:100%}.blob-note{font-size:.67rem}}
+
+.play-feedback{position:absolute;z-index:3;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0;transition:opacity .16s}.play-feedback.is-visible{opacity:1}.play-feedback[hidden]{display:none}.play-feedback span{width:70px;height:70px;display:grid;place-items:center;border-radius:50%;background:rgba(4,12,22,.72);border:1px solid rgba(255,255,255,.23);color:#fff;font-size:1.5rem;box-shadow:0 10px 35px rgba(0,0,0,.35);transform:scale(.88);transition:transform .16s}.play-feedback.is-visible span{transform:scale(1)}
+
+.player-progress{padding:0 15px 9px;background:#0b1420}.progress-range{display:block;width:100%;height:5px;margin:0;appearance:none;border:0;border-radius:99px;cursor:pointer;background:linear-gradient(90deg,#4b9eff var(--played,0%),#26364a var(--played,0%));outline:none}.progress-range::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:#f4f8ff;box-shadow:0 0 0 3px rgba(70,155,255,.22);opacity:0;transition:opacity .15s}.progress-range:hover::-webkit-slider-thumb,.progress-range:focus::-webkit-slider-thumb{opacity:1}.progress-range::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#f4f8ff;box-shadow:0 0 0 3px rgba(70,155,255,.22);opacity:0}.progress-range:hover::-moz-range-thumb,.progress-range:focus::-moz-range-thumb{opacity:1}.player-ui{display:flex;align-items:center;gap:12px;padding:0 15px 13px;background:#0b1420}.player-ui button{border:0;background:transparent;color:#c3d0df;padding:5px;cursor:pointer;font-size:.91rem;line-height:1}.player-ui button:hover,.player-ui button:focus-visible{color:#69b2ff;outline:none}.player-ui select{max-width:105px;padding:7px 23px 7px 9px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#101d2c;color:#eaf3ff;font-size:.74rem}.player-time{color:#a2b1c2;font-size:.72rem;font-variant-numeric:tabular-nums;white-space:nowrap}.player-ui-spacer{flex:1}.player-ui .context-trigger{width:30px;height:30px;border:1px solid rgba(255,255,255,.13);border-radius:8px}.custom-context-menu{position:fixed;z-index:9999;width:220px;padding:6px;background:#111d2b;border:1px solid rgba(255,255,255,.14);border-radius:11px;box-shadow:0 16px 42px rgba(0,0,0,.5)}.custom-context-menu[hidden]{display:none}.custom-context-menu button{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;border-radius:7px;background:transparent;color:#dce7f3;padding:10px 11px;font:500 .79rem 'DM Sans',sans-serif;cursor:pointer}.custom-context-menu button i{width:15px;color:#6aafff}.custom-context-menu button:hover,.custom-context-menu button:focus-visible{background:#1b2d42;color:#fff;outline:none}.custom-context-menu .context-divider{height:1px;background:rgba(255,255,255,.1);margin:5px 4px}.context-feedback{position:fixed;z-index:9998;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 15px;background:#122238;border:1px solid rgba(255,255,255,.15);border-radius:9px;color:#eef6ff;font-size:.78rem;box-shadow:0 8px 28px #0006}
+
+{% endblock %}
+{% block content %}
+{% set related_list = related_projects|default([], true)|rejectattr('id', 'equalto', project.id)|list %}
+{% set project_comments = comments if comments is defined and comments else (project.comments if project.comments is defined and project.comments else []) %}
+{% set gallery_images = project.images|default([], true)|map(attribute='filename')|list %}
+{% if project.image and project.image not in gallery_images %}{% set gallery_images = [project.image] + gallery_images %}{% endif %}
+{% set gallery_videos = project.videos|default([], true)|map(attribute='filename')|list %}
+{% if project.video and project.video not in gallery_videos %}{% set gallery_videos = [project.video] + gallery_videos %}{% endif %}
+
+{% macro render_project_gallery(images, videos) %}
+<section class="project-gallery" aria-label="Project media">
+  <div class="project-gallery-heading">
+    <h2>Project media</h2>
+    <span>{{ images|length + videos|length }} item{% if (images|length + videos|length) != 1 %}s{% endif %}</span>
+  </div>
+  <div class="project-photo-grid">
+    {% for image_name in images %}
+      <a class="project-photo-card" href="{{ url_for('static', filename='resources/images/' ~ image_name) }}" target="_blank" rel="noopener" aria-label="Open photo {{ loop.index }} from {{ project.title }}">
+        <img src="{{ url_for('static', filename='resources/images/' ~ image_name) }}" alt="{{ project.title }} — photo {{ loop.index }}" loading="lazy">
+        <div class="video-card-badge"><i class="fa-solid fa-image"></i> Img {{ loop.index }}</div>
+      </a>
+    {% endfor %}
+    {% for video_name in videos %}
+      <div class="project-photo-card" data-video-trigger="{{ url_for('static', filename='resources/videos/' ~ video_name) }}" role="button" tabindex="0" aria-label="Play clip {{ loop.index }}">
+        <div style="position:relative; aspect-ratio:16/9; background:#010408; display:grid; place-items:center;">
+          {% if project.image %}
+            <img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" loading="lazy">
+            <i class="fa-solid fa-film" style="position:absolute; font-size:2rem; color:var(--text-muted)"></i>
+          {% else %}
+            <i class="fa-solid fa-film" style="font-size:2rem; color:var(--text-muted)"></i>
+          {% endif %}
+          <div class="video-card-badge"><i class="fa-solid fa-play"></i> Video {{ loop.index }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endmacro %}
+
+<section class="project-page"><div class="container project-container">
+  <div class="project-topline"><a class="project-back" href="{{ url_for('index') }}#work"><i class="fa-solid fa-arrow-left"></i> All projects</a><span class="project-category">{{ project.category }}</span></div>
+  <header class="project-head"><div class="project-head-copy"><h1>{{ project.title }}</h1><div class="project-meta"><span>OgwenofayaVisuals</span>{% if project.created_at %}<span class="meta-dot"></span><time datetime="{{ project.created_at.strftime('%Y-%m-%d') }}">{{ project.created_at.strftime('%B %Y') }}</time>{% endif %}</div></div>{% if project.description %}<p class="project-summary">{{ project.description }}</p>{% endif %}</header>
+  <div class="watch-layout">
+    <div class="watch-main">
+      {% if project.video %}
+        {% set video_type = 'video/mp4' %}
+        <div class="project-video-shell" data-blob-player>
+          <div class="video-loading" data-loading><i class="fa-solid fa-circle-notch fa-spin"></i><span data-loading-text>Preparing video…</span></div>
+          <video class="project-video" playsinline preload="none"{% if project.image %} poster="{{ url_for('static', filename='resources/images/' ~ project.image) }}"{% endif %} data-default-src="{{ url_for('stream_video', id=project.id, quality=480) }}" data-default-type="{{ video_type }}" aria-label="{{ project.title }} video"><source src="{{ url_for('stream_video', id=project.id, quality=480) }}" type="{{ video_type }}">Your browser does not support this video. <a href="{{ url_for('stream_video', id=project.id, quality=480) }}">Open video stream</a>.</video>
+          <div class="play-feedback" data-play-feedback aria-hidden="true" hidden><span><i data-feedback-icon class="fa-solid fa-play"></i></span></div>
+          <div class="player-progress"><input class="progress-range" type="range" min="0" max="1000" value="0" step="1" data-progress aria-label="Video progress"></div>
+          <div class="player-ui" aria-label="Video controls"><button type="button" data-play aria-label="Play video"><i class="fa-solid fa-play"></i></button><span class="player-time" data-current-time>0:00</span><span class="player-time">/</span><span class="player-time" data-duration>0:00</span><span class="player-ui-spacer"></span> <div><select id="video-quality" data-quality aria-label="Video quality"><option value="auto" selected>Auto</option>{% for q in [144, 240, 360, 480, 720, 1080] %}<option value="{{ url_for('stream_video', id=project.id, quality=q) }}" data-resolution="{{ q }}" data-type="video/mp4">{{ q }}p</option>{% endfor %}</select></div><button type="button" data-mute aria-label="Mute video"><i class="fa-solid fa-volume-high"></i></button><button type="button" data-fullscreen aria-label="Enter fullscreen"><i class="fa-solid fa-expand"></i></button><button type="button" class="context-trigger" data-context-trigger aria-label="More video options" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button></div>
+          <div class="player-toolbar"><div class="player-title"><i class="fa-solid fa-circle-play"></i><span>Project film</span></div><div class="player-controls"> <i class="blob-note">Widget by <a style="color:#65b5ff; text-decoration:underline" href="https://lutan-tech.co.ke/?utm_medium=video_play&amp;utm_source=ogwenofaya_visuals&amp;utm_term=vidiora_system" class="blob-note">Vidiora System</a></i></div></div>
+        </div>
+        <div class="custom-context-menu" data-context-menu role="menu" aria-label="Video options" hidden><button type="button" role="menuitem" data-menu-play><i class="fa-solid fa-play"></i><span>Play</span></button><button type="button" role="menuitem" data-menu-mute><i class="fa-solid fa-volume-xmark"></i><span>Mute</span></button><button type="button" role="menuitem" data-menu-speed><i class="fa-solid fa-gauge-high"></i><span>Playback speed: 1×</span></button><div class="context-divider" role="separator"></div><button type="button" role="menuitem" data-menu-copy><i class="fa-regular fa-copy"></i><span>Copy video link</span></button></div>
+        {% if project.description %}<div class="video-info"><h2>About this film</h2><p>{{ project.description }}</p></div>{% endif %}
+        {% if gallery_images or gallery_videos %}{{ render_project_gallery(gallery_images, gallery_videos) }}{% endif %}
+      {% elif gallery_images or gallery_videos %}{{ render_project_gallery(gallery_images, gallery_videos) }}{% else %}<div class="project-empty"><i class="fa-regular fa-images"></i><h2>Project media is on its way</h2><p>There are no images or videos attached to this project yet.</p></div>{% endif %}
+    </div>
+    <aside class="comments-panel" aria-labelledby="comments-title">
+      <div class="comments-header"><div class="comments-title-row"><h2 id="comments-title">Comments</h2><span class="comments-count">{{ project_comments|length }} comment{% if project_comments|length != 1 %}s{% endif %}</span></div><div class="comments-sort"><i class="fa-solid fa-arrow-down-wide-short"></i><span>Discussion</span></div></div>
+      {% if project_comments %}
+        <div class="comments-list">
+          {% for comment in project_comments %}
+            <article class="comment-item">
+              {% if comment.author and comment.author.avatar_url %}
+                <img src="{{ comment.author.avatar_url }}" alt="" class="comment-avatar" style="object-fit:cover;">
+              {% else %}
+                <div class="comment-avatar" aria-hidden="true">{{ (comment.author.username if comment.author else 'V')[:1]|upper }}</div>
+              {% endif %}
+              <div>
+                <div class="comment-author">
+                  <strong>{{ comment.author.username if comment.author else 'Visitor' }}</strong>
+                  {% if comment.created_at %}
+                    <time>{{ comment.created_at.strftime('%b %d, %Y') }}</time>
+                  {% endif %}
+                </div>
+                <p class="comment-text">{{ comment.message }}</p>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="comment-empty"><div><i class="fa-regular fa-comments"></i><strong>No comments yet</strong><p>Start a conversation about this project.</p></div></div>
+      {% endif %}
+      
+      <div class="comment-form-shell">
+        {% if session.get('user_id') %}
+          <form action="{{ url_for('add_project_comment', slug=project.slug) }}" method="post" class="comment-form-grid">
+            <textarea name="message" class="comment-textarea" placeholder="Leave a comment about this project..." required></textarea>
+            <button type="submit" class="comment-submit-btn"><i class="fa-solid fa-paper-plane"></i> Post Comment</button>
+          </form>
+        {% else %}
+          <div style="text-align:center; padding:10px 0;">
+            <p style="color:var(--text-muted); font-size:0.78rem; margin-bottom:10px;">Sign in to join the discussion.</p>
+            <a href="{{ url_for('google_login', next=url_for('project', slug=project.slug)) }}" class="comment-submit-btn" style="text-decoration:none; background:#db4437; display:inline-flex; width:100%;">
+              <i class="fa-brands fa-google"></i> Sign in with Google
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+
+  <div class="related-heading"><h2>Related projects</h2><p>More work from the studio</p></div>
+  {% if related_list %}<div class="related-grid" aria-label="Related projects">
+    {% for related in related_list %}<a class="related-card" href="{{ url_for('project', slug=related.slug) }}" aria-label="View {{ related.title }}">{% if related.image %}<img src="{{ url_for('static', filename='resources/images/' ~ related.image) }}" alt="" loading="lazy">{% else %}<span class="related-no-image"><i class="fa-solid fa-film"></i></span>{% endif %}<span class="related-card-copy"><span><span class="related-card-category">{{ related.category }}</span><span class="related-card-title">{{ related.title }}</span></span><span class="related-card-arrow"><i class="fa-solid fa-arrow-right"></i></span></span></a>{% endfor %}
+  </div>{% else %}<div class="project-empty"><i class="fa-solid fa-layer-group"></i><h2>More stories are on the way</h2><p>Related work will appear here as projects are added to the portfolio.</p></div>{% endif %}
+  <aside class="project-next"><div><h2>Have a story of your own?</h2><p>Let’s make something meaningful together.</p></div><a class="btn" href="{{ url_for('index') }}#contact">Start a project <i class="fa-solid fa-arrow-right"></i></a></aside>
+</div></section>
+
+<!-- Pop-up Overlay Video Modal -->
+<div class="video-overlay-modal" id="videoModal">
+  <div class="video-overlay-content">
+    <button type="button" class="video-overlay-close" id="closeVideoModal" aria-label="Close modal"><i class="fa-solid fa-xmark fa-2x"></i></button>
+    <div class="project-video-shell" data-blob-player id="modalPlayerShell">
+      <div class="video-loading" data-loading><i class="fa-solid fa-circle-notch fa-spin"></i><span data-loading-text>Preparing video…</span></div>
+      <video class="project-video" playsinline preload="metadata" aria-label="Gallery clip video"><source src="" type="video/mp4">Your browser does not support this video.</video>
+      <div class="play-feedback" data-play-feedback aria-hidden="true" hidden><span><i data-feedback-icon class="fa-solid fa-play"></i></span></div>
+      <div class="player-progress"><input class="progress-range" type="range" min="0" max="1000" value="0" step="1" data-progress aria-label="Video progress"></div>
+      <div class="player-ui" aria-label="Video controls">
+        <button type="button" data-play aria-label="Play video"><i class="fa-solid fa-play"></i></button>
+        <span class="player-time" data-current-time>0:00</span><span class="player-time">/</span><span class="player-time" data-duration>0:00</span>
+        <span class="player-ui-spacer"></span>
+        <button type="button" data-mute aria-label="Mute video"><i class="fa-solid fa-volume-high"></i></button>
+        <button type="button" data-fullscreen aria-label="Enter fullscreen"><i class="fa-solid fa-expand"></i></button>
+      </div>
+      <div class="player-toolbar">
+        <div class="player-title"><i class="fa-solid fa-circle-play"></i><span>Gallery Clip</span></div>
+        <div class="player-controls"><i class="blob-note">Vidiora System</i></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function(){
+  const player=document.querySelector('[data-blob-player]');
+  if(!player)return;
+  const video=player.querySelector('video');
+  const quality=player.querySelector('[data-quality]');
+  const loading=player.querySelector('[data-loading]');
+  const loadingText=player.querySelector('[data-loading-text]');
+  const progress=player.querySelector('[data-progress]');
+  const currentTime=player.querySelector('[data-current-time]');
+  const duration=player.querySelector('[data-duration]');
+  const playButton=player.querySelector('[data-play]');
+  const muteButton=player.querySelector('[data-mute]');
+  const fullscreenButton=player.querySelector('[data-fullscreen]');
+  const contextMenu=document.querySelector('[data-context-menu]');
+  const contextTrigger=player.querySelector('[data-context-trigger]');
+  const playFeedback=player.querySelector('[data-play-feedback]');
+  const feedbackIcon=player.querySelector('[data-feedback-icon]');
+  const network=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+  const resolutionSteps=[144,240,360,480,720,1080];
+  let qualityMode='auto';
+  let currentResolution=480;
+  let lastAutoSwitch=0;
+  let feedbackTimer=null;
+  let desiredPlaying=false;
+  let streamOffset=0;
+  let totalDuration=null;
+  let hasLoadedStream=false;
+  let activeObjectUrl=null;
+  let activeAbortController=null;
+  let requestToken=0;
+
+  function waitFor(target,event){return new Promise(function(resolve,reject){target.addEventListener(event,resolve,{once:true});target.addEventListener('error',reject,{once:true});});}
+  function appendChunk(sourceBuffer,chunk){
+    return new Promise(function(resolve,reject){
+      function done(){sourceBuffer.removeEventListener('updateend',done);sourceBuffer.removeEventListener('error',failed);resolve();}
+      function failed(){sourceBuffer.removeEventListener('updateend',done);sourceBuffer.removeEventListener('error',failed);reject(new Error('Could not append video segment'));}
+      sourceBuffer.addEventListener('updateend',done,{once:true});
+      sourceBuffer.addEventListener('error',failed,{once:true});
+      try{sourceBuffer.appendBuffer(chunk);}catch(error){sourceBuffer.removeEventListener('updateend',done);sourceBuffer.removeEventListener('error',failed);reject(error);}
+    });
+  }
+
+  async function loadStream(url,restore,requestedStart){
+    const token=++requestToken;
+    if(activeAbortController)activeAbortController.abort();
+    activeAbortController=new AbortController();
+    const wasPlaying=restore?desiredPlaying:!video.paused;
+    const savedPosition=Number.isFinite(video.currentTime)?video.currentTime:0;
+    const startAt=restore?Math.max(0,Number.isFinite(requestedStart)?requestedStart:streamOffset+savedPosition):0;
+    const requestUrl=new URL(url,window.location.href);
+    requestUrl.searchParams.set('start',startAt.toFixed(3));
+    streamOffset=startAt;
+    hasLoadedStream=true;
+    if(loading){loading.classList.add('is-visible');loadingText.textContent=restore?'Buffering…':'Loading…';}
+    if(activeObjectUrl){URL.revokeObjectURL(activeObjectUrl);activeObjectUrl=null;}
+    video.pause();
+    try{
+      if(!('MediaSource' in window)||!MediaSource.isTypeSupported('video/mp4'))throw new Error('MediaSource MP4 is not supported');
+      const mediaSource=new MediaSource();
+      activeObjectUrl=URL.createObjectURL(mediaSource);
+      video.src=activeObjectUrl;
+      video.load();
+      const opened=waitFor(mediaSource,'sourceopen');
+      await opened;
+      if(token!==requestToken)return;
+      const sourceBuffer=mediaSource.addSourceBuffer('video/mp4');
+      const response=await fetch(requestUrl.href,{credentials:'same-origin',signal:activeAbortController.signal});
+      if(!response.ok||!response.body)throw new Error('The video stream could not be read');
+      const reportedDuration=Number(response.headers.get('X-Video-Duration'));
+      const reportedStart=Number(response.headers.get('X-Stream-Start'));
+      if(Number.isFinite(reportedDuration)&&reportedDuration>0)totalDuration=reportedDuration;
+      if(Number.isFinite(reportedStart)&&reportedStart>=0)streamOffset=reportedStart;
+      updateProgress();
+      const reader=response.body.getReader();
+      video.addEventListener('canplay',function onCanPlay(){
+        if(token===requestToken&&!restore&&loading)loading.classList.remove('is-visible');
+      });
+      video.addEventListener('error',function(){if(token===requestToken&&loading)loading.classList.remove('is-visible')},{once:true});
+      while(true){
+        const part=await reader.read();
+        if(token!==requestToken)return;
+        if(part.done)break;
+        await appendChunk(sourceBuffer,part.value);
+        if(!restore&&video.readyState>=2&&loading)loading.classList.remove('is-visible');
+        if(restore&&loadingText)loadingText.textContent='Restoring playback position…';
+      }
+      if(mediaSource.readyState==='open')mediaSource.endOfStream();
+      if(restore){
+        if(token!==requestToken)return;
+        if(wasPlaying&&desiredPlaying)await video.play().catch(function(){});
+      }else if(wasPlaying&&desiredPlaying){
+        await video.play().catch(function(){});
+      }
+      if(token!==requestToken)return;
+      if(loading)loading.classList.remove('is-visible');
+    }catch(error){
+      if(token!==requestToken)return;
+      if(activeObjectUrl){URL.revokeObjectURL(activeObjectUrl);activeObjectUrl=null;}
+      video.src=requestUrl.href;
+      const recover=async function(){
+        if(token!==requestToken)return;
+        if(wasPlaying&&desiredPlaying)video.play().catch(function(){});
+        if(loading)loading.classList.remove('is-visible');
+      };
+      if(video.readyState>=1)recover();
+      else video.addEventListener('loadedmetadata',recover,{once:true});
+      video.addEventListener('canplay',function(){if(token!==requestToken)return;if(loading)loading.classList.remove('is-visible')},{once:true});
+      video.load();
+    }
+  }
+
+  function formatTime(seconds){
+    if(!Number.isFinite(seconds)||seconds<0)return '0:00';
+    const mins=Math.floor(seconds/60);
+    const secs=Math.floor(seconds%60).toString().padStart(2,'0');
+    return mins+':'+secs;
+  }
+
+  function fullDuration(){
+    if(Number.isFinite(totalDuration)&&totalDuration>0)return totalDuration;
+    return Number.isFinite(video.duration)?streamOffset+video.duration:0;
+  }
+
+  function globalTime(){return streamOffset+(Number.isFinite(video.currentTime)?video.currentTime:0);}
+
+  function updateProgress(){
+    const total=fullDuration();
+    const elapsed=globalTime();
+    const ratio=total>0?elapsed/total:0;
+    const pct=Math.max(0,Math.min(100,ratio*100));
+    if(progress){
+      progress.value=Math.round(ratio*1000);
+      progress.style.setProperty('--played',pct+'%');
+    }
+    if(currentTime)currentTime.textContent=formatTime(elapsed);
+    if(duration)duration.textContent=formatTime(total);
+  }
+
+  function currentQualityUrl(){
+    if(quality&&quality.value==='auto')return resolutionOption(currentResolution).value;
+    return quality?quality.options[quality.selectedIndex].value:video.src;
+  }
+
+  function isBufferedAt(localTime){
+    for(let i=0;i<video.buffered.length;i++)if(localTime>=video.buffered.start(i)-.1&&localTime<=video.buffered.end(i)+.1)return true;
+    return false;
+  }
+
+  function seekGlobal(target){
+    const local=target-streamOffset;
+    if(local>=0&&isBufferedAt(local)){video.currentTime=local;return;}
+    loadStream(currentQualityUrl(),true,target);
+  }
+
+  function updatePlayState(){
+    const playing=!video.paused;
+    if(playButton){
+      playButton.innerHTML=playing?'<i class="fa-solid fa-pause"></i>':'<i class="fa-solid fa-play"></i>';
+      playButton.setAttribute('aria-label',playing?'Pause video':'Play video');
+    }
+    if(contextMenu){
+      const menuPlay=contextMenu.querySelector('[data-menu-play]');
+      if(menuPlay){
+        menuPlay.querySelector('span').textContent=playing?'Pause':'Play';
+        menuPlay.querySelector('i').className=playing?'fa-solid fa-pause':'fa-solid fa-play';
+      }
+    }
+  }
+
+  function updateMuteState(){
+    if(!muteButton)return;
+    const muted=video.muted||video.volume===0;
+    muteButton.innerHTML=muted?'<i class="fa-solid fa-volume-xmark"></i>':'<i class="fa-solid fa-volume-high"></i>';
+    muteButton.setAttribute('aria-label',muted?'Unmute video':'Mute video');
+    if(contextMenu){
+      const menuMute=contextMenu.querySelector('[data-menu-mute]');
+      if(menuMute){
+        menuMute.querySelector('span').textContent=muted?'Unmute':'Mute';
+        menuMute.querySelector('i').className=muted?'fa-solid fa-volume-high':'fa-solid fa-volume-xmark';
+      }
+    }
+  }
+
+  function closeMenu(){if(contextMenu){contextMenu.hidden=true;if(contextTrigger)contextTrigger.setAttribute('aria-expanded','false');}}
+  function openMenu(x,y){
+    if(!contextMenu)return;
+    contextMenu.hidden=false;
+    if(contextTrigger)contextTrigger.setAttribute('aria-expanded','true');
+    const box=contextMenu.getBoundingClientRect();
+    contextMenu.style.left=Math.max(8,Math.min(x,window.innerWidth-box.width-8))+'px';
+    contextMenu.style.top=Math.max(8,Math.min(y,window.innerHeight-box.height-8))+'px';
+    const firstBtn=contextMenu.querySelector('button');
+    if(firstBtn)firstBtn.focus();
+  }
+
+  function toast(message){
+    let node=document.querySelector('[data-context-feedback]');
+    if(node)node.remove();
+    node=document.createElement('div');node.className='context-feedback';node.dataset.contextFeedback='';node.textContent=message;document.body.appendChild(node);
+    setTimeout(function(){node.remove()},1800);
+  }
+
+  video.addEventListener('timeupdate',updateProgress);
+  video.addEventListener('loadedmetadata',updateProgress);
+  video.addEventListener('durationchange',updateProgress);
+  video.addEventListener('play',updatePlayState);
+  video.addEventListener('pause',updatePlayState);
+  video.addEventListener('volumechange',updateMuteState);
+  video.addEventListener('ended',function(){desiredPlaying=false;});
+
+  if(progress){
+    progress.addEventListener('input',function(){
+      const total=fullDuration();
+      if(total){const target=total*Number(progress.value)/1000;progress.style.setProperty('--played',(Number(progress.value)/10)+'%');if(currentTime)currentTime.textContent=formatTime(target);}
+    });
+    progress.addEventListener('change',function(){const total=fullDuration();if(total)seekGlobal(total*Number(progress.value)/1000);});
+  }
+
+  function showPlayFeedback(playing){
+    if(!playFeedback)return;
+    playFeedback.hidden=false;
+    playFeedback.classList.add('is-visible');
+    if(feedbackIcon)feedbackIcon.className=playing?'fa-solid fa-pause':'fa-solid fa-play';
+    clearTimeout(feedbackTimer);
+    feedbackTimer=setTimeout(function(){playFeedback.classList.remove('is-visible');setTimeout(function(){playFeedback.hidden=true},180)},650);
+  }
+
+  function togglePlayback(){
+    const willPlay=video.paused;
+    desiredPlaying=willPlay;
+    showPlayFeedback(willPlay);
+    if(willPlay)video.play().catch(function(){});else video.pause();
+  }
+
+  if(playButton)playButton.addEventListener('click',togglePlayback);
+  video.addEventListener('click',togglePlayback);
+  if(muteButton)muteButton.addEventListener('click',function(){video.muted=!video.muted;updateMuteState();});
+  if(fullscreenButton)fullscreenButton.addEventListener('click',function(){
+    if(document.fullscreenElement)document.exitFullscreen();
+    else player.requestFullscreen&&player.requestFullscreen();
+  });
+
+  if(contextTrigger&&contextMenu){
+    contextTrigger.addEventListener('click',function(event){event.stopPropagation();if(contextMenu.hidden)openMenu(contextTrigger.getBoundingClientRect().right,contextTrigger.getBoundingClientRect().bottom+6);else closeMenu();});
+    contextMenu.querySelector('[data-menu-play]').addEventListener('click',function(){togglePlayback();closeMenu();});
+    contextMenu.querySelector('[data-menu-mute]').addEventListener('click',function(){video.muted=!video.muted;updateMuteState();closeMenu();});
+    let speeds=[0.5,0.75,1,1.25,1.5,2];
+    contextMenu.querySelector('[data-menu-speed]').addEventListener('click',function(){
+      const next=speeds[(speeds.indexOf(video.playbackRate)+1)%speeds.length];
+      video.playbackRate=next;
+      this.querySelector('span').textContent='Playback speed: '+next+'×';
+      toast('Playback speed set to '+next+'×');
+      closeMenu();
+    });
+    contextMenu.querySelector('[data-menu-copy]').addEventListener('click',async function(){
+      try{await navigator.clipboard.writeText(new URL(video.dataset.defaultSrc,window.location.href).href);toast('Video link copied');}
+      catch(error){toast('Unable to copy the link in this browser');}
+      closeMenu();
+    });
+    video.addEventListener('contextmenu',function(event){event.preventDefault();openMenu(event.clientX,event.clientY);});
+    document.addEventListener('click',function(event){if(!contextMenu.contains(event.target)&&!contextTrigger.contains(event.target))closeMenu();});
+    document.addEventListener('keydown',function(event){if(event.key==='Escape')closeMenu();if((event.shiftKey&&event.key==='F10')||event.key==='ContextMenu'){event.preventDefault();openMenu(contextTrigger.getBoundingClientRect().right,contextTrigger.getBoundingClientRect().bottom+6);}});
+  }
+
+  updateProgress();updatePlayState();updateMuteState();
+
+  function chooseAutoResolution(){
+    const connection=network;
+    if(connection&&connection.saveData)return 240;
+    const type=connection&&connection.effectiveType;
+    if(type==='slow-2g'||type==='2g')return 144;
+    if(type==='3g'&&!(connection&&connection.downlink>=2))return 360;
+    const downlink=connection&&Number(connection.downlink);
+    if(Number.isFinite(downlink)&&downlink>0){
+      console.log(downlink)
+      if(downlink<0.65)return 144;
+      if(downlink<1.25)return 240;
+      if(downlink<2.5)return 360;
+      if(downlink<5)return 480;
+      if(downlink<9)return 720;
+      return 1080;
+    }
+    if(type==='3g')return 1080;
+    return window.innerWidth<700?480:720;
+  }
+
+  function resolutionOption(resolution){
+    if(!quality)return null;
+    return Array.from(quality.options).find(function(option){return Number(option.dataset.resolution)===resolution;});
+  }
+
+  function startResolution(resolution,restore){
+    const option=resolutionOption(resolution);
+    if(!option)return;
+    currentResolution=resolution;
+    lastAutoSwitch=Date.now();
+    if(quality&&qualityMode==='auto')quality.options[0].textContent='Auto · '+resolution+'p';
+    loadStream(option.value,restore);
+  }
+
+  function chooseAuto(restore){
+    const resolution=chooseAutoResolution();
+    if(resolution!==currentResolution||!hasLoadedStream)startResolution(resolution,restore);
+    else if(quality)quality.options[0].textContent='Auto · '+currentResolution+'p';
+  }
+
+  if(quality){
+    quality.addEventListener('change',function(){
+      const option=quality.options[quality.selectedIndex];
+      if(option.value==='auto'){
+        qualityMode='auto';
+        chooseAuto(true);
+      }else{
+        qualityMode='manual';
+        currentResolution=Number(option.dataset.resolution)||480;
+        loadStream(option.value,true);
+      }
+    });
+  }
+
+  if(network&&network.addEventListener)network.addEventListener('change',function(){if(qualityMode==='auto')chooseAuto(true);});
+  video.addEventListener('waiting',function(){
+    if(qualityMode!=='auto'||Date.now()-lastAutoSwitch<12000)return;
+    const index=resolutionSteps.indexOf(currentResolution);
+    if(index>0)startResolution(resolutionSteps[index-1],true);
+  });
+  chooseAuto(false);
+  window.addEventListener('pagehide',function(){if(activeAbortController)activeAbortController.abort();if(activeObjectUrl)URL.revokeObjectURL(activeObjectUrl)});
+
+  const modal=document.getElementById('videoModal');
+  const modalVideo=modal.querySelector('video');
+  const closeModal=document.getElementById('closeVideoModal');
+
+  document.querySelectorAll('[data-video-trigger]').forEach(function(card){
+    card.addEventListener('click',function(){
+      const videoUrl=card.getAttribute('data-video-trigger');
+      if(!videoUrl)return;
+      modalVideo.src=videoUrl;
+      modalVideo.load();
+      modal.classList.add('is-active');
+      modalVideo.play().catch(function(){});
+    });
+  });
+
+  function closeVideoOverlay(){
+    modalVideo.pause();
+    modalVideo.src='';
+    modal.classList.remove('is-active');
+  }
+
+  closeModal.addEventListener('click',closeVideoOverlay);
+  modal.addEventListener('click',function(e){if(e.target===modal)closeVideoOverlay();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeVideoOverlay();});
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,270 @@
+{% extends "admin/base.html" %}
+{% block title %}System Logs — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+.logs-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.metric-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 14px;
+}
+.metric-card h3 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.metric-card h3 i { color: var(--accent-cyan); }
+.metric-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.76rem;
+  color: var(--text-main);
+  background: var(--bg-base);
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+.metric-item span.count {
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 20px; margin-top: 20px; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 12px; }
+.panel-head h1 { font: 700 1.1rem 'Plus Jakarta Sans', sans-serif; margin: 0; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+.panel-head h1 i { color: var(--accent-cyan); }
+
+.table-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-input {
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  width: 220px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-input:focus { border-color: var(--accent-cyan); }
+
+.bulk-delete-btn {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(251, 113, 133, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+}
+.bulk-delete-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.table-scroll { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.data-table th { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+.data-table td { padding: 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; font-size: 0.78rem; color: var(--text-main); }
+.data-table tr:hover td { background: rgba(255, 255, 255, 0.012); }
+.table-main-title { font-weight: 700; color: var(--text-main); display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; }
+.table-sub-title { display: block; color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 0.68rem; font-weight: 600; }
+.badge.bot { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); }
+.badge.human { color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }
+.badge.status { color: var(--accent-cyan); background: var(--accent-cyan-glow); border: 1px solid rgba(34, 211, 238, 0.2); }
+.delete-form { margin: 0; }
+.delete-btn { border: 0; background: transparent; color: var(--text-muted); border-radius: 4px; padding: 5px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
+.delete-btn:hover { background: var(--danger-bg); color: var(--danger); }
+.empty-state { text-align: center; color: var(--text-muted); padding: 30px; }
+
+@media(max-width: 1024px) {
+  .logs-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 600px) {
+  .logs-metrics-grid { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% set title = "System Request Logs" %}
+{% block content %}
+<div class="logs-metrics-grid">
+  <div class="metric-card">
+    <h3><i class="fa-solid fa-calendar-day"></i> Recent Days</h3>
+    <div class="metric-list">
+      {% for day in last_5_days %}
+      <div class="metric-item">
+        <span>{{ day.date_label }}</span>
+        <span class="count">{{ day.count }} reqs</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <h3><i class="fa-solid fa-network-wired"></i> Frequent IPs</h3>
+    <div class="metric-list">
+      {% for ip_item in frequent_ips %}
+      <div class="metric-item">
+        <span style="font-family:'JetBrains Mono', monospace;">{{ ip_item.ip }}</span>
+        <span class="count">{{ ip_item.count }}</span>
+      </div>
+      {% else %}
+      <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; padding:10px;">No data</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <h3><i class="fa-solid fa-triangle-exclamation"></i> Suspicious IPs</h3>
+    <div class="metric-list">
+      {% for sus_ip in suspicious_ips %}
+      <div class="metric-item">
+        <span style="font-family:'JetBrains Mono', monospace; color:var(--danger);">{{ sus_ip.ip }}</span>
+        <span class="count" style="color:var(--danger);">{{ sus_ip.count }}</span>
+      </div>
+      {% else %}
+      <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; padding:10px;">None flagged</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <h3><i class="fa-solid fa-robot"></i> Bot Requests</h3>
+    <div class="metric-list">
+      {% for bot_item in top_bots %}
+      <div class="metric-item">
+        <span>{{ bot_item.name }}</span>
+        <span class="count">{{ bot_item.count }}</span>
+      </div>
+      {% else %}
+      <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; padding:10px;">No bots detected</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <div>
+      <h1><i class="fa-solid fa-server"></i> Detailed Traffic Logs</h1>
+      <p>Real-time server request records, visitor IP locations, and automated bot detections.</p>
+    </div>
+    <div class="table-actions-bar">
+      <input type="text" id="logSearch" class="search-input" placeholder="Instant search any field..." onkeyup="filterLogs()">
+      <form id="bulkDeleteForm" action="{{ url_for('bulk_delete_logs') }}" method="post" onsubmit="return confirm('Delete selected log entries?')">
+        <button type="submit" id="bulkDeleteBtn" class="bulk-delete-btn" disabled><i class="fa-regular fa-trash-can"></i> Delete Selected (<span id="selectedCount">0</span>)</button>
+        <div id="bulkInputs"></div>
+      </form>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table" id="logsTable">
+      <thead>
+        <tr>
+          <th style="width: 30px;"><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
+          <th>Method & Path</th>
+          <th>IP & Location</th>
+          <th>Visitor Type</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr class="log-row">
+          <td><input type="checkbox" class="log-checkbox" value="{{ log.id }}" onclick="updateBulkState()"></td>
+          <td>
+            <span class="table-main-title"><span style="color:var(--accent-cyan);">{{ log.method }}</span> {{ log.path }}</span>
+            {% if log.user_agent %}<span class="table-sub-title" style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ log.user_agent }}">{{ log.user_agent }}</span>{% endif %}
+          </td>
+          <td>
+            {{ log.ip_address }}
+            <span class="table-sub-title"><i class="fa-solid fa-location-dot"></i> {{ log.location or 'Unknown' }}</span>
+          </td>
+          <td>
+            {% if log.is_bot %}
+              <span class="badge bot"><i class="fa-solid fa-robot"></i> {{ log.bot_name }}</span>
+            {% else %}
+              <span class="badge human"><i class="fa-solid fa-user"></i> Human</span>
+            {% endif %}
+          </td>
+          <td><span class="badge status">{{ log.status_code }}</span></td>
+          <td>{{ log.created_at.strftime('%b %d, %Y - %H:%M:%S') }}</td>
+          <td>
+            <form class="delete-form" action="{{ url_for('purge_item', item_type='log', id=log.id) }}" method="post" onsubmit="return confirm('Delete this log entry?')">
+              <button class="delete-btn" type="submit" title="Delete log"><i class="fa-regular fa-trash-can"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.5rem; margin-bottom:8px; display:block;"></i>No request logs recorded yet.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function filterLogs() {
+  const query = document.getElementById('logSearch').value.toLowerCase();
+  const rows = document.querySelectorAll('.log-row');
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(query) ? '' : 'none';
+  });
+}
+
+function toggleSelectAll(source) {
+  const checkboxes = document.querySelectorAll('.log-checkbox');
+  checkboxes.forEach(cb => {
+    if(cb.closest('tr').style.display !== 'none') {
+      cb.checked = source.checked;
+    }
+  });
+  updateBulkState();
+}
+
+function updateBulkState() {
+  const checkboxes = document.querySelectorAll('.log-checkbox:checked');
+  const btn = document.getElementById('bulkDeleteBtn');
+  const countSpan = document.getElementById('selectedCount');
+  const inputsContainer = document.getElementById('bulkInputs');
+  
+  countSpan.textContent = checkboxes.length;
+  btn.disabled = checkboxes.length === 0;
+  
+  inputsContainer.innerHTML = '';
+  checkboxes.forEach(cb => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'log_ids';
+    input.value = cb.value;
+    inputsContainer.appendChild(input);
+  });
+}
+</script>
+{% endblock %}
