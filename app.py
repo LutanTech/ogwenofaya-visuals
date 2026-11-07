@@ -559,6 +559,7 @@ def probe_video_duration(path):
         return None
 
 @app.route("/video/<id>/<int:quality>")
+@limiter.exempt
 def stream_video(id, quality):
     project = Project.query.get_or_404(id)
     if not project.video:
