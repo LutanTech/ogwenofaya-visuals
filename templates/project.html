@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ project.title }} — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
 {% block extra_css %}
-.project-page{background:#070d16;color:#f4f7fb;min-height:75vh;padding:33px 0 88px}.project-container{max-width:1400px}.project-topline{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.project-back{display:inline-flex;align-items:center;gap:10px;color:#aab7c7;font-size:.87rem;font-weight:600}.project-back:hover{color:#fff}.project-back i{color:#5ba7ff}.project-category{display:inline-flex;align-items:center;gap:9px;color:#9bcaff;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}.project-category:before{content:'';width:20px;height:1px;background:#368bff}.project-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:23px}.project-head h1{font:800 clamp(2.35rem,5.6vw,4.6rem)/.98 'Manrope',sans-serif;letter-spacing:-.07em;margin:11px 0 0}.project-head-copy{min-width:0}.project-meta{display:flex;gap:11px;align-items:center;color:#8b9caf;font-size:.8rem;margin-top:16px}.project-meta .meta-dot{height:4px;width:4px;background:#368bff;border-radius:50%}.project-summary{color:#a3b1c1;line-height:1.75;font-size:.88rem;max-width:390px;margin:0}.watch-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,365px);gap:17px;align-items:start}.watch-main{min-width:0}.project-video-shell{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:17px;background:#010408;box-shadow:0 22px 65px rgba(0,0,0,.35)}.project-video{display:block;width:100%;aspect-ratio:16/9;max-height:76vh;object-fit:contain;background:#02060b}.video-loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:12px;background:rgba(3,8,14,.78);color:#e6f2ff;font-size:.9rem;z-index:2}.video-loading.is-visible{display:flex}.video-loading i{color:#65b5ff}.player-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 15px;background:#0b1420;border-top:1px solid rgba(255,255,255,.08)}.player-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.84rem}.player-title i{color:#68b2ff}.player-controls{display:flex;align-items:center;gap:9px}.player-controls label{color:#8293a7;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}.player-controls select{max-width:180px;padding:8px 28px 8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#101d2c;color:#eaf3ff;font-size:.77rem}.player-controls select:disabled{opacity:.58}.blob-note{color:#72849a;font-size:.7rem}.video-info{padding:17px 3px 0}.video-info h2{font:700 1rem 'Manrope',sans-serif;margin:0 0 6px}.video-info p{color:#9aaabd;line-height:1.7;font-size:.86rem;margin:0;white-space:pre-line}.comments-panel{background:#0c1522;border:1px solid rgba(255,255,255,.1);border-radius:17px;overflow:hidden;min-height:390px;display:flex;flex-direction:column}.comments-header{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.09)}.comments-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.comments-title-row h2{font:700 1.02rem 'Manrope',sans-serif;margin:0}.comments-count{color:#8596aa;font-size:.76rem}.comments-sort{display:flex;align-items:center;gap:8px;margin-top:14px;color:#8495a9;font-size:.74rem}.comments-sort i{color:#6eaef7}.comments-list{padding:5px 17px;max-height:410px;overflow:auto;flex:1}.comment-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:11px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.07)}.comment-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#1d5b9e,#10253e);color:#d8ecff;font-size:.75rem;font-weight:700}.comment-author{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.comment-author strong{font-size:.78rem;color:#eef4fa}.comment-author time{font-size:.68rem;color:#8090a4}.comment-text{color:#c2ccda;font-size:.79rem;line-height:1.6;margin:6px 0 0;overflow-wrap:anywhere}.comment-empty{flex:1;display:grid;place-items:center;text-align:center;padding:32px 22px;color:#8798ac}.comment-empty i{color:#5ba7ff;font-size:1.45rem;margin-bottom:13px}.comment-empty strong{display:block;color:#e7edf5;font:700 .9rem 'Manrope',sans-serif;margin-bottom:7px}.comment-empty p{font-size:.78rem;line-height:1.6;margin:0}
+.project-page{background:#070d16;color:#f4f7fb;min-height:75vh;padding:33px 0 88px}.project-container{max-width:1400px}.project-topline{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.project-back{display:inline-flex;align-items:center;gap:10px;color:#aab7c7;font-size:.87rem;font-weight:600}.project-back:hover{color:#fff}.project-back i{color:#5ba7ff}.project-category{display:inline-flex;align-items:center;gap:9px;color:#9bcaff;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}.project-category:before{content:'';width:20px;height:1px;background:#368bff}.project-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:23px}.project-head h1{font:800 clamp(2.35rem,5.6vw,4.6rem)/.98 'Manrope',sans-serif;letter-spacing:-.07em;margin:11px 0 0}.project-head-copy{min-width:0}.project-meta{display:flex;gap:11px;align-items:center;color:#8b9caf;font-size:.8rem;margin-top:16px}.project-meta .meta-dot{height:4px;width:4px;background:#368bff;border-radius:50%}.project-summary{color:#a3b1c1;line-height:1.75;font-size:.88rem;max-width:390px;margin:0}.watch-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,365px);gap:17px;align-items:start}.watch-main{min-width:0}.project-video-shell{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:17px;background:#010408;box-shadow:0 22px 65px rgba(0,0,0,.35)}.project-video{display:block;width:100%;aspect-ratio:16/9;max-height:65vh;object-fit:contain;background:#02060b}.video-loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:12px;color:#e6f2ff;font-size:.9rem;z-index:2}.video-loading.is-visible{display:flex}.video-loading i{color:#65b5ff}.player-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 15px;background:#0b1420;border-top:1px solid rgba(255,255,255,.08)}.player-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.84rem}.player-title i{color:#68b2ff}.player-controls{display:flex;align-items:center;gap:9px}.player-controls label{color:#8293a7;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}.player-controls select{max-width:180px;padding:8px 28px 8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#101d2c;color:#eaf3ff;font-size:.77rem}.player-controls select:disabled{opacity:.58}.blob-note{color:#72849a;font-size:.7rem}.video-info{padding:17px 3px 0}.video-info h2{font:700 1rem 'Manrope',sans-serif;margin:0 0 6px}.video-info p{color:#9aaabd;line-height:1.7;font-size:.86rem;margin:0;white-space:pre-line}.comments-panel{background:#0c1522;border:1px solid rgba(255,255,255,.1);border-radius:17px;overflow:hidden;min-height:390px;display:flex;flex-direction:column}.comments-header{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.09)}.comments-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.comments-title-row h2{font:700 1.02rem 'Manrope',sans-serif;margin:0}.comments-count{color:#8596aa;font-size:.76rem}.comments-sort{display:flex;align-items:center;gap:8px;margin-top:14px;color:#8495a9;font-size:.74rem}.comments-sort i{color:#6eaef7}.comments-list{padding:5px 17px;max-height:410px;overflow:auto;flex:1}.comment-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:11px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.07)}.comment-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#1d5b9e,#10253e);color:#d8ecff;font-size:.75rem;font-weight:700}.comment-author{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.comment-author strong{font-size:.78rem;color:#eef4fa}.comment-author time{font-size:.68rem;color:#8090a4}.comment-text{color:#c2ccda;font-size:.79rem;line-height:1.6;margin:6px 0 0;overflow-wrap:anywhere}.comment-empty{flex:1;display:grid;place-items:center;text-align:center;padding:32px 22px;color:#8798ac}.comment-empty i{color:#5ba7ff;font-size:1.45rem;margin-bottom:13px}.comment-empty strong{display:block;color:#e7edf5;font:700 .9rem 'Manrope',sans-serif;margin-bottom:7px}.comment-empty p{font-size:.78rem;line-height:1.6;margin:0}
 
 .comment-form-shell{padding:14px 17px 17px;border-top:1px solid rgba(255,255,255,.09);background:#09101a}
 .comment-form-grid{display:flex;flex-direction:column;gap:10px}
@@ -30,6 +30,93 @@
 
 .player-progress{padding:0 15px 9px;background:#0b1420}.progress-range{display:block;width:100%;height:5px;margin:0;appearance:none;border:0;border-radius:99px;cursor:pointer;background:linear-gradient(90deg,#4b9eff var(--played,0%),#26364a var(--played,0%));outline:none}.progress-range::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:#f4f8ff;box-shadow:0 0 0 3px rgba(70,155,255,.22);opacity:0;transition:opacity .15s}.progress-range:hover::-webkit-slider-thumb,.progress-range:focus::-webkit-slider-thumb{opacity:1}.progress-range::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#f4f8ff;box-shadow:0 0 0 3px rgba(70,155,255,.22);opacity:0}.progress-range:hover::-moz-range-thumb,.progress-range:focus::-moz-range-thumb{opacity:1}.player-ui{display:flex;align-items:center;gap:12px;padding:0 15px 13px;background:#0b1420}.player-ui button{border:0;background:transparent;color:#c3d0df;padding:5px;cursor:pointer;font-size:.91rem;line-height:1}.player-ui button:hover,.player-ui button:focus-visible{color:#69b2ff;outline:none}.player-ui select{max-width:105px;padding:7px 23px 7px 9px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:#101d2c;color:#eaf3ff;font-size:.74rem}.player-time{color:#a2b1c2;font-size:.72rem;font-variant-numeric:tabular-nums;white-space:nowrap}.player-ui-spacer{flex:1}.player-ui .context-trigger{width:30px;height:30px;border:1px solid rgba(255,255,255,.13);border-radius:8px}.custom-context-menu{position:fixed;z-index:9999;width:220px;padding:6px;background:#111d2b;border:1px solid rgba(255,255,255,.14);border-radius:11px;box-shadow:0 16px 42px rgba(0,0,0,.5)}.custom-context-menu[hidden]{display:none}.custom-context-menu button{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;border-radius:7px;background:transparent;color:#dce7f3;padding:10px 11px;font:500 .79rem 'DM Sans',sans-serif;cursor:pointer}.custom-context-menu button i{width:15px;color:#6aafff}.custom-context-menu button:hover,.custom-context-menu button:focus-visible{background:#1b2d42;color:#fff;outline:none}.custom-context-menu .context-divider{height:1px;background:rgba(255,255,255,.1);margin:5px 4px}.context-feedback{position:fixed;z-index:9998;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 15px;background:#122238;border:1px solid rgba(255,255,255,.15);border-radius:9px;color:#eef6ff;font-size:.78rem;box-shadow:0 8px 28px #0006}
 
+.flex{
+  display:flex;
+}
+.none{
+  display:none;
+}
+#image-overlay{
+  background:#000000e9;
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  width:100%;
+  z-index:999;
+  height:100%;
+  overscroll-behaviour:contain;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:5px;
+
+  img{
+    max-width:90%;
+    max-height:80%
+  }
+}
+
+.images-count{
+  color:white;
+  padding:5px 20px;
+  letter-spacing:8px;
+  bottom: 30px;
+  position:absolute;
+  border-radius:30px;
+  background:#6262625e;
+}
+.close-overlay{
+  float: right;
+  align-self: end;
+  top: 30px;
+  right: 18px;
+  border-radius: 50%;
+  width: 50px;
+  aspect-ratio: 1;
+  border: 0;
+  font-size: xx-large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position:absolute;
+  background:red;
+  color:white;
+  &:hover{
+    color:black;
+  }
+}
+.images-control{
+  position: absolute;
+  width: 100%;
+  max-width:700px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+
+  button{
+    padding: 4px 8px;
+    width: 46px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #00000080;
+    border: 1px solid #ffffff5e;
+    font-size: x-large;
+    color: white;
+    cursor:pointer;
+    &:hover{
+      background:#00000040;
+    }
+    &:disabled{
+    background: #80808096;
+    border: 0;
+    color: #dcdcdc66;
+    cursor:not-allowed;
+    }
+  }
+}
+
 {% endblock %}
 {% block content %}
 {% set related_list = related_projects|default([], true)|rejectattr('id', 'equalto', project.id)|list %}
@@ -39,6 +126,18 @@
 {% set gallery_videos = project.videos|default([], true)|map(attribute='filename')|list %}
 {% if project.video and project.video not in gallery_videos %}{% set gallery_videos = [project.video] + gallery_videos %}{% endif %}
 
+<section id="image-overlay" class="none">
+  <button class="close-overlay" onclick="toggleImageOverlay()"><i class="fas fa-close"></i></button>
+  <img src="{{url_for('static', filename='logos/logo.png') }}" alt="">
+  <div class="images-control">
+    <button type="button" id="prevImage"><i class="fas fa-chevron-left"></i></button>
+    <button type="button" id="nextImage"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <div class="images-count">1/1</div>
+
+</section>
+
 {% macro render_project_gallery(images, videos) %}
 <section class="project-gallery" aria-label="Project media">
   <div class="project-gallery-heading">
@@ -47,10 +146,10 @@
   </div>
   <div class="project-photo-grid">
     {% for image_name in images %}
-      <a class="project-photo-card" href="{{ url_for('static', filename='resources/images/' ~ image_name) }}" target="_blank" rel="noopener" aria-label="Open photo {{ loop.index }} from {{ project.title }}">
+      <button class="project-photo-card" onclick="toggleImageOverlay(`{{ url_for('static', filename='resources/images/' ~ image_name) }}`)" aria-label="Open photo {{ loop.index }} from {{ project.title }}">
         <img src="{{ url_for('static', filename='resources/images/' ~ image_name) }}" alt="{{ project.title }} — photo {{ loop.index }}" loading="lazy">
         <div class="video-card-badge"><i class="fa-solid fa-image"></i> Img {{ loop.index }}</div>
-      </a>
+      </button>
     {% endfor %}
     {% for video_name in videos %}
       <div class="project-photo-card" data-video-trigger="{{ url_for('static', filename='resources/videos/' ~ video_name) }}" role="button" tabindex="0" aria-label="Play clip {{ loop.index }}">
@@ -77,11 +176,11 @@
       {% if project.video %}
         {% set video_type = 'video/mp4' %}
         <div class="project-video-shell" data-blob-player>
-          <div class="video-loading" data-loading><i class="fa-solid fa-circle-notch fa-spin"></i><span data-loading-text>Preparing video…</span></div>
-          <video class="project-video" playsinline preload="none"{% if project.image %} poster="{{ url_for('static', filename='resources/images/' ~ project.image) }}"{% endif %} data-default-src="{{ url_for('stream_video', id=project.id, quality=480) }}" data-default-type="{{ video_type }}" aria-label="{{ project.title }} video"><source src="{{ url_for('stream_video', id=project.id, quality=480) }}" type="{{ video_type }}">Your browser does not support this video. <a href="{{ url_for('stream_video', id=project.id, quality=480) }}">Open video stream</a>.</video>
+          <div class="video-loading" data-loading><i class="fa-solid fa-circle-notch fa-spin" style="font-size:4em"></i></div>
+          <video class="project-video" playsinline preload="none" data-default-src="{{ url_for('stream_video', id=project.id, quality=480) }}" data-default-type="{{ video_type }}" aria-label="{{ project.title }} video"><source src="{{ url_for('stream_video', id=project.id, quality=480) }}" type="{{ video_type }}">Your browser does not support this video. <a href="{{ url_for('stream_video', id=project.id, quality=480) }}">Open video stream</a>.</video>
           <div class="play-feedback" data-play-feedback aria-hidden="true" hidden><span><i data-feedback-icon class="fa-solid fa-play"></i></span></div>
           <div class="player-progress"><input class="progress-range" type="range" min="0" max="1000" value="0" step="1" data-progress aria-label="Video progress"></div>
-          <div class="player-ui" aria-label="Video controls"><button type="button" data-play aria-label="Play video"><i class="fa-solid fa-play"></i></button><span class="player-time" data-current-time>0:00</span><span class="player-time">/</span><span class="player-time" data-duration>0:00</span><span class="player-ui-spacer"></span> <div><select id="video-quality" data-quality aria-label="Video quality"><option value="auto" selected>Auto</option>{% for q in [144, 240, 360, 480, 720, 1080] %}<option value="{{ url_for('stream_video', id=project.id, quality=q) }}" data-resolution="{{ q }}" data-type="video/mp4">{{ q }}p</option>{% endfor %}</select></div><button type="button" data-mute aria-label="Mute video"><i class="fa-solid fa-volume-high"></i></button><button type="button" data-fullscreen aria-label="Enter fullscreen"><i class="fa-solid fa-expand"></i></button><button type="button" class="context-trigger" data-context-trigger aria-label="More video options" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button></div>
+          <div class="player-ui" aria-label="Video controls"><button type="button" data-play aria-label="Play video"><i class="fa-solid fa-play"></i></button><span class="player-time" data-current-time>0:00</span><span class="player-time">/</span><span class="player-time" data-video-duration data-duration>0:00</span><span class="player-ui-spacer"></span> <div><select id="video-quality" data-quality aria-label="Video quality"><option value="auto" selected>Auto</option>{% for q in [144, 240, 360, 480, 720, 1080] %}<option value="{{ url_for('stream_video', id=project.id, quality=q) }}" data-resolution="{{ q }}" data-type="video/mp4">{{ q }}p</option>{% endfor %}</select></div><button type="button" data-mute aria-label="Mute video"><i class="fa-solid fa-volume-high"></i></button><button type="button" data-fullscreen aria-label="Enter fullscreen"><i class="fa-solid fa-expand"></i></button><button type="button" class="context-trigger" data-context-trigger aria-label="More video options" aria-haspopup="menu" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button></div>
           <div class="player-toolbar"><div class="player-title"><i class="fa-solid fa-circle-play"></i><span>Project film</span></div><div class="player-controls"> <i class="blob-note">Widget by <a style="color:#65b5ff; text-decoration:underline" href="https://lutan-tech.co.ke/?utm_medium=video_play&amp;utm_source=ogwenofaya_visuals&amp;utm_term=vidiora_system" class="blob-note">Vidiora System</a></i></div></div>
         </div>
         <div class="custom-context-menu" data-context-menu role="menu" aria-label="Video options" hidden><button type="button" role="menuitem" data-menu-play><i class="fa-solid fa-play"></i><span>Play</span></button><button type="button" role="menuitem" data-menu-mute><i class="fa-solid fa-volume-xmark"></i><span>Mute</span></button><button type="button" role="menuitem" data-menu-speed><i class="fa-solid fa-gauge-high"></i><span>Playback speed: 1×</span></button><div class="context-divider" role="separator"></div><button type="button" role="menuitem" data-menu-copy><i class="fa-regular fa-copy"></i><span>Copy video link</span></button></div>
@@ -210,73 +309,161 @@
   }
 
   async function loadStream(url,restore,requestedStart){
+
     const token=++requestToken;
+
     if(activeAbortController)activeAbortController.abort();
     activeAbortController=new AbortController();
+
     const wasPlaying=restore?desiredPlaying:!video.paused;
     const savedPosition=Number.isFinite(video.currentTime)?video.currentTime:0;
     const startAt=restore?Math.max(0,Number.isFinite(requestedStart)?requestedStart:streamOffset+savedPosition):0;
+
     const requestUrl=new URL(url,window.location.href);
     requestUrl.searchParams.set('start',startAt.toFixed(3));
+
     streamOffset=startAt;
     hasLoadedStream=true;
-    if(loading){loading.classList.add('is-visible');loadingText.textContent=restore?'Buffering…':'Loading…';}
-    if(activeObjectUrl){URL.revokeObjectURL(activeObjectUrl);activeObjectUrl=null;}
-    video.pause();
-    try{
-      if(!('MediaSource' in window)||!MediaSource.isTypeSupported('video/mp4'))throw new Error('MediaSource MP4 is not supported');
-      const mediaSource=new MediaSource();
-      activeObjectUrl=URL.createObjectURL(mediaSource);
-      video.src=activeObjectUrl;
-      video.load();
-      const opened=waitFor(mediaSource,'sourceopen');
-      await opened;
-      if(token!==requestToken)return;
-      const sourceBuffer=mediaSource.addSourceBuffer('video/mp4');
-      const response=await fetch(requestUrl.href,{credentials:'same-origin',signal:activeAbortController.signal});
-      if(!response.ok||!response.body)throw new Error('The video stream could not be read');
-      const reportedDuration=Number(response.headers.get('X-Video-Duration'));
-      const reportedStart=Number(response.headers.get('X-Stream-Start'));
-      if(Number.isFinite(reportedDuration)&&reportedDuration>0)totalDuration=reportedDuration;
-      if(Number.isFinite(reportedStart)&&reportedStart>=0)streamOffset=reportedStart;
-      updateProgress();
-      const reader=response.body.getReader();
-      video.addEventListener('canplay',function onCanPlay(){
-        if(token===requestToken&&!restore&&loading)loading.classList.remove('is-visible');
-      });
-      video.addEventListener('error',function(){if(token===requestToken&&loading)loading.classList.remove('is-visible')},{once:true});
-      while(true){
-        const part=await reader.read();
-        if(token!==requestToken)return;
-        if(part.done)break;
-        await appendChunk(sourceBuffer,part.value);
-        if(!restore&&video.readyState>=2&&loading)loading.classList.remove('is-visible');
-        if(restore&&loadingText)loadingText.textContent='Restoring playback position…';
-      }
-      if(mediaSource.readyState==='open')mediaSource.endOfStream();
-      if(restore){
-        if(token!==requestToken)return;
-        if(wasPlaying&&desiredPlaying)await video.play().catch(function(){});
-      }else if(wasPlaying&&desiredPlaying){
-        await video.play().catch(function(){});
-      }
-      if(token!==requestToken)return;
-      if(loading)loading.classList.remove('is-visible');
-    }catch(error){
-      if(token!==requestToken)return;
-      if(activeObjectUrl){URL.revokeObjectURL(activeObjectUrl);activeObjectUrl=null;}
-      video.src=requestUrl.href;
-      const recover=async function(){
-        if(token!==requestToken)return;
-        if(wasPlaying&&desiredPlaying)video.play().catch(function(){});
-        if(loading)loading.classList.remove('is-visible');
-      };
-      if(video.readyState>=1)recover();
-      else video.addEventListener('loadedmetadata',recover,{once:true});
-      video.addEventListener('canplay',function(){if(token!==requestToken)return;if(loading)loading.classList.remove('is-visible')},{once:true});
-      video.load();
+
+    if(loading){
+        loading.classList.add('is-visible');
     }
-  }
+
+    if(activeObjectUrl){
+        URL.revokeObjectURL(activeObjectUrl);
+        activeObjectUrl=null;
+    }
+
+    video.pause();
+
+    try{
+      const mime='video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+      if(!('MediaSource' in window)||!MediaSource.isTypeSupported(mime)){
+          throw new Error('H.264/AAC MediaSource is not supported');
+      }
+
+        const mediaSource=new MediaSource();
+        activeObjectUrl=URL.createObjectURL(mediaSource);
+
+        video.src=activeObjectUrl;
+        video.load();
+
+        await Promise.race([
+            waitFor(mediaSource,'sourceopen'),
+            new Promise((_,reject)=>setTimeout(()=>reject(new Error('MediaSource opening timed out')),10000))
+        ]);
+
+        if(token!==requestToken)return;
+
+        const sourceBuffer=mediaSource.addSourceBuffer(mime);
+        const response=await fetch(requestUrl.href,{
+            credentials:'same-origin',
+            signal:activeAbortController.signal
+        });
+
+        if(!response.ok)throw new Error(`Stream request failed: ${response.status}`);
+        if(!response.body)throw new Error('The video stream could not be read');
+
+
+        const reportedDuration=parseFloat(response.headers.get('X-Video-Duration'));
+        const reportedStart=parseFloat(response.headers.get('X-Stream-Start'));
+
+        if(Number.isFinite(reportedDuration)&&reportedDuration>0){
+            totalDuration=reportedDuration;
+
+            const durationLabel=document.querySelector('[data-video-duration]');
+            if(durationLabel)durationLabel.textContent=formatTime(totalDuration);
+        }
+
+        if(Number.isFinite(reportedStart)&&reportedStart>=0){
+            streamOffset=reportedStart;
+        }
+
+        updateProgress();
+
+        const reader=response.body.getReader();
+
+        video.addEventListener('canplay',function onCanPlay(){
+            if(token===requestToken&&!restore&&loading){
+                loading.classList.remove('is-visible');
+            }
+        });
+
+        video.addEventListener('error',function(){
+            if(token===requestToken&&loading){
+                loading.classList.remove('is-visible');
+            }
+        },{once:true});
+
+        while(true){
+            const part=await reader.read();
+
+            if(token!==requestToken)return;
+            if(part.done)break;
+
+            await appendChunk(sourceBuffer,part.value);
+
+            if(!restore&&video.readyState>=2&&loading){
+                loading.classList.remove('is-visible');
+            }
+
+            if(restore&&loadingText){
+                loadingText.textContent='Loading…';
+            }
+        }
+
+        if(mediaSource.readyState==='open'){
+            mediaSource.endOfStream();
+        }
+
+        if(token!==requestToken)return;
+
+        if(wasPlaying&&desiredPlaying){
+            await video.play().catch(function(){});
+        }
+
+        if(loading)loading.classList.remove('is-visible');
+
+    }catch(error){
+        if(token!==requestToken)return;
+
+        if(error.name==='AbortError')return;
+
+        alert('Streaming error: '+error.message);
+
+        if(activeObjectUrl){
+            URL.revokeObjectURL(activeObjectUrl);
+            activeObjectUrl=null;
+        }
+
+        video.src=requestUrl.href;
+
+        const recover=function(){
+            if(token!==requestToken)return;
+
+            if(wasPlaying&&desiredPlaying){
+                video.play().catch(function(){});
+            }
+
+            if(loading)loading.classList.remove('is-visible');
+        };
+
+        if(video.readyState>=1){
+            recover();
+        }else{
+            video.addEventListener('loadedmetadata',recover,{once:true});
+        }
+
+        video.addEventListener('canplay',function(){
+            if(token===requestToken&&loading){
+                loading.classList.remove('is-visible');
+            }
+        },{once:true});
+
+        video.load();
+    }
+}
 
   function formatTime(seconds){
     if(!Number.isFinite(seconds)||seconds<0)return '0:00';
@@ -349,6 +536,13 @@
       }
     }
   }
+
+  function formatDuration(seconds){
+    const minutes=Math.floor(seconds/60);
+    const remaining=Math.floor(seconds%60);
+    return `${minutes}:${String(remaining).padStart(2,'0')}`;
+}
+
 
   function closeMenu(){if(contextMenu){contextMenu.hidden=true;if(contextTrigger)contextTrigger.setAttribute('aria-expanded','false');}}
   function openMenu(x,y){
@@ -441,7 +635,6 @@
     if(type==='3g'&&!(connection&&connection.downlink>=2))return 360;
     const downlink=connection&&Number(connection.downlink);
     if(Number.isFinite(downlink)&&downlink>0){
-      console.log(downlink)
       if(downlink<0.65)return 144;
       if(downlink<1.25)return 240;
       if(downlink<2.5)return 360;
@@ -517,9 +710,65 @@
     modal.classList.remove('is-active');
   }
 
+
   closeModal.addEventListener('click',closeVideoOverlay);
   modal.addEventListener('click',function(e){if(e.target===modal)closeVideoOverlay();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeVideoOverlay();});
 })();
+let gallery=[]
+let index=0
+
+{% for img in project.images %}
+gallery.push("{{ url_for('static',filename='resources/images/' ~ img.filename) }}")
+{% endfor %}
+
+{% if project.image %}
+const featuredImage="{{ url_for('static',filename='resources/images/' ~ project.image) }}"
+
+if(!gallery.includes(featuredImage)){
+    gallery.push(featuredImage)
+}
+{% endif %}
+
+console.log(gallery)
+
+function updateGallery(){
+    const prevBtn=document.getElementById("prevImage")
+    const nextBtn=document.getElementById("nextImage")
+
+    document.querySelector(".images-count").innerText=(index+1)+"/"+gallery.length
+
+    prevBtn.onclick=function(){
+        if(index<=0)return
+        index--
+        document.querySelector("#image-overlay img").src=gallery[index]
+        updateGallery()
+    }
+
+    nextBtn.onclick=function(){
+        if(index>=gallery.length-1)return
+        index++
+        document.querySelector("#image-overlay img").src=gallery[index]
+        updateGallery()
+    }
+
+    prevBtn.disabled=index<=0
+    nextBtn.disabled=index>=gallery.length-1
+}
+
+function toggleImageOverlay(link){
+    const overlay=document.getElementById("image-overlay")
+
+    overlay.classList.toggle("none")
+    overlay.classList.toggle("flex")
+
+    if(link){
+        overlay.querySelector("img").src=link
+        index=gallery.indexOf(link)
+        if(index<0)index=0
+    }
+
+    updateGallery()
+}
 </script>
 {% endblock %}

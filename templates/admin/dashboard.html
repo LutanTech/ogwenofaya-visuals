@@ -308,7 +308,7 @@
             <td>
               <div style="display:flex; align-items:center; gap:10px;">
                 {% if project.image %}
-                  <img class="table-thumb" src="{{ url_for('static', filename='resources/images' ~ project.image) }}" alt="">
+                  <img class="table-thumb" src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="">
                 {% else %}
                   <span class="table-thumb" style="display:grid; place-items:center;"><i class="fa-solid fa-image" style="color:var(--text-muted)"></i></span>
                 {% endif %}

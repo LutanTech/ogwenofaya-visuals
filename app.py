@@ -45,7 +45,7 @@ migrate = Migrate(app, db)
 limiter = Limiter(
     key_func=get_remote_address,
     app=app,
-    default_limits=["200 per day", "50 per hour"]
+    default_limits=["2000 per day", "500 per hour"]
 )
 
 IMAGE_DIR = os.path.join(app.root_path, "static", "resources", "images")
@@ -622,6 +622,8 @@ def stream_video(id, quality):
     if duration is not None:
         headers["X-Video-Duration"] = f"{duration:.3f}"
     return Response(generate(), mimetype="video/mp4", headers=headers)
+
+
 
 @app.route("/control/testimonials/new", methods=["GET", "POST"])
 def add_testimonial_page():

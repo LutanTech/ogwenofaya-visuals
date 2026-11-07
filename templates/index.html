@@ -1,66 +1,442 @@
-{% extends "base.html" %}
-{% block title %}OgwenofayaVisuals — Films, Photography & Visual Stories{% endblock %}
-{% block extra_css %}
-.hero{position:relative;isolation:isolate;overflow:hidden;background:var(--ink);color:#fff;min-height:650px;display:flex;align-items:center}.hero:before{content:'';position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(5,12,22,.97) 0%,rgba(5,12,22,.86) 43%,rgba(5,12,22,.32) 100%) center 47%/cover}.hero:after{content:'';position:absolute;z-index:-1;width:520px;height:520px;border:1px solid rgba(101,181,255,.2);border-radius:50%;right:-100px;top:70px;box-shadow:0 0 0 55px rgba(54,139,255,.035),0 0 0 110px rgba(54,139,255,.025)}.hero-content{padding:105px 0 95px;max-width:760px}.hero .eyebrow{color:#9acaff}.hero h1{font:800 clamp(3.25rem,7vw,6.8rem)/.98 'Manrope',sans-serif;letter-spacing:-.075em;margin:24px 0}.hero h1 span{color:var(--blue-2)}.hero-copy{max-width:580px;color:#c2cedb;font-size:1.08rem;line-height:1.8}.hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:30px}.hero-note{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);display:flex;gap:27px;flex-wrap:wrap;color:#aab8c9;font-size:.83rem}.hero-note i{color:var(--blue-2);margin-right:7px}.scroll-cue{position:absolute;bottom:26px;right:max(24px,calc((100vw - var(--max))/2));color:#aab8c9;font-size:.73rem;letter-spacing:.12em;text-transform:uppercase;writing-mode:vertical-rl;display:flex;gap:10px;align-items:center}.scroll-cue i{color:var(--blue-2)}
-.work-section{background:#fff;position:relative}.work-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:48px}.work-toolbar .section-heading{margin:0;max-width:630px}.work-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);grid-template-rows:repeat(2,minmax(230px,1fr));gap:18px}.work-card{position:relative;overflow:hidden;border-radius:22px;background:#0c1a2c;min-height:0;color:white;isolation:isolate;box-shadow:0 12px 35px rgba(7,17,31,.12)}.work-card:first-child{grid-row:span 2}.work-card:first-child .work-card-body{left:30px;bottom:29px}.work-card:first-child h3{font-size:clamp(1.5rem,2.4vw,2.2rem)}.work-card:after{content:'';position:absolute;inset:30% 0 0;z-index:-1;background:linear-gradient(0deg,rgba(4,12,22,.94),transparent)}.work-card img,.work-card video{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}.work-card:hover img{transform:scale(1.055)}.work-card-body{position:absolute;left:22px;right:22px;bottom:21px}.work-category{color:#aad2ff;text-transform:uppercase;font-size:.68rem;font-weight:700;letter-spacing:.13em}.work-card h3{font:700 1.28rem 'Manrope',sans-serif;margin:8px 0 0}.work-arrow{position:absolute;right:21px;bottom:24px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(255,255,255,.45);transition:.2s}.work-card:hover .work-arrow{background:var(--blue);border-color:var(--blue)}.work-card-link{position:absolute;inset:0;z-index:2}.work-empty{grid-column:1/-1;grid-row:1/-1;min-height:300px;background:radial-gradient(ellipse at 85% 0%,rgba(54,139,255,.12),transparent 36%),#f3f7fc;border:1px solid #e2ebf5;border-radius:24px;padding:55px 25px;text-align:center;color:#50637a;display:flex;flex-direction:column;align-items:center;justify-content:center}.work-empty i{font-size:1.6rem;color:var(--blue);margin-bottom:12px}.work-empty h3{color:var(--ink);margin:0 0 8px;font:700 1.2rem 'Manrope',sans-serif}.work-empty p{margin:0;line-height:1.7}
-.services-section{background:#f0f5fb}.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.service-card{background:#fff;border:1px solid #e2eaf3;border-radius:var(--radius);padding:27px;min-height:220px;transition:transform .22s,box-shadow .22s}.service-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}.service-icon{width:48px;height:48px;border-radius:15px;background:#e9f3ff;color:var(--blue);display:grid;place-items:center;font-size:1.13rem;margin-bottom:23px}.service-card h3{font:700 1.12rem 'Manrope',sans-serif;margin:0 0 9px;letter-spacing:-.025em}.service-card p{color:#68788d;line-height:1.7;font-size:.92rem;margin:0}.service-empty{grid-column:1/-1;text-align:center;padding:32px;color:#65778c}.process-section{background:var(--ink);color:#fff}.process-section .section-heading p{color:#aab8c9}.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}.process-step{padding-top:20px;border-top:1px solid rgba(255,255,255,.2)}.step-number{color:var(--blue-2);font:700 .8rem 'Manrope',sans-serif;letter-spacing:.15em}.process-step h3{font:700 1.14rem 'Manrope',sans-serif;margin:17px 0 9px}.process-step p{color:#aab8c9;line-height:1.7;font-size:.9rem;margin:0}
-.testimonials-section{background:linear-gradient(180deg,#f0f5fb 0%,#e8f1fb 100%);position:relative;overflow:hidden}.testimonials-section:before{content:'“';position:absolute;top:20px;right:7vw;color:rgba(54,139,255,.08);font:800 22rem/1 'Manrope',sans-serif;pointer-events:none}.testimonials-section .container{position:relative}.testimonial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}.quote-card{position:relative;padding:29px 27px 25px;border-radius:20px;background:#fff;border:1px solid rgba(18,46,78,.08);box-shadow:0 16px 44px rgba(15,45,79,.07);display:flex;flex-direction:column;min-height:275px;transition:transform .22s,box-shadow .22s}.quote-card:hover{transform:translateY(-5px);box-shadow:0 22px 50px rgba(15,45,79,.13)}.quote-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#eaf3ff;color:#267ee8;font-size:1.05rem}.quote-card blockquote{margin:22px 0 27px;font:500 1.04rem/1.75 'Manrope',sans-serif;color:#213249;flex:1}.quote-author{padding-top:17px;border-top:1px solid #eaf0f6}.quote-author{display:flex;align-items:center;gap:12px}.quote-avatar{width:42px;height:42px;display:grid;place-items:center;background:#dcecff;color:#1672db;border-radius:50%}.quote-author strong{display:block;font-size:.9rem}.quote-author span{display:block;margin-top:4px;color:#78879a;font-size:.78rem}.testimonial-empty{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 34px;background:#fff;border:1px solid #dfe9f5;border-radius:20px;box-shadow:0 16px 44px rgba(15,45,79,.06);color:#5c6f85}.testimonial-empty-copy{display:flex;align-items:center;gap:18px}.testimonial-empty-copy>i{font-size:1.35rem;color:#368bff}.testimonial-empty strong{display:block;color:#13243a;font:700 1.05rem 'Manrope',sans-serif;margin-bottom:5px}.testimonial-empty span{font-size:.9rem}.testimonial-empty a{color:#176fd1;font-weight:700;white-space:nowrap}.testimonial-empty a:hover{text-decoration:underline}
-.about-section{background:#eaf2fb}.about-layout{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:72px}.about-visual{position:relative;min-height:440px;border-radius:28px;overflow:hidden;background-image:url(https://i.pinimg.com/736x/a8/cd/ce/a8cdce1ae6f12403bfcc32af247a1df7.jpg); background-size:cover; background-position:top;display:flex;align-items:flex-end;padding:30px;color:white}.about-visual:before,.about-visual:after{content:'';position:absolute;border:20px solid rgba(255, 255, 255, 0.42);border-radius:50%;width:360px;height:360px;right:-75px;top:-50px}.about-visual:after{width:250px;height:250px;right:15px;top:130px}.about-visual-inner{position:relative;z-index:1;max-width:280px}.about-visual-inner i{font-size:2.5rem;color:#b4dcff}.about-visual-inner p{font:700 1.5rem/1.3 'Manrope',sans-serif;margin:16px 0 0}.about-copy h2{font:800 clamp(2.2rem,4vw,3.4rem)/1.08 'Manrope',sans-serif;letter-spacing:-.06em;margin:15px 0 20px}.about-copy>p{color:#5f7085;line-height:1.85}.about-points{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:25px 0 30px}.about-point{display:flex;align-items:center;gap:10px;color:#24374e;font-size:.9rem}.about-point i{color:var(--blue)}
-.contact-section{background:var(--ink);color:#fff}.contact-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:start}.contact-section .section-heading{margin:0}.contact-section .section-heading p{color:#aab8c9}.contact-details{display:grid;gap:16px;margin-top:30px}.contact-detail{display:flex;gap:13px;align-items:center;color:#d4dfeb;font-size:.92rem}.contact-detail i{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#132943;color:var(--blue-2)}.contact-form{padding:29px;background:#fff;color:var(--ink);border-radius:var(--radius)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form-group{margin-bottom:15px}.form-group label{display:block;font-size:.82rem;font-weight:700;margin-bottom:7px}.form-group input,.form-group textarea,.form-group select{width:100%;border:1px solid #dce5ef;border-radius:10px;padding:13px 14px;background:#f9fbfd;color:#18283a;outline:none}.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #368bff20}.form-group textarea{min-height:125px;resize:vertical}.contact-form .btn{width:100%;cursor:pointer}.form-hint{color:#7c8b9b;font-size:.75rem;margin:12px 0 0;text-align:center}
-@media(max-width:950px){.work-grid{grid-template-columns:minmax(0,1.05fr) minmax(250px,.95fr);grid-template-rows:repeat(2,minmax(200px,1fr))}.services-grid,.testimonial-grid{grid-template-columns:repeat(2,1fr)}.about-layout{gap:38px}.contact-layout{gap:35px}.process-grid{grid-template-columns:repeat(2,1fr);row-gap:32px}}
-@media(max-width:650px){.hero{min-height:610px}.hero-content{padding:82px 0}.hero h1{font-size:clamp(3rem,14vw,4.4rem)}.hero-copy{font-size:1rem}.hero-note{gap:14px;flex-direction:column}.scroll-cue{display:none}.work-toolbar{align-items:flex-start;flex-direction:column}.work-grid,.services-grid,.testimonial-grid,.process-grid,.about-layout,.contact-layout{grid-template-columns:1fr}.work-grid{grid-template-rows:none}.work-card,.work-card:first-child{grid-row:auto;min-height:300px}.work-card:first-child .work-card-body{left:22px;bottom:21px}.work-card:first-child h3{font-size:1.45rem}.work-toolbar{margin-bottom:32px}.testimonial-empty{align-items:flex-start;flex-direction:column;padding:24px}.testimonial-empty-copy{align-items:flex-start}.about-visual{min-height:320px}.about-points{grid-template-columns:1fr}.contact-form{padding:22px}.form-row{grid-template-columns:1fr;gap:0}}
+{% extends "base.html" %} {% block title %}OgwenofayaVisuals — Films, Photography & Visual Stories{% endblock %} {% block extra_css %}
+.hero{position:relative;isolation:isolate;overflow:hidden;background:var(--ink);color:#fff;min-height:650px;display:flex;align-items:center}.hero:before{content:'';position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(5,12,22,.97)
+0%,rgba(5,12,22,.86) 43%,rgba(5,12,22,.32) 100%), */ url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=2200&q=85') */
+center 47%/cover}.hero:after{content:'';position:absolute;z-index:-1;width:520px;height:520px;border:1px solid
+rgba(101,181,255,.2);border-radius:50%;right:-100px;top:70px;box-shadow:0 0 0 55px rgba(54,139,255,.035),0 0 0 110px
+rgba(54,139,255,.025)}.hero-content{padding:105px 0 95px;max-width:760px}.hero .eyebrow{color:#9acaff}.hero h1{font:800 clamp(3.25rem,7vw,6.8rem)/.98
+'Manrope',sans-serif;letter-spacing:-.075em;margin:24px 0}.hero h1
+span{color:var(--blue-2)}.hero-copy{max-width:580px;color:#c2cedb;font-size:1.08rem;line-height:1.8}.hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:30px}.hero-note{margin-top:52px;padding-top:20px;border-top:1px
+solid var(--line);display:flex;gap:27px;flex-wrap:wrap;color:#aab8c9;font-size:.83rem}.hero-note
+i{color:var(--blue-2);margin-right:7px}.scroll-cue{position:absolute;bottom:26px;right:max(24px,calc((100vw -
+var(--max))/2));color:#aab8c9;font-size:.73rem;letter-spacing:.12em;text-transform:uppercase;writing-mode:vertical-rl;display:flex;gap:10px;align-items:center}.scroll-cue
+i{color:var(--blue-2)}
+.work-section{background:#fff;position:relative}.work-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:48px}.work-toolbar
+.section-heading{margin:0;max-width:630px}.work-grid{display:grid;grid-template-columns:minmax(0,1.12fr)
+minmax(300px,.88fr);grid-template-rows:repeat(2,minmax(230px,1fr));gap:18px}.work-card{position:relative;overflow:hidden;border-radius:22px;background:#0c1a2c;min-height:0;color:white;isolation:isolate;box-shadow:0
+12px 35px rgba(7,17,31,.12)}.work-card:first-child{grid-row:span 2}.work-card:first-child .work-card-body{left:30px;bottom:29px}.work-card:first-child
+h3{font-size:clamp(1.5rem,2.4vw,2.2rem)}.work-card:after{content:'';position:absolute;inset:30% 0
+0;z-index:-1;background:linear-gradient(0deg,rgba(4,12,22,.94),transparent)}.work-card img,.work-card
+video{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}.work-card:hover
+img{transform:scale(1.055)}.work-card-body{position:absolute;left:22px;right:22px;bottom:21px}.work-category{color:#aad2ff;text-transform:uppercase;font-size:.68rem;font-weight:700;letter-spacing:.13em}.work-card
+h3{font:700 1.28rem 'Manrope',sans-serif;margin:8px 0
+0}.work-arrow{position:absolute;right:21px;bottom:24px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid
+rgba(255,255,255,.45);transition:.2s}.work-card:hover
+.work-arrow{background:var(--blue);border-color:var(--blue)}.work-card-link{position:absolute;inset:0;z-index:2}.work-empty{grid-column:1/-1;grid-row:1/-1;min-height:300px;background:radial-gradient(ellipse
+at 85% 0%,rgba(54,139,255,.12),transparent 36%),#f3f7fc;border:1px solid #e2ebf5;border-radius:24px;padding:55px
+25px;text-align:center;color:#50637a;display:flex;flex-direction:column;align-items:center;justify-content:center}.work-empty
+i{font-size:1.6rem;color:var(--blue);margin-bottom:12px}.work-empty h3{color:var(--ink);margin:0 0 8px;font:700 1.2rem 'Manrope',sans-serif}.work-empty
+p{margin:0;line-height:1.7}
+.services-section{background:#f0f5fb}.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.service-card{background:#fff;border:1px solid
+#e2eaf3;border-radius:var(--radius);padding:27px;min-height:220px;transition:transform .22s,box-shadow
+.22s}.service-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}.service-icon{width:48px;height:48px;border-radius:15px;background:#e9f3ff;color:var(--blue);display:grid;place-items:center;font-size:1.13rem;margin-bottom:23px}.service-card
+h3{font:700 1.12rem 'Manrope',sans-serif;margin:0 0 9px;letter-spacing:-.025em}.service-card
+p{color:#68788d;line-height:1.7;font-size:.92rem;margin:0}.service-empty{grid-column:1/-1;text-align:center;padding:32px;color:#65778c}.process-section{background:var(--ink);color:#fff}.process-section
+.section-heading p{color:#aab8c9}.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}.process-step{padding-top:20px;border-top:1px solid
+rgba(255,255,255,.2)}.step-number{color:var(--blue-2);font:700 .8rem 'Manrope',sans-serif;letter-spacing:.15em}.process-step h3{font:700 1.14rem
+'Manrope',sans-serif;margin:17px 0 9px}.process-step p{color:#aab8c9;line-height:1.7;font-size:.9rem;margin:0}
+.testimonials-section{background:linear-gradient(180deg,#f0f5fb 0%,#e8f1fb
+100%);position:relative;overflow:hidden}.testimonials-section:before{content:'“';position:absolute;top:20px;right:7vw;color:rgba(54,139,255,.08);font:800
+22rem/1 'Manrope',sans-serif;pointer-events:none}.testimonials-section
+.container{position:relative}.testimonial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}.quote-card{position:relative;padding:29px
+27px 25px;border-radius:20px;background:#fff;border:1px solid rgba(18,46,78,.08);box-shadow:0 16px 44px
+rgba(15,45,79,.07);display:flex;flex-direction:column;min-height:275px;transition:transform .22s,box-shadow
+.22s}.quote-card:hover{transform:translateY(-5px);box-shadow:0 22px 50px
+rgba(15,45,79,.13)}.quote-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#eaf3ff;color:#267ee8;font-size:1.05rem}.quote-card
+blockquote{margin:22px 0 27px;font:500 1.04rem/1.75 'Manrope',sans-serif;color:#213249;flex:1}.quote-author{padding-top:17px;border-top:1px solid
+#eaf0f6}.quote-author{display:flex;align-items:center;gap:12px}.quote-avatar{width:42px;height:42px;display:grid;place-items:center;background:#dcecff;color:#1672db;border-radius:50%}.quote-author
+strong{display:block;font-size:.9rem}.quote-author
+span{display:block;margin-top:4px;color:#78879a;font-size:.78rem}.testimonial-empty{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px
+34px;background:#fff;border:1px solid #dfe9f5;border-radius:20px;box-shadow:0 16px 44px
+rgba(15,45,79,.06);color:#5c6f85}.testimonial-empty-copy{display:flex;align-items:center;gap:18px}.testimonial-empty-copy>i{font-size:1.35rem;color:#368bff}.testimonial-empty
+strong{display:block;color:#13243a;font:700 1.05rem 'Manrope',sans-serif;margin-bottom:5px}.testimonial-empty span{font-size:.9rem}.testimonial-empty
+a{color:#176fd1;font-weight:700;white-space:nowrap}.testimonial-empty a:hover{text-decoration:underline}
+.about-section{background:#eaf2fb}.about-layout{display:grid;grid-template-columns:1fr
+1fr;align-items:center;gap:72px}.about-visual{position:relative;min-height:440px;border-radius:28px;overflow:hidden;background-image:url(https://i.pinimg.com/736x/a8/cd/ce/a8cdce1ae6f12403bfcc32af247a1df7.jpg);
+background-size:cover;
+background-position:top;display:flex;align-items:flex-end;padding:30px;color:white}.about-visual:before,.about-visual:after{content:'';position:absolute;border:20px
+solid rgba(255, 255, 255,
+0.42);border-radius:50%;width:360px;height:360px;right:-75px;top:-50px}.about-visual:after{width:250px;height:250px;right:15px;top:130px}.about-visual-inner{position:relative;z-index:1;max-width:280px}.about-visual-inner
+i{font-size:2.5rem;color:#b4dcff}.about-visual-inner p{font:700 1.5rem/1.3 'Manrope',sans-serif;margin:16px 0 0}.about-copy h2{font:800
+clamp(2.2rem,4vw,3.4rem)/1.08 'Manrope',sans-serif;letter-spacing:-.06em;margin:15px 0
+20px}.about-copy>p{color:#5f7085;line-height:1.85}.about-points{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:25px 0
+30px}.about-point{display:flex;align-items:center;gap:10px;color:#24374e;font-size:.9rem}.about-point i{color:var(--blue)}
+.contact-section{background:var(--ink);color:#fff}.contact-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:start}.contact-section
+.section-heading{margin:0}.contact-section .section-heading
+p{color:#aab8c9}.contact-details{display:grid;gap:16px;margin-top:30px}.contact-detail{display:flex;gap:13px;align-items:center;color:#d4dfeb;font-size:.92rem}.contact-detail
+i{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#132943;color:var(--blue-2)}.contact-form{padding:29px;background:#fff;color:var(--ink);border-radius:var(--radius)}.form-row{display:grid;grid-template-columns:1fr
+1fr;gap:14px}.form-group{margin-bottom:15px}.form-group label{display:block;font-size:.82rem;font-weight:700;margin-bottom:7px}.form-group input,.form-group
+textarea,.form-group select{width:100%;border:1px solid #dce5ef;border-radius:10px;padding:13px 14px;background:#f9fbfd;color:#18283a;outline:none}.form-group
+input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #368bff20}.form-group
+textarea{min-height:125px;resize:vertical}.contact-form .btn{width:100%;cursor:pointer}.form-hint{color:#7c8b9b;font-size:.75rem;margin:12px 0
+0;text-align:center} @media(max-width:950px){.work-grid{grid-template-columns:minmax(0,1.05fr)
+minmax(250px,.95fr);grid-template-rows:repeat(2,minmax(200px,1fr))}.services-grid,.testimonial-grid{grid-template-columns:repeat(2,1fr)}.about-layout{gap:38px}.contact-layout{gap:35px}.process-grid{grid-template-columns:repeat(2,1fr);row-gap:32px}}
+@media(max-width:650px){.hero{min-height:610px}.hero-content{padding:82px 0}.hero
+h1{font-size:clamp(3rem,14vw,4.4rem)}.hero-copy{font-size:1rem}.hero-note{gap:14px;flex-direction:column}.scroll-cue{display:none}.work-toolbar{align-items:flex-start;flex-direction:column}.work-grid,.services-grid,.testimonial-grid,.process-grid,.about-layout,.contact-layout{grid-template-columns:1fr}.work-grid{grid-template-rows:none}.work-card,.work-card:first-child{grid-row:auto;min-height:300px}.work-card:first-child
+.work-card-body{left:22px;bottom:21px}.work-card:first-child
+h3{font-size:1.45rem}.work-toolbar{margin-bottom:32px}.testimonial-empty{align-items:flex-start;flex-direction:column;padding:24px}.testimonial-empty-copy{align-items:flex-start}.about-visual{min-height:320px}.about-points{grid-template-columns:1fr}.contact-form{padding:22px}.form-row{grid-template-columns:1fr;gap:0}}
+.showreel-section{background:#081321;color:#fff;padding:78px 0}.showreel-layout{display:grid;grid-template-columns:minmax(0,1.35fr)
+minmax(260px,.65fr);gap:54px;align-items:center}.reel-frame{position:relative;overflow:hidden;border-radius:22px;background:#02060b;border:1px solid
+rgba(255,255,255,.14);box-shadow:0 28px 80px rgba(0,0,0,.38);aspect-ratio:16/9}.reel-frame
+video{display:block;width:100%;height:100%;object-fit:cover}.reel-copy .eyebrow{color:#8fc8ff}.reel-copy h2{font:800 clamp(2rem,3.5vw,3.2rem)/1.08
+'Manrope',sans-serif;letter-spacing:-.055em;margin:16px 0}.reel-copy p{color:#aab8c9;line-height:1.8;margin:0 0
+22px}.reel-meta{display:flex;gap:10px;align-items:center;color:#99aabd;font-size:.78rem;letter-spacing:.04em}.reel-meta
+i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);padding:7px
+10px;border-radius:999px;color:#c6d7ea;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-top:18px}@media(max-width:800px){.showreel-layout{grid-template-columns:1fr;gap:29px}.showreel-section{padding:65px
+0}}
 
-.showreel-section{background:#081321;color:#fff;padding:78px 0}.showreel-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:54px;align-items:center}.reel-frame{position:relative;overflow:hidden;border-radius:22px;background:#02060b;border:1px solid rgba(255,255,255,.14);box-shadow:0 28px 80px rgba(0,0,0,.38);aspect-ratio:16/9}.reel-frame video{display:block;width:100%;height:100%;object-fit:cover}.reel-copy .eyebrow{color:#8fc8ff}.reel-copy h2{font:800 clamp(2rem,3.5vw,3.2rem)/1.08 'Manrope',sans-serif;letter-spacing:-.055em;margin:16px 0}.reel-copy p{color:#aab8c9;line-height:1.8;margin:0 0 22px}.reel-meta{display:flex;gap:10px;align-items:center;color:#99aabd;font-size:.78rem;letter-spacing:.04em}.reel-meta i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);padding:7px 10px;border-radius:999px;color:#c6d7ea;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-top:18px}@media(max-width:800px){.showreel-layout{grid-template-columns:1fr;gap:29px}.showreel-section{padding:65px 0}}
+.testimonial-overlay{
+  position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background: #000000ba;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-{% endblock %}
-{% block content %}
-<section class="hero" id="top">
-  <div class="container"><div class="hero-content">
-    <span class="eyebrow">Film · Photography · Creative direction</span>
-    <h1>Stories made<br>to <span>move you.</span></h1>
-    <p class="hero-copy">OgwenofayaVisuals creates thoughtful films and photography for people, brands and organisations with something meaningful to say.</p>
-    <div class="hero-actions"><a class="btn" href="#work">Explore our work <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-outline" href="#contact"><i class="fa-regular fa-paper-plane"></i> Tell us your idea</a></div>
-    <div class="hero-note"><span><i class="fa-solid fa-location-dot"></i> Kenya · East Africa</span><span><i class="fa-solid fa-film"></i> From first idea to final frame</span><span><i class="fa-solid fa-circle-play"></i> Made for every screen</span></div>
-  </div></div><a class="scroll-cue" href="#work">Scroll to explore <i class="fa-solid fa-arrow-down"></i></a>
+#testimonial-quote{
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 20px;
+  min-height: 400px;
+}
+.testimonial-dets{
+  background: #006aff30;
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position:relative;
+}
+.t-dp{
+  background: #2ed2ff57;
+  padding: 10px;
+  border-radius: 50%;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.t-quote{
+  padding: 30px;
+  text-align: justify;
+  white-space: pre-wrap;
+  overflow: auto;
+}
+
+.close-testimonial{
+  justify-self: end;
+    float: right;
+    position: absolute;
+    right: 25px;
+    background: #ffffff38;
+    border-radius: 50%;
+    width: 40px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: x-large;
+    color:red;
+    &:hover{
+      background:red;
+      color:white;
+    }
+}
+.none{
+  display:none;
+}
+.flex{
+  display:flex
+}
+
+{% endblock %} {% block content %} <section class="hero" id="top">
+	<div class="container">
+		<div class="hero-content">
+			<span class="eyebrow">Film · Photography · Creative direction</span>
+			<h1> Stories made <br> to <span>move you.</span>
+			</h1>
+			<p class="hero-copy"> OgwenofayaVisuals creates thoughtful films and photography for people, brands and organisations with something meaningful to
+				say.</p>
+			<div class="hero-actions"><a class="btn" href="#work">Explore our work <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-outline"
+					href="#contact"><i class="fa-regular fa-paper-plane"></i> Tell us your idea</a></div>
+			<div class="hero-note">
+				<span><i class="fa-solid fa-location-dot"></i> Kenya · East Africa</span><span><i class="fa-solid fa-film"></i> From first idea to final
+					frame</span><span><i class="fa-solid fa-circle-play"></i> Made for every screen</span>
+			</div>
+		</div>
+	</div>
+	<a class="scroll-cue" href="#work">Scroll to explore <i class="fa-solid fa-arrow-down"></i></a>
 </section>
-<section class="showreel-section" aria-labelledby="showreel-title"><div class="container showreel-layout">
-  <div class="reel-frame">
-    <video playsinline autoplay muted loop preload="metadata" aria-label="Showreel video" poster="{{ url_for('static', filename='resources/images/hero.png') }}">
-        <source src="{{ url_for('static', filename='resources/videos/hero.mp4') }}" type="video/mp4">
-        Your browser does not support embedded video.
-    </video>
-</div>
-  <div class="reel-copy"><span class="eyebrow">The moving picture</span><h2 id="showreel-title">A feel for the frame.</h2><p>A closer look at our visual style—thoughtful framing, rich atmosphere and stories told through motion.</p><div class="reel-meta"><i class="fa-solid fa-circle-play"></i><span>Showreel · Click play to watch</span></div><span class="sample-tag"><i class="fa-solid fa-expand"></i> Made to be seen</span></div>
-</div></section>
-<section class="section work-section" id="work"><div class="container">
-  <div class="work-toolbar"><div class="section-heading"><span class="eyebrow">Selected work</span><h2>Real people.<br>Stories worth seeing.</h2><p>A look at the projects, moments and ideas brought to life through our lens.</p></div><a class="btn btn-dark" href="#contact">Create something together <i class="fa-solid fa-arrow-right"></i></a></div>
-  <div class="work-grid">
-    {% set showcase = featured if featured else projects %}
-    {% for project in showcase %}
-      <article class="work-card">
-        {% if project.image %}<img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="{{ project.title }}" loading="lazy">{% else %}<div style="position:absolute;inset:0;z-index:-2;background:linear-gradient(145deg,#0e2340,#1769bc 60%,#07111f)"></div>{% endif %}
-        <div class="work-card-body"><span class="work-category">{{ project.category }}</span><h3>{{ project.title }}</h3></div><span class="work-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span><a class="work-card-link" href="{{ url_for('project', slug=project.slug) }}" aria-label="View {{ project.title }}"></a>
-      </article>
-    {% else %}
-      <div class="work-empty"><i class="fa-solid fa-clapperboard"></i><h3>The next story starts here.</h3><p>Our portfolio is taking shape. Get in touch and let’s make the first frame yours.</p></div>
-    {% endfor %}
+
+<section class="testimonial-overlay none">
+  <div id="testimonial-quote">
+    <div class="testimonial-dets">
+      <div class="t-dp">
+        <i class="fas fa-user" style="font-size: xx-large;color:rgb(0, 114, 181)"></i>
+      </div>
+      <div class="t-dets">
+      <div class="t-name" style="font-weight: 200; color:rgba(128, 128, 128, 0.723)"> Lutan Fyah</div>
+      <div class="t-company" style="font-weight: bolder;">Lutan Tech</div>
+
+      </div>
+      <div class="close-testimonial" onclick="toggleTestimonial()">
+        <i class="fas fa-close"></i>
+      </div>
+    </div>
+    <div class="t-quote">Loading...</div>
   </div>
-</div></section>
-<section class="section services-section" id="services"><div class="container"><div class="section-heading"><span class="eyebrow">What we do</span><h2>One creative partner.<br>Every frame in focus.</h2><p>From the first conversation to the final export, we bring care and craft to every part of the production.</p></div>
-  <div class="services-grid">
-    {% for service in services %}<article class="service-card"><div class="service-icon"><i class="fa-solid fa-camera-retro"></i></div><h3>{{ service.title }}</h3><p>{{ service.description or 'Creative planning and polished production, tailored to your story.' }}</p></article>
-    {% else %}<div class="service-empty">Our service list is being updated. <a href="#contact">Talk to us about your project <i class="fa-solid fa-arrow-right"></i></a></div>{% endfor %}
-  </div>
-</div></section>
-<section class="section process-section"><div class="container"><div class="section-heading"><span class="eyebrow">The process</span><h2>Good stories come together.</h2><p>A clear, collaborative process keeps your story at the centre from kickoff to delivery.</p></div>
-  <div class="process-grid"><article class="process-step"><span class="step-number">01 / LISTEN</span><h3>Find the story</h3><p>We learn about your audience, goals and the people at the heart of the story.</p></article><article class="process-step"><span class="step-number">02 / PLAN</span><h3>Shape the vision</h3><p>We align on the creative direction, locations, schedule and what success looks like.</p></article><article class="process-step"><span class="step-number">03 / CREATE</span><h3>Capture the moment</h3><p>A thoughtful production brings genuine moments and strong visuals together.</p></article><article class="process-step"><span class="step-number">04 / DELIVER</span><h3>Make it ready to share</h3><p>We refine, finish and deliver the final work in formats that fit your needs.</p></article></div>
-</div></section>
-<section class="section testimonials-section" id="testimonials"><div class="container"><div class="section-heading"><span class="eyebrow">Kind words</span><h2>Made together.<br>Remembered together.</h2><p>Every good project is a partnership. Here’s what collaborators have to say.</p></div>
-  <div class="testimonial-grid">{% for testimonial in testimonials %}<article class="quote-card"><div class="quote-mark" aria-hidden="true"><i class="fa-solid fa-quote-left"></i></div><blockquote>{% if testimonial.quote|length > 200 %}  “{{ testimonial.quote[:200] + '...' }}” <br> <a href="#" style="color:blue; padding-top:15px;"> View Testimonial</a> {% else %} “{{ testimonial.quote }}” {% endif %}</blockquote><div class="quote-author"><div class="quote-avatar"><i class="fa-solid fa-user"></i></div><div><strong>{{ testimonial.name }}</strong><span>{% if testimonial.company %}{{ testimonial.company }}{% else %}Project partner{% endif %}</span></div></div></article>{% else %}<div class="testimonial-empty"><div class="testimonial-empty-copy"><i class="fa-solid fa-quote-left" aria-hidden="true"></i><div><strong>Good work is built on good partnerships.</strong><span>We would love to make something meaningful with you.</span></div></div><a href="#contact">Start a conversation <i class="fa-solid fa-arrow-right"></i></a></div>{% endfor %}</div>
-</div></section>
-<section class="section about-section" id="about"><div class="container about-layout"><div class="about-visual" ><div class="about-visual-inner"><i class="fa-solid fa-aperture"></i><p>We make visuals with feeling, purpose and a point of view.</p></div></div><div class="about-copy"><span class="eyebrow">A little about us</span><h2>Visuals that feel like something.</h2><p>OgwenofayaVisuals is a creative production studio built around the power of a well-told story. We partner with clients to turn ideas into films and images that feel honest, considered and alive.</p><p>Whether it’s a brand film, a documentary moment or a celebration worth remembering, we bring intention to every detail and a collaborative spirit to every set.</p><div class="about-points"><div class="about-point"><i class="fa-solid fa-check"></i> Thoughtful storytelling</div><div class="about-point"><i class="fa-solid fa-check"></i> Collaborative production</div><div class="about-point"><i class="fa-solid fa-check"></i> Flexible, nimble crew</div><div class="about-point"><i class="fa-solid fa-check"></i> Ready-to-share delivery</div></div><a class="btn btn-dark" href="#contact">Let’s make it real <i class="fa-solid fa-arrow-right"></i></a></div></div></section>
-<section class="section contact-section" id="contact"><div class="container contact-layout"><div><div class="section-heading"><span class="eyebrow">Start a project</span><h2>Have a story<br>on your mind?</h2><p>Tell us what you’re working on. We’ll get back to you and explore what we can create together.</p></div><div class="contact-details"><div class="contact-detail"><i class="fa-regular fa-envelope"></i><span>Share your idea through the form and we’ll be in touch.</span></div><div class="contact-detail"><i class="fa-solid fa-video"></i><span>Films · Photography · Brand stories</span></div></div></div>
-  <form class="contact-form" action="{{ url_for('contact') }}" method="post"><div class="form-row"><div class="form-group"><label for="name">Your name *</label><input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required></div><div class="form-group"><label for="email">Email address *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="jane@example.com" required></div></div><div class="form-row"><div class="form-group"><label for="phone">Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+254 …"></div><div class="form-group"><label for="service">What do you need?</label><select id="service" name="service"><option value="">Choose a service</option>{% for service in services %}<option value="{{ service.title }}">{{ service.title }}</option>{% endfor %}<option value="Film production">Film production</option><option value="Photography">Photography</option><option value="Brand content">Brand content</option><option value="Something else">Something else</option></select></div></div><div class="form-group"><label for="message">Tell us about your project *</label><textarea id="message" name="message" placeholder="The idea, the timeline, and what you'd love to make…" required></textarea></div><button class="btn btn-dark" type="submit">Send your enquiry <i class="fa-solid fa-arrow-right"></i></button><p class="form-hint">Your details are only used to respond to your enquiry.</p></form>
-</div></section>
-{% endblock %}
-{% block scripts %}<script>document.querySelectorAll('.flash-message').forEach(function(message){setTimeout(function(){message.style.transition='opacity .4s';message.style.opacity='0';setTimeout(function(){message.remove()},450)},5000)});</script>{% endblock %}
+</section>
+
+<section class="showreel-section" aria-labelledby="showreel-title">
+	<div class="container showreel-layout">
+		<div class="reel-frame">
+			<video playsinline autoplay muted loop preload="metadata" aria-label="Showreel video"
+				poster="{{ url_for('static', filename='resources/images/hero.png') }}">
+				<source src="{{ url_for('static', filename='resources/videos/hero.mp4') }}" type="video/mp4"> Your browser does not support embedded video.
+			</video>
+		</div>
+		<div class="reel-copy">
+			<span class="eyebrow">The moving picture</span>
+			<h2 id="showreel-title">A feel for the frame.</h2>
+			<p>A closer look at our visual style—thoughtful framing, rich atmosphere and stories told through motion.</p>
+			<div class="reel-meta"><i class="fa-solid fa-circle-play"></i><span>Showreel · Click play to watch</span></div>
+			<span class="sample-tag"><i class="fa-solid fa-expand"></i> Made to be seen</span>
+		</div>
+	</div>
+</section>
+<section class="section work-section" id="work">
+	<div class="container">
+		<div class="work-toolbar">
+			<div class="section-heading">
+				<span class="eyebrow">Selected work</span>
+				<h2> Real people. <br> Stories worth seeing. </h2>
+				<p>A look at the projects, moments and ideas brought to life through our lens.</p>
+			</div>
+			<a class="btn btn-dark" href="#contact">Create something together <i class="fa-solid fa-arrow-right"></i></a>
+		</div>
+		<div class="work-grid"> {% set showcase = featured if featured else projects %} {% for project in showcase %} <article class="work-card">
+				{% if project.image %} <img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="{{ project.title }}"
+					loading="lazy"> {% else %} <div style="position:absolute;
+                                        inset:0;
+                                        z-index:-2;
+                                        background:linear-gradient(145deg,#0e2340,#1769bc 60%,#07111f)">
+				</div> {% endif %} <div class="work-card-body">
+					<span class="work-category">{{ project.category }}</span>
+					<h3>{{ project.title }}
+					</h3>
+				</div>
+				<span class="work-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span><a class="work-card-link"
+					href="{{ url_for('project', slug=project.slug) }}" aria-label="View {{ project.title }}"></a>
+			</article> {% else %} <div class="work-empty">
+				<i class="fa-solid fa-clapperboard"></i>
+				<h3>The next story starts here.</h3>
+				<p>Our portfolio is taking shape. Get in touch and let’s make the first frame yours.</p>
+			</div> {% endfor %} </div>
+	</div>
+</section>
+<section class="section services-section" id="services">
+	<div class="container">
+		<div class="section-heading">
+			<span class="eyebrow">What we do</span>
+			<h2> One creative partner. <br> Every frame in focus. </h2>
+			<p>From the first conversation to the final export, we bring care and craft to every part of the production. </p>
+		</div>
+		<div class="services-grid"> {% for service in services %} <article class="service-card">
+				<div class="service-icon">
+					<i class="fa-solid fa-camera-retro"></i>
+				</div>
+				<h3>{{ service.title }}
+				</h3>
+				<p>{{ service.description or 'Creative planning and polished production, tailored to your story.' }}
+				</p>
+			</article> {% else %}<div class="service-empty"> Our service list is being updated. <a href="#contact">Talk to us about your project <i
+						class="fa-solid fa-arrow-right"></i></a>
+			</div>{% endfor %} </div>
+	</div>
+</section>
+<section class="section process-section">
+	<div class="container">
+		<div class="section-heading">
+			<span class="eyebrow">The process</span>
+			<h2>Good stories come together.</h2>
+			<p>A clear, collaborative process keeps your story at the centre from kickoff to delivery.</p>
+		</div>
+		<div class="process-grid">
+			<article class="process-step">
+				<span class="step-number">01 / LISTEN</span>
+				<h3>Find the story</h3>
+				<p>We learn about your audience, goals and the people at the heart of the story. </p>
+			</article>
+			<article class="process-step">
+				<span class="step-number">02 / PLAN</span>
+				<h3>Shape the vision </h3>
+				<p>We align on the creative direction, locations, schedule and what success looks like.</p>
+			</article>
+			<article class="process-step">
+				<span class="step-number">03 / CREATE</span>
+				<h3>Capture the moment </h3>
+				<p>A thoughtful production brings genuine moments and strong visuals together.</p>
+			</article>
+			<article class="process-step">
+				<span class="step-number">04 / DELIVER</span>
+				<h3>Make it ready to share</h3>
+				<p>We refine, finish and deliver the final work in formats that fit your needs.</p>
+			</article>
+		</div>
+	</div>
+</section>
+<section class="section testimonials-section" id="testimonials">
+	<div class="container">
+		<div class="section-heading">
+			<span class="eyebrow">Kind words</span>
+			<h2> Made together. <br> Remembered together. </h2>
+			<p>Every good project is a partnership. Here’s what collaborators have to say.</p>
+		</div>
+		<div class="testimonial-grid"> {% for testimonial in testimonials %} <article class="quote-card">
+				<div class="quote-mark" aria-hidden="true">
+					<i class="fa-solid fa-quote-left"></i>
+				</div>
+				<blockquote>
+          {% if testimonial.quote|length > 200 %}
+              “{{ testimonial.quote[:200] }}...”
+              <br>
+              <a href="#" style="color:blue;padding-top:15px;"
+                 onclick="event.preventDefault();toggleTestimonial({{ testimonial.quote|tojson|forceescape }}, {{ testimonial.name|tojson|forceescape }}, {{ testimonial.company|tojson|forceescape }});">
+                  View Testimonial
+              </a>
+          {% else %}
+              “{{ testimonial.quote }}”
+          {% endif %}
+      </blockquote>
+				<div class="quote-author">
+					<div class="quote-avatar">
+						<i class="fa-solid fa-user"></i>
+					</div>
+					<div>
+						<strong>{{ testimonial.name }}</strong><span>{% if testimonial.company %}{{ testimonial.company }}{% else %}Project
+							partner{% endif %}</span>
+					</div>
+				</div>
+			</article>{% else %}<div class="testimonial-empty">
+				<div class="testimonial-empty-copy">
+					<i class="fa-solid fa-quote-left" aria-hidden="true"></i>
+					<div><strong>Good work is built on good partnerships.</strong><span>We would love to make something meaningful with you.</span>
+					</div>
+				</div><a href="#contact">Start a conversation <i class="fa-solid fa-arrow-right"></i></a>
+			</div>{% endfor %}</div>
+	</div>
+</section>
+<section class="section about-section" id="about">
+	<div class="container about-layout">
+		<div class="about-visual">
+			<div class="about-visual-inner">
+				<i class="fa-solid fa-aperture"></i>
+				<p>We make visuals with feeling, purpose and a point of view.</p>
+			</div>
+		</div>
+		<div class="about-copy">
+			<span class="eyebrow">A little about us</span>
+			<h2>Visuals that feel like something.</h2>
+			<p>OgwenofayaVisuals is a creative production studio built around the power of a well-told story. We partner with clients to turn ideas into films
+				and images that feel honest, considered and alive. </p>
+			<p>Whether it’s a brand film, a documentary moment or a celebration worth remembering, we bring intention to every detail and a collaborative spirit
+				to every set.</p>
+			<div class="about-points">
+				<div class="about-point">
+					<i class="fa-solid fa-check"></i> Thoughtful storytelling
+				</div>
+				<div class="about-point">
+					<i class="fa-solid fa-check"></i> Collaborative production
+				</div>
+				<div class="about-point">
+					<i class="fa-solid fa-check"></i> Flexible, nimble crew
+				</div>
+				<div class="about-point">
+					<i class="fa-solid fa-check"></i> Ready-to-share delivery
+				</div>
+			</div>
+			<a class="btn btn-dark" href="#contact">Let’s make it real <i class="fa-solid fa-arrow-right"></i></a>
+		</div>
+	</div>
+</section>
+<section class="section contact-section" id="contact">
+	<div class="container contact-layout">
+		<div>
+			<div class="section-heading">
+				<span class="eyebrow">Start a project</span>
+				<h2> Have a story <br> on your mind? </h2>
+				<p>Tell us what you’re working on. We’ll get back to you and explore what we can create together.</p>
+			</div>
+			<div class="contact-details">
+				<div class="contact-detail">
+					<i class="fa-regular fa-envelope"></i><span>Share your idea through the form and we’ll be in touch.</span>
+				</div>
+				<div class="contact-detail">
+					<i class="fa-solid fa-video"></i><span>Films · Photography · Brand stories</span>
+				</div>
+			</div>
+		</div>
+		<form class="contact-form" action="{{ url_for("contact") }}" method="post">
+			<div class="form-row">
+				<div class="form-group">
+					<label for="name">Your name *</label><input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required>
+				</div>
+				<div class="form-group">
+					<label for="email">Email address *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="jane@example.com"
+						required>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="phone">Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+254 …">
+				</div>
+				<div class="form-group">
+					<label for="service">What do you need?</label><select id="service" name="service">
+						<option value=""> Choose a service </option> {% for service in services %} <option value="{{ service.title }}">
+							{{ service.title }}
+						</option> {% endfor %} <option value="Something else"> Something else </option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="message">Tell us about your project *</label><textarea id="message" name="message"
+					placeholder="The idea, the timeline, and what you'd love to make…" required></textarea>
+			</div><button class="btn btn-dark" type="submit">Send your enquiry <i class="fa-solid fa-arrow-right"></i></button>
+			<p class="form-hint">Your details are only used to respond to your enquiry. </p>
+		</form>
+	</div>
+</section> {% endblock %} {% block scripts %} <script>
+document.querySelectorAll('.flash-message')
+	.forEach(function(message) {
+		setTimeout(function() {
+			message.style.transition = 'opacity .4s';
+			message.style.opacity = '0';
+			setTimeout(function() {
+				message.remove()
+			}, 450)
+		}, 5000)
+	});
+
+  function toggleTestimonial(q, n, c){
+    const to =  document.querySelector('.testimonial-overlay')
+    const name = to.querySelector('.t-name')
+    const company = to.querySelector('.t-company')
+    const quote = to.querySelector('.t-quote')
+
+    to.classList.toggle('none')
+    to.classList.toggle('flex')
+
+    if(q || n || c){
+      name.innerHTML = n      
+      quote.innerHTML = q      
+      company.innerHTML = c      
+    }
+  }
+
+</script> {% endblock %}
