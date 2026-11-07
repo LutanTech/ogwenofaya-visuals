@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}OgwenofayaVisuals — Films, Photography & Visual Stories{% endblock %} {% block extra_css %}
+{% extends "base.html" %} {% block title %}OgwenofayaVisuals — Video Production, Photography & Design{% endblock %} {% block extra_css %}
 .hero{position:relative;isolation:isolate;overflow:hidden;background:var(--ink);color:#fff;min-height:650px;display:flex;align-items:center}.hero:before{content:'';position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(5,12,22,.97)
 0%,rgba(5,12,22,.86) 43%,rgba(5,12,22,.32) 100%), url('https://copyrightalliance.org/wp-content/uploads/2020/05/ThinkstockPhotos-512034218-768x513.jpg')
 center 47%/cover}.hero:after{content:'';position:absolute;z-index:-1;width:520px;height:520px;border:1px solid
@@ -12,7 +12,7 @@ var(--max))/2));color:#aab8c9;font-size:.73rem;letter-spacing:.12em;text-transfo
 i{color:var(--blue-2)}
 .work-section{background:#fff;position:relative}.work-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:48px}.work-toolbar
 .section-heading{margin:0;max-width:630px}.work-grid{display:grid;grid-template-columns:minmax(0,1.12fr)
-minmax(300px,.88fr);grid-template-rows:repeat(2,minmax(230px,1fr));gap:18px}.work-card{position:relative;overflow:hidden;border-radius:22px;background:#0c1a2c;min-height:0;color:white;isolation:isolate;box-shadow:0
+minmax(300px,.88fr);grid-template-rows:repeat(2,minmax(230px,1fr));gap:18px}.work-card{position:relative;overflow:hidden;border-radius:22px;background:#0c1a2c;min-height:50vh;color:white;isolation:isolate;box-shadow:0
 12px 35px rgba(7,17,31,.12)}.work-card:first-child{grid-row:span 2}.work-card:first-child .work-card-body{left:30px;bottom:29px}.work-card:first-child
 h3{font-size:clamp(1.5rem,2.4vw,2.2rem)}.work-card:after{content:'';position:absolute;inset:30% 0
 0;z-index:-1;background:linear-gradient(0deg,rgba(4,12,22,.94),transparent)}.work-card img,.work-card
@@ -123,9 +123,9 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 }
 .t-quote{
   padding: 30px;
-  text-align: justify;
   white-space: pre-wrap;
   overflow: auto;
+  line-height:2;
 }
 
 .close-testimonial{
@@ -158,20 +158,19 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 {% endblock %} {% block content %} <section class="hero" id="top">
 	<div class="container">
 		<div class="hero-content">
-			<span class="eyebrow">Film · Photography · Creative direction</span>
-			<h1> Stories made <br> to <span>move you.</span>
+			<span class="eyebrow"><i class="fa-solid fa-clapperboard"></i> Videography &nbsp;·&nbsp; <i class="fa-solid fa-camera"></i> Photography &nbsp;·&nbsp; <i class="fa-solid fa-paintbrush"></i> Brand Content & Design</span>
+			<h1> Visuals that tell <br> <span>your story.</span>
 			</h1>
-			<p class="hero-copy"> OgwenofayaVisuals creates thoughtful films and photography for people, brands and organisations with something meaningful to
-				say.</p>
-			<div class="hero-actions"><a class="btn" href="#work">Explore our work <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-outline"
-					href="#contact"><i class="fa-regular fa-paper-plane"></i> Tell us your idea</a></div>
+			<p class="hero-copy"> OgwenofayaVisuals provides professional video production, photography, graphic design, and brand content for businesses, organizations, and individuals.</p>
+			<div class="hero-actions"><a class="btn" href="#work"><i class="fa-solid fa-eye"></i> See our work <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-outline"
+					href="#contact"><i class="fa-regular fa-paper-plane"></i> Start a project</a></div>
 			<div class="hero-note">
-				<span><i class="fa-solid fa-location-dot"></i> Kenya · East Africa</span><span><i class="fa-solid fa-film"></i> From first idea to final
-					frame</span><span><i class="fa-solid fa-circle-play"></i> Made for every screen</span>
+				<span><i class="fa-solid fa-location-dot"></i> Nairobi · Kenya</span><span><i class="fa-solid fa-sliders"></i> Full production: planning to final
+					delivery</span><span><i class="fa-solid fa-laptop-code"></i> Ready for web, print, and social media</span>
 			</div>
 		</div>
 	</div>
-	<a class="scroll-cue" href="#work">Scroll to explore <i class="fa-solid fa-arrow-down"></i></a>
+	<a class="scroll-cue" href="#work">Scroll down <i class="fa-solid fa-arrow-down"></i></a>
 </section>
 
 <section class="testimonial-overlay none">
@@ -189,7 +188,7 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
         <i class="fas fa-close"></i>
       </div>
     </div>
-    <div class="t-quote">Loading...</div>
+    <div class="t-quote"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
   </div>
 </section>
 
@@ -202,11 +201,11 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 			</video>
 		</div>
 		<div class="reel-copy">
-			<span class="eyebrow">The moving picture</span>
-			<h2 id="showreel-title">A feel for the frame.</h2>
-			<p>A closer look at our visual style—thoughtful framing, rich atmosphere and stories told through motion.</p>
-			<div class="reel-meta"><i class="fa-solid fa-circle-play"></i><span>Showreel · Click play to watch</span></div>
-			<span class="sample-tag"><i class="fa-solid fa-expand"></i> Made to be seen</span>
+			<span class="eyebrow"><i class="fa-solid fa-play"></i> Showreel</span>
+			<h2 id="showreel-title">See our work in motion.</h2>
+			<p>Watch a short compilation of our recent video projects, filming style, and editing.</p>
+			<div class="reel-meta"><i class="fa-solid fa-circle-play"></i><span>Showreel · Video preview</span></div>
+			<span class="sample-tag"><i class="fa-solid fa-video"></i> HD Video Production</span>
 		</div>
 	</div>
 </section>
@@ -214,11 +213,11 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 	<div class="container">
 		<div class="work-toolbar">
 			<div class="section-heading">
-				<span class="eyebrow">Selected work</span>
-				<h2> Real people. <br> Stories worth seeing. </h2>
-				<p>A look at the projects, moments and ideas brought to life through our lens.</p>
+				<span class="eyebrow"><i class="fa-solid fa-briefcase"></i> Portfolio</span>
+				<h2> Recent projects. </h2>
+				<p>Browse examples of our past video, photo, and design work.</p>
 			</div>
-			<a class="btn btn-dark" href="#contact">Create something together <i class="fa-solid fa-arrow-right"></i></a>
+			<a class="btn btn-dark" href="#contact"><i class="fa-solid fa-handshake"></i> Work with us <i class="fa-solid fa-arrow-right"></i></a>
 		</div>
 		<div class="work-grid"> {% set showcase = featured if featured else projects %} {% for project in showcase %} <article class="work-card">
 				{% if project.image %} <img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="{{ project.title }}"
@@ -227,7 +226,7 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
                                         z-index:-2;
                                         background:linear-gradient(145deg,#0e2340,#1769bc 60%,#07111f)">
 				</div> {% endif %} <div class="work-card-body">
-					<span class="work-category">{{ project.category }}</span>
+					<span class="work-category"><i class="fa-solid fa-tag"></i> {{ project.category }}</span>
 					<h3>{{ project.title }}
 					</h3>
 				</div>
@@ -235,58 +234,83 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 					href="{{ url_for('project', slug=project.slug) }}" aria-label="View {{ project.title }}"></a>
 			</article> {% else %} <div class="work-empty">
 				<i class="fa-solid fa-clapperboard"></i>
-				<h3>The next story starts here.</h3>
-				<p>Our portfolio is taking shape. Get in touch and let’s make the first frame yours.</p>
+				<h3>No projects uploaded yet.</h3>
+				<p>We are currently updating our portfolio. Contact us to see samples or discuss your project.</p>
 			</div> {% endfor %} </div>
 	</div>
 </section>
 <section class="section services-section" id="services">
 	<div class="container">
 		<div class="section-heading">
-			<span class="eyebrow">What we do</span>
-			<h2> One creative partner. <br> Every frame in focus. </h2>
-			<p>From the first conversation to the final export, we bring care and craft to every part of the production. </p>
+			<span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Our Services</span>
+			<h2> Video, photography, <br> and design in one place. </h2>
+			<p>Professional services tailored to capture genuine moments, build your brand identity, and tell your story clearly.</p>
 		</div>
-		<div class="services-grid"> {% for service in services %} <article class="service-card">
-				<div class="service-icon">
-					<i class="fa-solid fa-camera-retro"></i>
-				</div>
-				<h3>{{ service.title }}
-				</h3>
-				<p>{{ service.description or 'Creative planning and polished production, tailored to your story.' }}
-				</p>
-			</article> {% else %}<div class="service-empty"> Our service list is being updated. <a href="#contact">Talk to us about your project <i
-						class="fa-solid fa-arrow-right"></i></a>
-			</div>{% endfor %} </div>
+		<div class="services-grid"> 
+			<!-- Photography Service Card -->
+			<article class="service-card">
+				<div class="service-icon"><i class="fa-solid fa-camera-retro"></i></div>
+				<h3>Photography</h3>
+				<p>Sharp, natural photography for portraits, events, and lifestyle shoots. Focused on capturing real moments and important details that tell your story clearly.</p>
+			</article>
+			<!-- Brand Content Service Card -->
+			<article class="service-card">
+				<div class="service-icon"><i class="fa-solid fa-bullhorn"></i></div>
+				<h3>Brand Content</h3>
+				<p>Custom visuals, social media content, and marketing materials designed to help your business stand out, communicate clearly, and connect with your audience.</p>
+			</article>
+			<!-- Videography Service Card -->
+			<article class="service-card">
+				<div class="service-icon"><i class="fa-solid fa-video"></i></div>
+				<h3>Videography</h3>
+				<p>Professional video production for events, promotions, and social media. Handling filming and editing to turn your ideas into engaging, ready-to-share videos.</p>
+			</article>
+			<!-- Graphic Design Service Card -->
+			<article class="service-card">
+				<div class="service-icon"><i class="fa-solid fa-pen-nib"></i></div>
+				<h3>Graphic Design</h3>
+				<p>Clean, eye-catching designs for logos, branding, posters, and social media graphics that make your message easy to read and your brand memorable.</p>
+			</article>
+			
+			{% for service in services %} 
+			{% if service.title not in ['Photography', 'Brand Content', 'Videography', 'Graphic Design'] %}
+			<article class="service-card">
+				<div class="service-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+				<h3>{{ service.title }}</h3>
+				<p>{{ service.description or 'Custom planning, production, and execution for your project.' }}</p>
+			</article> 
+			{% endif %}
+			{% endfor %} 
+		</div>
 	</div>
 </section>
 <section class="section process-section">
 	<div class="container">
 		<div class="section-heading">
-			<span class="eyebrow">The process</span>
-			<h2>Good stories come together.</h2>
-			<p>A clear, collaborative process keeps your story at the centre from kickoff to delivery.</p>
+			<span class="eyebrow"><i class="fa-solid fa-gears"></i> How We Work</span>
+			<h2>Our 4-step production process.</h2>
+			<p>We follow a simple, step-by-step workflow from your first call to final delivery.</p>
 		</div>
 		<div class="process-grid">
 			<article class="process-step">
-				<span class="step-number">01 / LISTEN</span>
-				<h3>Find the story</h3>
-				<p>We learn about your audience, goals and the people at the heart of the story. </p>
+				<span class="step-number"><i class="fa-solid fa-headphones"></i> 01 / CONSULTATION</span>
+				<h3>Discuss your goals</h3>
+				<p>We talk through your target audience, message, and what you want the project to achieve.</p>
 			</article>
 			<article class="process-step">
-				<span class="step-number">02 / PLAN</span>
-				<h3>Shape the vision </h3>
-				<p>We align on the creative direction, locations, schedule and what success looks like.</p>
+				<span class="step-number"><i class="fa-solid fa-compass-drafting"></i> 02 / PLAN</span>
+				<h3>Plan the shoot</h3>
+				<p>We agree on the concept, locations, filming schedule, and budget.</p>
 			</article>
 			<article class="process-step">
-				<span class="step-number">03 / CREATE</span>
-				<h3>Capture the moment </h3>
-				<p>A thoughtful production brings genuine moments and strong visuals together.</p>
+				<span class="step-number"><i class="fa-solid fa-clapperboard"></i> 03 / FILM</span>
+				<h3>Production day</h3>
+				<p>Our crew arrives on location to film and photograph everything needed.</p>
 			</article>
 			<article class="process-step">
-				<span class="step-number">04 / DELIVER</span>
-				<h3>Make it ready to share</h3>
-				<p>We refine, finish and deliver the final work in formats that fit your needs.</p>
+				<span class="step-number"><i class="fa-solid fa-circle-check"></i> 04 / DELIVER</span>
+				<h3>Edit and deliver</h3>
+				<p>We edit the footage, add finishing touches, and send you the final files in the formats you need.</p>
 			</article>
 		</div>
 	</div>
@@ -294,9 +318,9 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 <section class="section testimonials-section" id="testimonials">
 	<div class="container">
 		<div class="section-heading">
-			<span class="eyebrow">Kind words</span>
-			<h2> Made together. <br> Remembered together. </h2>
-			<p>Every good project is a partnership. Here’s what collaborators have to say.</p>
+			<span class="eyebrow"><i class="fa-solid fa-comments"></i> Client Reviews</span>
+			<h2> What our clients say. </h2>
+			<p>Feedback from people and businesses we have worked with.</p>
 		</div>
 		<div class="testimonial-grid"> {% for testimonial in testimonials %} <article class="quote-card">
 				<div class="quote-mark" aria-hidden="true">
@@ -306,9 +330,9 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
           {% if testimonial.quote|length > 200 %}
               “{{ testimonial.quote[:200] }}...”
               <br>
-              <a href="#" style="color:blue;padding-top:15px;"
+              <a href="#" style="color:blue;padding-top:15px;font-size:small; text-decoration:underline"
                  onclick="event.preventDefault();toggleTestimonial({{ testimonial.quote|tojson|forceescape }}, {{ testimonial.name|tojson|forceescape }}, {{ testimonial.company|tojson|forceescape }});">
-                  View Testimonial
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> View Testimonial <i class="fas fa-arrow-right"></i>
               </a>
           {% else %}
               “{{ testimonial.quote }}”
@@ -319,16 +343,15 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 						<i class="fa-solid fa-user"></i>
 					</div>
 					<div>
-						<strong>{{ testimonial.name }}</strong><span>{% if testimonial.company %}{{ testimonial.company }}{% else %}Project
-							partner{% endif %}</span>
+						<strong>{{ testimonial.name }}</strong><span>{% if testimonial.company %}<i class="fa-solid fa-building"></i> {{ testimonial.company }}{% else %}<i class="fa-solid fa-id-badge"></i> Client{% endif %}</span>
 					</div>
 				</div>
 			</article>{% else %}<div class="testimonial-empty">
 				<div class="testimonial-empty-copy">
 					<i class="fa-solid fa-quote-left" aria-hidden="true"></i>
-					<div><strong>Good work is built on good partnerships.</strong><span>We would love to make something meaningful with you.</span>
+					<div><strong>Client reviews coming soon.</strong><span>Get in touch to start your project with us.</span>
 					</div>
-				</div><a href="#contact">Start a conversation <i class="fa-solid fa-arrow-right"></i></a>
+				</div><a href="#contact"><i class="fa-solid fa-paper-plane"></i> Contact us <i class="fa-solid fa-arrow-right"></i></a>
 			</div>{% endfor %}</div>
 	</div>
 </section>
@@ -337,31 +360,29 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 		<div class="about-visual">
 			<div class="about-visual-inner">
 				<i class="fa-solid fa-aperture"></i>
-				<p>We make visuals with feeling, purpose and a point of view.</p>
+				<p>Clear, high-quality visuals for your brand or event.</p>
 			</div>
 		</div>
 		<div class="about-copy">
-			<span class="eyebrow">A little about us</span>
-			<h2>Visuals that feel like something.</h2>
-			<p>OgwenofayaVisuals is a creative production studio built around the power of a well-told story. We partner with clients to turn ideas into films
-				and images that feel honest, considered and alive. </p>
-			<p>Whether it’s a brand film, a documentary moment or a celebration worth remembering, we bring intention to every detail and a collaborative spirit
-				to every set.</p>
+			<span class="eyebrow"><i class="fa-solid fa-circle-info"></i> About Us</span>
+			<h2>Who we are.</h2>
+			<p>OgwenofayaVisuals is a Nairobi-based video, photography, and design studio. We work with businesses, organizations, and individuals to turn their ideas into clear, professional visuals.</p>
+			<p>Whether you need a promotional video, brand content, or event photography, we manage the entire process smoothly and professionally.</p>
 			<div class="about-points">
 				<div class="about-point">
-					<i class="fa-solid fa-check"></i> Thoughtful storytelling
+					<i class="fa-solid fa-check-circle"></i> Clear messaging
 				</div>
 				<div class="about-point">
-					<i class="fa-solid fa-check"></i> Collaborative production
+					<i class="fa-solid fa-face-smile"></i> Easy to work with
 				</div>
 				<div class="about-point">
-					<i class="fa-solid fa-check"></i> Flexible, nimble crew
+					<i class="fa-solid fa-users"></i> Flexible crew size
 				</div>
 				<div class="about-point">
-					<i class="fa-solid fa-check"></i> Ready-to-share delivery
+					<i class="fa-solid fa-bolt"></i> Fast final delivery
 				</div>
 			</div>
-			<a class="btn btn-dark" href="#contact">Let’s make it real <i class="fa-solid fa-arrow-right"></i></a>
+			<a class="btn btn-dark" href="#contact"><i class="fa-solid fa-envelope"></i> Get in touch <i class="fa-solid fa-arrow-right"></i></a>
 		</div>
 	</div>
 </section>
@@ -369,46 +390,54 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
 	<div class="container contact-layout">
 		<div>
 			<div class="section-heading">
-				<span class="eyebrow">Start a project</span>
-				<h2> Have a story <br> on your mind? </h2>
-				<p>Tell us what you’re working on. We’ll get back to you and explore what we can create together.</p>
+				<span class="eyebrow"><i class="fa-solid fa-paper-plane"></i> Contact Us</span>
+				<h2> Ready to start <br> your project? </h2>
+				<p>Send us a message with your project details, and we will get back to you soon.</p>
 			</div>
 			<div class="contact-details">
 				<div class="contact-detail">
-					<i class="fa-regular fa-envelope"></i><span>Share your idea through the form and we’ll be in touch.</span>
+					<i class="fa-regular fa-envelope"></i><span>Fill out the form to send us an email.</span>
 				</div>
 				<div class="contact-detail">
-					<i class="fa-solid fa-video"></i><span>Films · Photography · Brand stories</span>
+					<i class="fa-solid fa-photo-film"></i><span>Video · Photography · Brand Content · Design</span>
 				</div>
 			</div>
 		</div>
 		<form class="contact-form" action="{{ url_for("contact") }}" method="post">
 			<div class="form-row">
 				<div class="form-group">
-					<label for="name">Your name *</label><input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required>
+					<label for="name"><i class="fa-solid fa-user"></i> Your name *</label><input id="name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required>
 				</div>
 				<div class="form-group">
-					<label for="email">Email address *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="jane@example.com"
+					<label for="email"><i class="fa-solid fa-at"></i> Email address *</label><input id="email" name="email" type="email" autocomplete="email" placeholder="jane@example.com"
 						required>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group">
-					<label for="phone">Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+254 …">
+					<label for="phone"><i class="fa-solid fa-phone"></i> Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+254 …">
 				</div>
 				<div class="form-group">
-					<label for="service">What do you need?</label><select id="service" name="service">
-						<option value=""> Choose a service </option> {% for service in services %} <option value="{{ service.title }}">
-							{{ service.title }}
-						</option> {% endfor %} <option value="Something else"> Something else </option>
+					<label for="service"><i class="fa-solid fa-list-check"></i> What do you need?</label><select id="service" name="service">
+						<option value=""> Choose a service </option> 
+						<option value="Photography">Photography</option>
+						<option value="Brand Content">Brand Content</option>
+						<option value="Videography">Videography</option>
+						<option value="Graphic Design">Graphic Design</option>
+						{% for service in services %} 
+						{% if service.title not in ['Photography', 'Brand Content', 'Videography', 'Graphic Design'] %}
+						<option value="{{ service.title }}">{{ service.title }}</option> 
+						{% endif %}
+						{% endfor %} 
+						<option value="Something else"> Something else </option>
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="message">Tell us about your project *</label><textarea id="message" name="message"
+				<label for="message"><i class="fa-solid fa-message"></i> Tell us about your project *</label><textarea id="message" name="message"
 					placeholder="The idea, the timeline, and what you'd love to make…" required></textarea>
-			</div><button class="btn btn-dark" type="submit">Send your enquiry <i class="fa-solid fa-arrow-right"></i></button>
-			<p class="form-hint">Your details are only used to respond to your enquiry. </p>
+			</div><button class="btn btn-dark" type="submit"><i class="fa-solid fa-paper-plane"></i> Send your enquiry <i class="fa-solid fa-arrow-right"></i></button>
+			<p class="form-hint"><i class="fa-solid fa-shield-halved"></i> Your details are only used to respond to your enquiry. </p>
 		</form>
 	</div>
 </section> {% endblock %} {% block scripts %} <script>
