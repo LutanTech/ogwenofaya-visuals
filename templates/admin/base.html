@@ -208,7 +208,7 @@
       </div>
       <div class="sidebar-menu">
         <span class="sidebar-menu-label">Overview</span>
-        <a class="sidebar-link {% if request.endpoint == 'control' %}active{% endif %}" href="{{ url_for('control') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard Metrics</a>
+        <a class="sidebar-link {% if request.endpoint == 'control' %}active{% endif %}" href="{{ url_for('control') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
         
         <span class="sidebar-menu-label" style="margin-top:12px;">Quick Actions</span>
         <a class="sidebar-link {% if request.endpoint == 'project_page' %}active{% endif %}" href="{{ url_for('projects_page') }}"><i class="fa-solid fa-film"></i> Projects</a>

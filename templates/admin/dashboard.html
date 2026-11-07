@@ -186,6 +186,18 @@
   transition: all 0.15s;
 }
 .delete-action-btn:hover { background: var(--danger-bg); color: var(--danger); }
+.edit-action-btn {
+  border: 0;
+  background: #063c3bdb;
+  color: var(--text-muted);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.edit-action-btn:hover { background:rgba(2, 188, 185, 0.86); color:white; }
 .empty-state { text-align: center; color: var(--text-muted); padding: 20px 10px; font-size: 0.76rem; }
 .empty-state i { display: block; color: var(--border-active); font-size: 1.2rem; margin-bottom: 6px; }
 
@@ -327,10 +339,8 @@
                 <span class="badge muted">Standard</span>
               {% endif %}
             </td>
-            <td>
-              <form class="delete-form" action="{{ url_for('edit_project', id=project.id) }}" method="post" onsubmit="return confirm('Delete this project?')">
-                <button class="delete-action-btn" type="submit" title="Delete"><i class="fa-regular fa-edit"></i> Edit</button>
-              </form>
+            <td style='display:flex; flex-direction:column;gap:4px; align-items:center; justify-content:center'>
+                <a class="edit-action-btn" href="{{ url_for('edit_project', id=project.id) }}" type="button" role="button" title="Edit"><i class="fa-regular fa-edit"></i> Edit</a>
               <form class="delete-form" action="{{ url_for('delete_project', id=project.id) }}" method="post" onsubmit="return confirm('Delete this project?')">
                 <button class="delete-action-btn" type="submit" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
               </form>
