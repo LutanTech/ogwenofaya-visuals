@@ -579,21 +579,24 @@ def stream_video(id, quality):
     if duration is not None:
         start = min(start, max(0.0, duration - 0.05))
     command = [FFMPEG, "-hide_banner", "-loglevel", "error"]
-    if start > 0:
-        command += ["-ss", f"{start:.3f}"]
+
+    if start>0:
+        command += ["-ss",f"{start:.3f}"]
+
     command += [
-        "-i", path,
-        "-map", "0:v:0",
-        "-map", "0:a?",
-        "-vf", f"scale=-2:min({quality}\\,ih)",
-        "-c:v", "libx264",
-        "-preset", "veryfast",
-        "-crf", "23",
-        "-pix_fmt", "yuv420p",
-        "-c:a", "aac",
-        "-b:a", "128k",
-        "-movflags", "frag_keyframe+empty_moov+default_base_moof",
-        "-f", "mp4",
+        "-i",path,
+        "-map","0:v:0",
+        "-map","0:a?",
+        "-vf",f"scale=-2:min({quality}\\,ih)",
+        "-c:v","libx264",
+        "-threads","1",
+        "-preset","ultrafast",
+        "-crf","23",
+        "-pix_fmt","yuv420p",
+        "-c:a","aac",
+        "-b:a","128k",
+        "-movflags","frag_keyframe+empty_moov+default_base_moof",
+        "-f","mp4",
         "pipe:1",
     ]
     process = subprocess.Popen(
