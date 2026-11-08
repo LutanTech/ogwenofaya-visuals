@@ -10,7 +10,7 @@ import secrets
 import string
 import subprocess
 import urllib.request
-
+from mailer import send_mail
 from flask import (
     Flask,
     Response,
@@ -28,18 +28,117 @@ from flask_limiter.util import get_remote_address
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from google_auth_oauthlib.flow import Flow
+from itsdangerous import URLSafeTimedSerializer
 import requests
 from sqlalchemy import func
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
-
+from mailer import mail  
 from known_bots import detect_bot
-app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "change_this_secret")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ogwenofaya.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+from models import db, Project, User, Admin, Service, Testimonial, Comment, Inquiry, RequestLog, ProjectImage, ProjectVideo
 
-db = SQLAlchemy(app)
+app = Flask(__name__)
+COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE","0")=="1"
+
+app.config.update(
+    MAX_CONTENT_LENGTH=25*1024*1024,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=COOKIE_SECURE,
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=72),
+    SECRET_KEY=os.getenv("FLASK_SECRET","secret-key"),
+    SQLALCHEMY_DATABASE_URI="sqlite:///ogwenofaya.db",
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    MAIL_SERVER="mail.tunupublishers.com",
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USE_TLS=False,
+    MAIL_USERNAME="library@tunupublishers.com",
+    MAIL_PASSWORD=os.getenv("MAIL_PASS"),
+    MAIL_DEFAULT_SENDER="library@tunupublishers.com"
+)
+print(app.config["MAIL_PASSWORD"])
+RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
+delta = 3
+
+db.init_app(app)
+mail.init_app(app)
+
+
+SENDER_MAIL = "library@tunupublishers.com"
+
+
+def captcha_verify(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if request.method == "POST":
+            if request.form.get("website_url"):
+                if (
+                    request.is_json
+                    or request.headers.get("Accept") == "application/json"
+                ):
+                    return jsonify({"error": "Invalid request."}), 400
+                flash("Please complete the reCAPTCHA checkbox verification.", "error")
+                return redirect(request.referrer or "/")
+
+            token = request.form.get("g-recaptcha-response")
+
+            if not token:
+                if (
+                    request.is_json
+                    or request.headers.get("Accept") == "application/json"
+                    or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+                ):
+                    return jsonify(
+                        {"error": "Please complete the reCAPTCHA verification."}
+                    ), 400
+                flash("Please complete the reCAPTCHA checkbox verification.", "error")
+                return redirect(request.referrer or "/")
+
+            try:
+                result = requests.post(
+                    "https://www.google.com/recaptcha/api/siteverify",
+                    data={
+                        "secret": RECAPTCHA_SECRET_KEY,
+                        "response": token,
+                        "remoteip": request.remote_addr,
+                    },
+                    timeout=10,
+                ).json()
+            except requests.RequestException:
+                if (
+                    request.is_json
+                    or request.headers.get("Accept") == "application/json"
+                    or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+                ):
+                    return jsonify(
+                        {"error": "reCAPTCHA verification failed. Please try again."}
+                    ), 400
+                flash("reCAPTCHA verification failed. Please try again.", "error")
+                return redirect(request.referrer or "/")
+
+            if not result.get("success"):
+                if (
+                    request.is_json
+                    or request.headers.get("Accept") == "application/json"
+                    or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+                ):
+                    return jsonify(
+                        {"error": "Please complete the reCAPTCHA verification."}
+                    ), 400
+                flash("Please complete the reCAPTCHA checkbox verification.", "error")
+                return redirect(request.referrer or "/")
+
+        return f(*args, **kwargs)
+
+    return wrapper
+
+
+app.config["MAIL_DEFAULT_SENDER"] = (
+    "OgwenofayaVisuals",
+     f'{SENDER_MAIL}'
+)
+
 migrate = Migrate(app, db)
 
 limiter = Limiter(
@@ -47,6 +146,8 @@ limiter = Limiter(
     app=app,
     default_limits=["2000 per day", "500 per hour"]
 )
+
+
 
 IMAGE_DIR = os.path.join(app.root_path, "static", "resources", "images")
 VIDEO_DIR = os.path.join(app.root_path, "static", "resources", "videos")
@@ -132,126 +233,6 @@ def get_location_by_ip(ip):
         pass
     return "Unknown"
 
-class Project(db.Model):
-    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("PRJ_"))
-    title = db.Column(db.String(150), nullable=False)
-    slug = db.Column(db.String(180), unique=True, nullable=False)
-    category = db.Column(db.String(80), nullable=False)
-    description = db.Column(db.Text)
-    image = db.Column(db.String(255))
-    video = db.Column(db.String(255))
-    featured = db.Column(db.Boolean, default=False)
-    is_deleted = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-    images = db.relationship(
-        "ProjectImage",
-        backref="project",
-        cascade="all, delete-orphan",
-        order_by="ProjectImage.id"
-    )
-
-class ProjectImage(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.String(30), db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True)
-    filename = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-    
-    
-class ProjectVideo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.String(30), db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True)
-    filename = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-    
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    google_id = db.Column(db.String(100), unique=True, nullable=True)
-    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    username = db.Column(db.String(100), nullable=False)
-    avatar_url = db.Column(db.String(255), nullable=True)
-    google_method = db.Column(db.Boolean, default=False)
-    email_method = db.Column(db.Boolean, default=False)
-    is_active = db.Column(db.Boolean, default=True, nullable=False)
-    is_admin = db.Column(db.Boolean, default=False, nullable=False)
-    is_super_admin = db.Column(db.Boolean, default=False, nullable=False)
-    tkv = db.Column(db.String(50), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-    password = db.Column(db.String(255), nullable=True)
-    
-
-
-Project.videos = db.relationship(
-    "ProjectVideo",
-    backref="project",
-    cascade="all, delete-orphan",
-    order_by="ProjectVideo.id"
-)
-
-Project.comments = db.relationship(
-    "Comment",
-    backref="project",
-    cascade="all, delete-orphan",
-    order_by="Comment.id.desc()"
-)
-
-class Service(db.Model):
-    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("SRV_"))
-    title = db.Column(db.String(150), nullable=False)
-    description = db.Column(db.Text)
-    image = db.Column(db.String(255))
-    position = db.Column(db.Integer, default=0)
-    is_deleted = db.Column(db.Boolean, default=False)
-    
-    
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    project_id = db.Column(db.String(30), db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    message = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-
-    author = db.relationship("User", backref=db.backref("comments", cascade="all, delete-orphan"))
-    
-
-
-class Testimonial(db.Model):
-    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("TST_"))
-    name = db.Column(db.String(120), nullable=False)
-    company = db.Column(db.String(150))
-    quote = db.Column(db.Text, nullable=False)
-    position = db.Column(db.Integer, default=0)
-    is_deleted = db.Column(db.Boolean, default=False)
-
-class Inquiry(db.Model):
-    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("INQ_"))
-    name = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(180), nullable=False)
-    phone = db.Column(db.String(50))
-    service = db.Column(db.String(120))
-    message = db.Column(db.Text, nullable=False)
-    is_deleted = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-
-class Admin(db.Model):
-    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("ADM_"))
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-
-class RequestLog(db.Model):
-    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("LOG_"))
-    method = db.Column(db.String(10), nullable=False)
-    path = db.Column(db.String(255), nullable=False)
-    status_code = db.Column(db.Integer, nullable=False)
-    ip_address = db.Column(db.String(50))
-    location = db.Column(db.String(120))
-    user_agent = db.Column(db.String(255))
-    is_bot = db.Column(db.Boolean, default=False)
-    bot_name = db.Column(db.String(100), nullable=True)
-    is_deleted = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
-
 def admin_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -336,6 +317,7 @@ def checkProcess():
         print(f"FFmpeg error: {e}", flush=True)
 
 @app.post("/contact")
+@captcha_verify
 @limiter.limit("5 per minute")
 def contact():
     name = request.form.get("name", "").strip()
@@ -361,8 +343,10 @@ def contact():
 @app.route("/register", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
 def register():
-    if Admin.query.first():
-        return redirect(url_for("login"))
+    
+    if Admin.query.count() > 1:
+       return redirect(url_for("login"))
+   
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
@@ -375,6 +359,9 @@ def register():
             return render_template("register.html")
         if password != confirm:
             flash("Passwords do not match.")
+            return render_template("register.html")
+        if Admin.query.filter_by(username=username).first():
+            flash("An account with that username already exists.")
             return render_template("register.html")
         admin = Admin(
             username=username,
@@ -922,7 +909,63 @@ def google_login():
         session["google_code_verifier"]=flow.code_verifier
 
         return redirect(auth_url)
-    
+  
+
+serializer=URLSafeTimedSerializer(app.secret_key)
+
+@app.route("/reset-password",methods=["GET","POST"])
+def reset_password():
+    if request.method=="POST":
+        email=request.form.get("email","").strip().lower()
+        user=Admin.query.filter_by(username=email).first()
+
+        if user:
+            token=serializer.dumps(user.id,salt="password-reset")
+            reset_url=url_for("reset_password_token",token=token,_external=True)
+
+            email_html=f"""
+            <div>
+                <h2>Reset your password</h2>
+                <p>We received a request to reset your password.</p>
+                <p><a href="{reset_url}">Reset Password</a></p>
+                <p>This link expires in 30 minutes.</p>
+                <p>If you did not request this, you can safely ignore this email.</p>
+            </div>
+            """
+
+            send_mail(user.id,'Password Reset',email_html)
+
+        return redirect(url_for("reset_password"))
+
+    return render_template("reset_password.html")
+
+
+@app.route("/reset-password/<token>",methods=["GET","POST"])
+def reset_password_token(token):
+    try:
+        user_id=serializer.loads(
+            token,
+            salt="password-reset",
+            max_age=1800
+        )
+    except Exception:
+        return "Invalid or expired reset link",400
+
+    user=Admin.query.get_or_404(user_id)
+
+    if request.method=="POST":
+        password=request.form.get("password","")
+
+        if len(password)<8:
+            return "Password must be at least 8 characters",400
+
+        user.password=generate_password_hash(password)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+
+    return render_template("reset_password_token.html")
+ 
 @app.route("/google/callback")
 def callback():
         if "google_state" not in session or "google_code_verifier" not in session:

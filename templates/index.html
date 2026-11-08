@@ -155,10 +155,20 @@ i{color:var(--blue-2)}.sample-tag{display:inline-flex;align-items:center;gap:7px
   display:flex
 }
 
+@media(max-width:768px){
+	.eyebrow{
+		flex-wrap:wrap
+	}
+	.eyebrow:before{
+       display:none
+	}
+}
 {% endblock %} {% block content %} <section class="hero" id="top">
 	<div class="container">
 		<div class="hero-content">
-			<span class="eyebrow"><i class="fa-solid fa-clapperboard"></i> Videography &nbsp;·&nbsp; <i class="fa-solid fa-camera"></i> Photography &nbsp;·&nbsp; <i class="fa-solid fa-paintbrush"></i> Brand Content & Design</span>
+			<span class="eyebrow">
+				<div><i class="fa-solid fa-clapperboard"></i> Videography &nbsp;·&nbsp;</div> 
+				<div><i class="fa-solid fa-camera"></i> Photography &nbsp;·&nbsp; </div> <div> <i class="fa-solid fa-paintbrush"></i> Brand Content & Design </div></span>
 			<h1> Visuals that tell <br> <span>your story.</span>
 			</h1>
 			<p class="hero-copy"> OgwenofayaVisuals provides professional video production, photography, graphic design and brand content for businesses, organizations and individuals.</p>
