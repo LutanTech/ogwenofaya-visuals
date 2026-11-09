@@ -941,11 +941,11 @@ def add_project():
     category = request.form.get("category", "").strip()
     description = request.form.get("description", "").strip()
     if not title or not category:
-        return admin_form_response("Title and category are required.", False, 400)
+        flash("Title and category are required.", 'error')
+        return redirect(url_for('projects_page'))
     
     slug = unique_slug(title)
     
-    # Accept all uploaded files from the unified input field
     uploaded_files = request.files.getlist("images")
     if not any(file and file.filename for file in uploaded_files):
         legacy_file = request.files.get("image")
@@ -966,7 +966,6 @@ def add_project():
         if not ext:
             continue
         
-        # Differentiate types based on file extensions
         if ext in IMAGE_EXTENSIONS:
             saved_name = f"{gen_id('IMG_')}{ext}"
             file.save(os.path.join(IMAGE_DIR, saved_name))
@@ -993,7 +992,6 @@ def add_project():
     db.session.add(project)
     db.session.flush()
     
-    # Save relations to respective database models
     for filename in saved_images:
         db.session.add(ProjectImage(project_id=project.id, filename=filename))
     for filename in saved_videos:
@@ -1002,7 +1000,9 @@ def add_project():
         db.session.add(ProjectFile(project_id=project.id, filename=filename))
         
     db.session.commit()
-    return admin_form_response("Project created successfully.", True, 201)
+    flash('Project created successfully', 'success')
+    return redirect(url_for('projects_page'))
+
 
 @app.post("/control/service")
 @admin_required
