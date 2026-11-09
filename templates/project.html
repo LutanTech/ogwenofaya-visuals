@@ -160,7 +160,7 @@
             <img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" loading="lazy">
             <i class="fa-solid fa-film" style="position:absolute; font-size:2rem; color:var(--text-muted)"></i>
           {% else %}
-            <i class="fa-solid fa-film" style="font-size:2rem; color:var(--text-muted)"></i>
+          <img src="{{ url_for('static', filename='resources/images/video-poster.gif') }}" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" loading="lazy">
           {% endif %}
           <div class="video-card-badge"><i class="fa-solid fa-play"></i> Video {{ loop.index }}</div>
         </div>
@@ -173,13 +173,11 @@
       
       <div class="project-photo-card" style="display:flex; flex-direction:column; background:#0b1420; min-height:180px;">
         {% if ext == 'pdf' %}
-          <!-- Live Embedded PDF Thumbnail Preview -->
           <div style="position:relative; width:100%; height:130px; overflow:hidden; background:#02060b;">
             <iframe src="{{ file_url }}#toolbar=0&navpanes=0&scrollbar=0" style="width:100%; height:180px; border:0; pointer-events:none; margin-top:-25px;" title="{{ doc.filename }}"></iframe>
             <a href="{{ file_url }}" target="_blank" style="position:absolute; inset:0; z-index:2;" aria-label="Preview full PDF"></a>
           </div>
         {% else %}
-          <!-- Generic Fallback Preview Box for non-PDF files -->
           <div style="width:100%; height:100px; display:grid; place-items:center; background:var(--bg-base); color:var(--accent); font-weight:800; font-size:1.2rem; font-family:'JetBrains Mono',monospace;">
             {{ ext | upper }}
           </div>
