@@ -294,6 +294,7 @@
         <a class="sidebar-link {% if request.endpoint == 'messages_page' %}active{% endif %}" href="{{ url_for('messages_page') }}"><i class="fa-regular fa-envelope"></i> Messages</a>
         <a class="sidebar-link {% if request.endpoint == 'users_page' %}active{% endif %}" href="{{ url_for('users_page') }}"><i class="fas fa-users"></i> Users</a>
         <a class="sidebar-link {% if request.endpoint == 'logs_page' %}active{% endif %}" href="{{ url_for('logs_page') }}"><i class="fa-solid fa-server"></i> System Logs</a>
+        <a style="color:red" class="sidebar-link {% if request.endpoint == 'cache_page' %}active{% endif %}" href="{{ url_for('cache_page') }}"><i  style="color:red" class="fa-solid fa-trash"></i> Cache</a>
 
         <span class="sidebar-menu-label">System</span>
         <a class="sidebar-link" href="{{ url_for('index') }}" target="_blank" rel="noopener"><i class="fa-solid fa-external-link"></i> Public Website</a>

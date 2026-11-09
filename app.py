@@ -1171,10 +1171,15 @@ def delete_inquiry(id):
 @app.route("/control/cache")
 @admin_required
 def cache_page():
+    show = request.args.get('show')
     deleted_projects = Project.query.filter_by(is_deleted=True).all()
     deleted_services = Service.query.filter_by(is_deleted=True).all()
     deleted_testimonials = Testimonial.query.filter_by(is_deleted=True).all()
-    deleted_logs = RequestLog.query.order_by(RequestLog.created_at.desc()).limit(100).all()
+    deleted_logs = RequestLog.query.filter_by(is_deleted=True).limit(100).all()
+    
+    if show =='all':
+       deleted_logs = RequestLog.query.order_by(RequestLog.created_at.desc()).limit(100).all()
+       
     return render_template(
         "admin/cache.html",
         deleted_projects=deleted_projects,
@@ -1758,6 +1763,22 @@ def bulk_delete_logs():
     return redirect(url_for("logs_page"))
 
 
+@app.post("/control/logs/delete/<string:id>")
+@admin_required
+def delete_single_log(id):
+    log = RequestLog.query.get_or_404(id)
+    db.session.delete(log)
+    db.session.commit()
+    flash("Log entry permanently deleted.")
+    return redirect(request.referrer or url_for("cache_page"))
+
+@app.post("/control/logs/purge-all")
+@admin_required
+def purge_all_logs():
+    RequestLog.query.filter_by(is_deleted=True).delete()
+    db.session.commit()
+    flash("All request logs have been purged.")
+    return redirect(request.referrer or url_for("cache_page"))
 
 @app.errorhandler(401)
 def unauthorized_error(error):

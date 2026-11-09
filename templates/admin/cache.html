@@ -53,30 +53,66 @@
 </div>
 
 <div class="panel">
-  <div class="panel-head">
-    <h2><i class="fa-solid fa-server"></i> Request Logs (Bots & Traffic)</h2>
+  <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2><i class="fa-solid fa-server"></i> Request Logs (Trash / Deleted)</h2>
+    <div style="display:flex; gap:8px;">
+      <button type="submit" form="bulk-logs-form" class="btn-purge" style="padding:5px 10px; font-size:0.72rem;">Delete Selected</button>
+      <form action="{{ url_for('purge_all_logs') }}" method="post" onsubmit="return confirm('Are you sure you want to purge all request logs?');" style="margin:0;">
+        <button type="submit" class="btn-purge" style="padding:5px 10px; font-size:0.72rem; color:black; background:#fa8686;">Purge All</button>
+      </form>
+    </div>
   </div>
-  <div class="table-scroll">
-    <table class="data-table">
-      <thead><tr><th>Method / Path</th><th>IP & Location</th><th>Visitor Type</th><th>Status</th><th>Time</th></tr></thead>
-      <tbody>
-        {% for log in deleted_logs %} 
-        <tr>
-          <td><b>{{ log.method }}</b> {{ log.path }}</td>
-          <td>{{ log.ip_address }}<br><span style="color:var(--text-muted);">{{ log.location }}</span></td>
-          <td>
-            {% if log.is_bot %}
-              <span style="color:#f59e0b;">🤖 {{ log.bot_name }}</span>
-            {% else %}
-              <span style="color:#10b981;">👤 Human</span>
-            {% endif %}
-          </td>
-          <td>{{ log.status_code }}</td>
-          <td>{{ log.created_at.strftime('%b %d, %H:%M') }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+
+  <form id="bulk-logs-form" action="{{ url_for('bulk_delete_logs') }}" method="post">
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:30px;"><input type="checkbox" id="select-all-logs" style="accent-color:var(--accent-cyan);"></th>
+            <th>Method / Path</th>
+            <th>IP & Location</th>
+            <th>Visitor Type</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in deleted_logs %} 
+          <tr>
+            <td><input type="checkbox" name="log_ids" value="{{ log.id }}" class="log-checkbox" style="accent-color:var(--accent-cyan);"></td>
+            <td><b>{{ log.method }}</b> {{ log.path }}</td>
+            <td>{{ log.ip_address }}<br><span style="color:var(--text-muted);">{{ log.location }}</span></td>
+            <td>
+              {% if log.is_bot %}
+                <span style="color:#f59e0b;">🤖 {{ log.bot_name }}</span>
+              {% else %}
+                <span style="color:#10b981;">👤 Human</span>
+              {% endif %}
+            </td>
+            <td>{{ log.status_code }}</td>
+            <td>{{ log.created_at.strftime('%b %d, %H:%M') }}</td>
+            <td>
+              <div class="actions-cell">
+                <form action="{{ url_for('delete_single_log', id=log.id) }}" method="post" onsubmit="return confirm('Permanently delete this log?');" style="margin:0;">
+                  <button class="btn-purge" type="submit">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7"><div class="empty-state">No deleted request logs found.</div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
 </div>
+
+<script>
+  document.getElementById('select-all-logs')?.addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.log-checkbox');
+    checkboxes.forEach(cb => cb.checked = this.checked);
+  });
+</script>
 {% endblock %}
