@@ -1323,7 +1323,7 @@ def edit_project(id):
                 saved_videos.append(saved_name)
             else:
                 saved_name = f"{gen_id('DOC_')}{ext}"
-                file.save(os.path.join(IMAGE_DIR, saved_name))
+                file.save(os.path.join(FILES_DIR, saved_name))
                 saved_files.append(saved_name)
                 
         if saved_images:
