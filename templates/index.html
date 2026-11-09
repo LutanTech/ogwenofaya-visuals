@@ -1026,12 +1026,12 @@
 			<a class="btn btn-dark" href="#contact"><i class="fa-solid fa-handshake"></i> Work with us <i class="fa-solid fa-arrow-right"></i></a>
 		</div>
 		<div class="work-grid"> {% set showcase = featured if featured else projects %} {% for project in showcase %} <article class="work-card">
-				{% if project.image %} <img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="{{ project.title }}"
-					loading="lazy"> {% else %} <div style="position:absolute;
-                                        inset:0;
-                                        z-index:-2;
-                                        background:linear-gradient(145deg,#0e2340,#1769bc 60%,#07111f)">
-				</div> {% endif %} <div class="work-card-body">
+				{% if project.image %} <img src="{{ url_for('static', filename='resources/images/' ~ project.image)  }}" alt="{{ project.title }}"
+					loading="lazy"> {% else %} 
+					
+					<img src="{{ url_for('static', filename='resources/images/project.png')  }}" alt="{{ project.title }}"
+					loading="lazy">
+					{% endif %} <div class="work-card-body">
 					<span class="work-category"><i class="fa-solid fa-tag"></i> {{ project.category }}</span>
 					<h3>{{ project.title }}
 					</h3>

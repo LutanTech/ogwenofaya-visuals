@@ -28,6 +28,8 @@ class Project(db.Model):
         cascade="all, delete-orphan",
         order_by="ProjectImage.id"
     )
+    
+    files = db.relationship('ProjectFile', backref='project', cascade='all, delete-orphan')
 
 class ProjectImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -150,3 +152,10 @@ class BlockedIP(db.Model):
 class Registration(db.Model):
     id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("REG_"))
     status = db.Column(db.Boolean, default=False)
+    
+class ProjectFile(db.Model):
+    __tablename__ = 'project_files'
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.String(30), db.ForeignKey('project.id', ondelete='CASCADE'), nullable=False, index=True)
+    filename = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=delta))

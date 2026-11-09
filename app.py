@@ -52,6 +52,7 @@ from models import (
     ProjectVideo,
     Registration,
     RequestLog,
+    ProjectFile,
     Service,
     Testimonial,
     User,
@@ -197,6 +198,7 @@ with app.app_context():
 
 IMAGE_DIR = os.path.join(app.root_path, "static", "resources", "images")
 VIDEO_DIR = os.path.join(app.root_path, "static", "resources", "videos")
+FILES_DIR = os.path.join(app.root_path, "static", "resources", "files")
 GOOGLE_CLIENT_SECRETS_FILE="client_secret.json"
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"]="1"
 
@@ -209,6 +211,7 @@ delta = 3
 
 os.makedirs(IMAGE_DIR, exist_ok=True)
 os.makedirs(VIDEO_DIR, exist_ok=True)
+os.makedirs(FILES_DIR, exist_ok=True)
 
 def generate_token(user_id,tkv):
     return hmac.new(
@@ -917,6 +920,20 @@ def admin_form_response(message, ok=True, status=200):
     flash(message)
     return redirect(url_for("control"))
 
+@app.post("/control/projects/file/delete/<int:file_id>")
+@admin_required
+def delete_project_file(file_id):
+    file_record = ProjectFile.query.get_or_404(file_id)
+    project_id = file_record.project_id
+    path = os.path.join(IMAGE_DIR, file_record.filename)
+    if os.path.exists(path):
+        os.remove(path)
+    db.session.delete(file_record)
+    db.session.commit()
+    flash("File deleted from project.")
+    return redirect(url_for("edit_project", id=project_id))
+
+
 @app.post("/control/project")
 @admin_required
 def add_project():
@@ -925,27 +942,45 @@ def add_project():
     description = request.form.get("description", "").strip()
     if not title or not category:
         return admin_form_response("Title and category are required.", False, 400)
-    slug = unique_slug(title)
-    image_files = request.files.getlist("images")
-    if not any(file and file.filename for file in image_files):
-        legacy_image = request.files.get("image")
-        image_files = [legacy_image] if legacy_image and legacy_image.filename else []
-    saved_images = []
-    for image_file in image_files:
-        filename = save_image_upload(image_file)
-        if filename:
-            saved_images.append(filename)
     
-    video_files = request.files.getlist("videos")
-    if not any(file and file.filename for file in video_files):
-        legacy_video = request.files.get("video")
-        video_files = [legacy_video] if legacy_video and legacy_video.filename else []
+    slug = unique_slug(title)
+    
+    # Accept all uploaded files from the unified input field
+    uploaded_files = request.files.getlist("images")
+    if not any(file and file.filename for file in uploaded_files):
+        legacy_file = request.files.get("image")
+        uploaded_files = [legacy_file] if legacy_file and legacy_file.filename else []
+    
+    saved_images = []
     saved_videos = []
-    for video_file in video_files:
-        filename = save_upload(video_file, VIDEO_DIR, "VID_")
-        if filename:
-            saved_videos.append(filename)
+    saved_files = []
+    
+    IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".avif", ".bmp", ".tif", ".tiff"}
+    VIDEO_EXTENSIONS = {".mp4", ".mov", ".avi", ".mkv", ".webm", ".m4v"}
+    
+    for file in uploaded_files:
+        if not file or not file.filename:
+            continue
+        filename = secure_filename(file.filename)
+        ext = os.path.splitext(filename)[1].lower()
+        if not ext:
+            continue
+        
+        # Differentiate types based on file extensions
+        if ext in IMAGE_EXTENSIONS:
+            saved_name = f"{gen_id('IMG_')}{ext}"
+            file.save(os.path.join(IMAGE_DIR, saved_name))
+            saved_images.append(saved_name)
+        elif ext in VIDEO_EXTENSIONS:
+            saved_name = f"{gen_id('VID_')}{ext}"
+            file.save(os.path.join(VIDEO_DIR, saved_name))
+            saved_videos.append(saved_name)
+        else:
+            saved_name = f"{gen_id('DOC_')}{ext}"
+            file.save(os.path.join(IMAGE_DIR, saved_name))
+            saved_files.append(saved_name)
 
+    # Create the project instance
     project = Project(
         title=title,
         slug=slug,
@@ -957,12 +992,17 @@ def add_project():
     )
     db.session.add(project)
     db.session.flush()
+    
+    # Save relations to respective database models
     for filename in saved_images:
         db.session.add(ProjectImage(project_id=project.id, filename=filename))
     for filename in saved_videos:
         db.session.add(ProjectVideo(project_id=project.id, filename=filename))
+    for filename in saved_files:
+        db.session.add(ProjectFile(project_id=project.id, filename=filename))
+        
     db.session.commit()
-    return admin_form_response("Project created.", True, 201)
+    return admin_form_response("Project created successfully.", True, 201)
 
 @app.post("/control/service")
 @admin_required

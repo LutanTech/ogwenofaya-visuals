@@ -127,15 +127,15 @@
     <h3><i class="fa-solid fa-ban"></i> Blocked IPs</h3>
     <div class="metric-list">
       {% for item in blocked_ips[:2] %}
-      <div class="metric-item">
-        <span style="font-family:'JetBrains Mono', monospace;">{{ item.ip_address }}</span>
-        <span class="count">{{ item.blocked_at }}</span>
+      <div class="metric-item" style="margin-bottom:9px">
+        <span style="font-family:'JetBrains Mono', monospace; font-size:xx-small">{{ item.ip_address }}</span>
+        <span class="count" style="font-size:xx-small">{{ (item.blocked_at).strftime('%d/%m/%Y %H:%M:%S') }}</span>
       </div>
       {% else %}
       <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; padding:10px;">No data</div>
       {% endfor %}
     </div>
-    <h3><i class="fa-solid fa-ban"></i> Frequent IPs</h3>
+    <h3><i class="fa-solid fa-network-wired"></i> Frequent IPs</h3>
     <div class="metric-list">
       {% for item in frequent_ips[:2] %}
       <div class="metric-item">

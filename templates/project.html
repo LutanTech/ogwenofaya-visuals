@@ -125,6 +125,7 @@
 {% if project.image and project.image not in gallery_images %}{% set gallery_images = [project.image] + gallery_images %}{% endif %}
 {% set gallery_videos = project.videos|default([], true)|map(attribute='filename')|list %}
 {% if project.video and project.video not in gallery_videos %}{% set gallery_videos = [project.video] + gallery_videos %}{% endif %}
+{% set gallery_docs = project.files %}
 
 <section id="image-overlay" class="none">
   <button class="close-overlay" onclick="toggleImageOverlay()"><i class="fas fa-close"></i></button>
@@ -138,11 +139,11 @@
 
 </section>
 
-{% macro render_project_gallery(images, videos) %}
+{% macro render_project_gallery(images, videos, documents) %}
 <section class="project-gallery" aria-label="Project media">
   <div class="project-gallery-heading">
-    <h2>Project media</h2>
-    <span>{{ images|length + videos|length }} item{% if (images|length + videos|length) != 1 %}s{% endif %}</span>
+    <h2>Project media & files</h2>
+    <span>{{ images|length + videos|length + documents|length }} item{% if (images|length + videos|length + documents|length) != 1 %}s{% endif %}</span>
   </div>
   <div class="project-photo-grid">
     {% for image_name in images %}
@@ -151,6 +152,7 @@
         <div class="video-card-badge"><i class="fa-solid fa-image"></i> Img {{ loop.index }}</div>
       </button>
     {% endfor %}
+    
     {% for video_name in videos %}
       <div class="project-photo-card" data-video-trigger="{{ url_for('static', filename='resources/videos/' ~ video_name) }}" role="button" tabindex="0" aria-label="Play clip {{ loop.index }}">
         <div style="position:relative; aspect-ratio:16/9; background:#010408; display:grid; place-items:center;">
@@ -161,6 +163,31 @@
             <i class="fa-solid fa-film" style="font-size:2rem; color:var(--text-muted)"></i>
           {% endif %}
           <div class="video-card-badge"><i class="fa-solid fa-play"></i> Video {{ loop.index }}</div>
+        </div>
+      </div>
+    {% endfor %}
+
+    {% for doc in documents %}
+      {% set ext = doc.filename.split('.')[-1] | lower %}
+      {% set file_url = url_for('static', filename='resources/files/' ~ doc.filename) %}
+      
+      <div class="project-photo-card" style="display:flex; flex-direction:column; background:#0b1420; min-height:180px;">
+        {% if ext == 'pdf' %}
+          <!-- Live Embedded PDF Thumbnail Preview -->
+          <div style="position:relative; width:100%; height:130px; overflow:hidden; background:#02060b;">
+            <iframe src="{{ file_url }}#toolbar=0&navpanes=0&scrollbar=0" style="width:100%; height:180px; border:0; pointer-events:none; margin-top:-25px;" title="{{ doc.filename }}"></iframe>
+            <a href="{{ file_url }}" target="_blank" style="position:absolute; inset:0; z-index:2;" aria-label="Preview full PDF"></a>
+          </div>
+        {% else %}
+          <!-- Generic Fallback Preview Box for non-PDF files -->
+          <div style="width:100%; height:100px; display:grid; place-items:center; background:var(--bg-base); color:var(--accent); font-weight:800; font-size:1.2rem; font-family:'JetBrains Mono',monospace;">
+            {{ ext | upper }}
+          </div>
+        {% endif %}
+        
+        <div style="padding:10px 12px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08);">
+          <span style="color:var(--text-main); font-size:0.75rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;" title="{{ doc.filename }}">{{ doc.filename }}</span>
+          <a href="{{ file_url }}" download class="btn-sm" style="color:var(--accent); font-size:0.75rem; text-decoration:none;" title="Download file"><i class="fa-solid fa-download"></i></a>
         </div>
       </div>
     {% endfor %}
@@ -185,8 +212,8 @@
         </div>
         <div class="custom-context-menu" data-context-menu role="menu" aria-label="Video options" hidden><button type="button" role="menuitem" data-menu-play><i class="fa-solid fa-play"></i><span>Play</span></button><button type="button" role="menuitem" data-menu-mute><i class="fa-solid fa-volume-xmark"></i><span>Mute</span></button><button type="button" role="menuitem" data-menu-speed><i class="fa-solid fa-gauge-high"></i><span>Playback speed: 1×</span></button><div class="context-divider" role="separator"></div><button type="button" role="menuitem" data-menu-copy><i class="fa-regular fa-copy"></i><span>Copy video link</span></button></div>
         {% if project.description %}<div class="video-info"><h2>About this film</h2><p>{{ project.description }}</p></div>{% endif %}
-        {% if gallery_images or gallery_videos %}{{ render_project_gallery(gallery_images, gallery_videos) }}{% endif %}
-      {% elif gallery_images or gallery_videos %}{{ render_project_gallery(gallery_images, gallery_videos) }}{% else %}<div class="project-empty"><i class="fa-regular fa-images"></i><h2>Project media is on its way</h2><p>There are no images or videos attached to this project yet.</p></div>{% endif %}
+        {% if gallery_images or gallery_videos or gallery_docs %}{{ render_project_gallery(gallery_images, gallery_videos, gallery_docs) }}{% endif %}
+      {% elif gallery_images or gallery_videos or gallery_docs %}{{ render_project_gallery(gallery_images, gallery_videos, gallery_docs) }}{% else %}<div class="project-empty"><i class="fa-regular fa-images"></i><h2>Project media is on its way</h2><p>There are no images or videos attached to this project yet.</p></div>{% endif %}
     </div>
     <aside class="comments-panel" aria-labelledby="comments-title">
       <div class="comments-header"><div class="comments-title-row"><h2 id="comments-title">Comments</h2><span class="comments-count">{{ project_comments|length }} comment{% if project_comments|length != 1 %}s{% endif %}</span></div><div class="comments-sort"><i class="fa-solid fa-arrow-down-wide-short"></i><span>Discussion</span></div></div>
@@ -719,7 +746,9 @@ let gallery=[]
 let index=0
 
 {% for img in project.images %}
-gallery.push("{{ url_for('static',filename='resources/images/' ~ img.filename) }}")
+  {% if img.filename  %}
+    gallery.push("{{ url_for('static',filename='resources/images/' ~ img.filename) }}")
+  {% endif %}
 {% endfor %}
 
 {% if project.image %}
