@@ -14,3 +14,5 @@ Flask-Limiter
 Flask-Migrate
 python-engineio
 dnspython
+beautifulsoup4
+Flask-Mail

@@ -1656,6 +1656,9 @@ def logs_page():
         .all()
     )
     suspicious_ips = [{"ip": row.ip_address, "count": row.count} for row in suspicious_ips_raw]
+    
+    blocked_ips = BlockedIP.query.all()
+    
 
     top_bots_raw = (
         db.session.query(RequestLog.bot_name, func.count(RequestLog.id).label("count"))
@@ -1675,7 +1678,8 @@ def logs_page():
         last_5_days=last_5_days,
         frequent_ips=frequent_ips,
         suspicious_ips=suspicious_ips,
-        top_bots=top_bots
+        top_bots=top_bots,
+        blocked_ips=blocked_ips
     )
     
     
