@@ -158,11 +158,11 @@
         <div style="position:relative; aspect-ratio:16/9; background:#010408; display:grid; place-items:center;">
           {% if project.image %}
             <img src="{{ url_for('static', filename='resources/images/' ~ project.image) }}" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" loading="lazy">
-            <i class="fa-solid fa-film" style="position:absolute; font-size:2rem; color:var(--text-muted)"></i>
+            <i class="fa-solid fa-video" style="position:absolute; font-size:2rem; color:var(--text-muted)"></i>
           {% else %}
           <img src="{{ url_for('static', filename='resources/images/video-poster.gif') }}" alt="" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" loading="lazy">
           {% endif %}
-          <div class="video-card-badge"><i class="fa-solid fa-play"></i> Video {{ loop.index }}</div>
+          <div class="video-card-badge"><i class="fa-solid fa-play"></i> Video {{ loop.index }} &bull; Click to Play</div>
         </div>
       </div>
     {% endfor %}
@@ -260,7 +260,7 @@
 
   <div class="related-heading"><h2>Related projects</h2><p>More work from the studio</p></div>
   {% if related_list %}<div class="related-grid" aria-label="Related projects">
-    {% for related in related_list %}<a class="related-card" href="{{ url_for('project', slug=related.slug) }}" aria-label="View {{ related.title }}">{% if related.image %}<img src="{{ url_for('static', filename='resources/images/' ~ related.image) }}" alt="" loading="lazy">{% else %}<span class="related-no-image"><i class="fa-solid fa-film"></i></span>{% endif %}<span class="related-card-copy"><span><span class="related-card-category">{{ related.category }}</span><span class="related-card-title">{{ related.title }}</span></span><span class="related-card-arrow"><i class="fa-solid fa-arrow-right"></i></span></span></a>{% endfor %}
+    {% for related in related_list %}<a class="related-card" href="{{ url_for('project', slug=related.slug) }}" aria-label="View {{ related.title }}">{% if related.image %}<img src="{{ url_for('static', filename='resources/images/' ~ related.image) }}" alt="" loading="lazy">{% else %}<span class="related-no-image"><i class="fa-solid fa-video"></i></span>{% endif %}<span class="related-card-copy"><span><span class="related-card-category">{{ related.category }}</span><span class="related-card-title">{{ related.title }}</span></span><span class="related-card-arrow"><i class="fa-solid fa-arrow-right"></i></span></span></a>{% endfor %}
   </div>{% else %}<div class="project-empty"><i class="fa-solid fa-layer-group"></i><h2>More stories are on the way</h2><p>Related work will appear here as projects are added to the portfolio.</p></div>{% endif %}
   <aside class="project-next"><div><h2>Have a story of your own?</h2><p>Let’s make something meaningful together.</p></div><a class="btn" href="{{ url_for('index') }}#contact">Start a project <i class="fa-solid fa-arrow-right"></i></a></aside>
 </div></section>
