@@ -13,3 +13,4 @@ python-socketio
 Flask-Limiter
 Flask-Migrate
 python-engineio
+dnspython

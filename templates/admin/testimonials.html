@@ -13,7 +13,7 @@
 .table-main-title { font-weight: 700; color: var(--text-main); display: block; }
 .table-sub-title { display: block; color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }
 .actions-cell { display: flex; align-items: center; gap: 8px; }
-.btn-action { border: 1px solid var(--border-active); background: var(--bg-surface-hover); color: var(--text-main); border-radius: 4px; padding: 5px 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.btn-action { border: 1px solid var(--border-active); background: var(--bg-surface-hover);  color:var(--text-muted ); border-radius: 4px; padding: 5px 10px; font-size: 0.72rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
 .btn-action:hover { border-color: var(--accent-cyan); }
 .delete-btn { border: 0; background: transparent; color: var(--text-muted); border-radius: 4px; padding: 5px 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
 .delete-btn:hover { background: var(--danger-bg); color: var(--danger); }
@@ -28,7 +28,7 @@
       <h1><i class="fa-solid fa-comments"></i> Client Testimonials</h1>
       <p>Manage and edit reviews published by your clients.</p>
     </div>
-    <a href="{{ url_for('add_testimonial_page') }}" class="btn-action" style="background:var(--accent-cyan); color:#060913; border:0;"><i class="fa-solid fa-plus"></i> Add Testimonial</a>
+    <a href="{{ url_for('add_testimonial_page') }}" class="btn-action" style="border:0;"><i class="fa-solid fa-plus"></i> Add Testimonial</a>
   </div>
   <div class="table-scroll">
     <table class="data-table">

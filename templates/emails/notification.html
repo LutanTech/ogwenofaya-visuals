@@ -45,7 +45,7 @@
                                         <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                             <tr>
                                                 <td align="center" style="width:48px;height:48px;background-color:#111d2b;color:#68b2ff;border-radius:14px;font-size:22px;line-height:48px;text-align:center;border:1px solid rgba(255,255,255,0.12);box-shadow:0 4px 12px rgba(54,139,255,0.2);">
-                                                    🎬
+                                                    <img src="{{ url_for('static', filename='logos/logo.png') }}">
                                                 </td>
                                             </tr>
                                         </table>
@@ -108,4 +108,111 @@
                                 <h3 style="margin:0 0 10px 0;color:#070d16;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;font-family:'Manrope',sans-serif;">
                                     📌 Project Details
                                 </h3>
-                                <table role="
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border:1px solid #d8e2ed;border-radius:12px;overflow:hidden;">
+                                    {% if project %}
+                                    <tr>
+                                        <td style="padding:12px 16px;border-bottom:1px solid #d8e2ed;color:#647890;font-size:12px;font-weight:700;width:35%;">Project Title</td>
+                                        <td style="padding:12px 16px;border-bottom:1px solid #d8e2ed;color:#070d16;font-size:13px;font-weight:800;">{{ project.title }}</td>
+                                    </tr>
+                                    {% if project.category %}
+                                    <tr>
+                                        <td style="padding:12px 16px;border-bottom:1px solid #d8e2ed;color:#647890;font-size:12px;font-weight:700;">Category</td>
+                                        <td style="padding:12px 16px;border-bottom:1px solid #d8e2ed;color:#334458;font-size:13px;font-weight:600;">{{ project.category }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    {% if item_details %}
+                                        {% for key, val in item_details.items() %}
+                                        <tr>
+                                            <td style="padding:12px 16px;border-bottom:1px solid #d8e2ed;color:#647890;font-size:12px;font-weight:700;width:35%;">{{ key }}</td>
+                                            <td style="padding:12px 16px;border-bottom:1px solid #d8e2ed;color:#070d16;font-size:13px;font-weight:700;">{{ val }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            {% if action_url %}
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:28px 0;">
+                                <tr>
+                                    <td align="center" style="border-radius:999px;background-color:#368bff;">
+                                        <a href="{{ action_url }}" class="btn-mobile" target="_blank" style="display:inline-block;padding:14px 28px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:800;color:#ffffff;text-decoration:none;border-radius:999px;background-color:#368bff;box-shadow:0 6px 16px rgba(54,139,255,0.25);">
+                                            {{ action_text|default("View Project &rarr;") }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            {% endif %}
+
+                            <div style="border-top:1px solid #d8e2ed;padding-top:20px;margin-top:28px;">
+                                <p style="margin:0 0 12px 0;color:#647890;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;font-family:'Manrope',sans-serif;">
+                                    Quick Shortcuts
+                                </p>
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                    <tr>
+                                        <td class="grid-stack" style="padding-bottom:8px;">
+                                            <a href="{{ url_for('index', _external=True) if url_for else '#' }}#work" style="color:#2563eb;font-size:12px;font-weight:700;text-decoration:none;font-family:'Manrope',sans-serif;">
+                                                🎬 Portfolio &rarr;
+                                            </a>
+                                        </td>
+                                        <td class="grid-stack" style="padding-bottom:8px;">
+                                            <a href="{{ url_for('index', _external=True) if url_for else '#' }}#contact" style="color:#2563eb;font-size:12px;font-weight:700;text-decoration:none;font-family:'Manrope',sans-serif;">
+                                                💬 Contact Studio &rarr;
+                                            </a>
+                                        </td>
+                                        <td class="grid-stack" style="padding-bottom:8px;">
+                                            <a href="{{ url_for('index', _external=True) if url_for else '#' }}/support" target="_blank" style="color:#2563eb;font-size:12px;font-weight:700;text-decoration:none;font-family:'Manrope',sans-serif;">
+                                                🎧 Support
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="background-color:#070d16;padding:28px 32px;text-align:center;">
+                            <p style="margin:0 0 8px 0;color:#ffffff;font-size:13px;font-weight:800;font-family:'Manrope',sans-serif;">
+                                OgwenofayaVisuals Studio
+                            </p>
+                            <p style="margin:0 0 16px 0;color:#8293a7;font-size:11px;line-height:1.6;font-family:'Manrope',sans-serif;">
+                                Capturing moments. Crafting cinematic stories. Reach us at 
+                                <a href="mailto:info@ogwenofayavisuals.com" style="color:#68b2ff;text-decoration:none;font-weight:700;">info@ogwenofayavisuals.com</a>.
+                            </p>
+                            
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin-bottom:16px;">
+                                <tr>
+                                    <td style="padding:0 8px;">
+                                        <a href="{{ url_for('index', _external=True) if url_for else '#' }}" style="color:#8293a7;font-size:11px;text-decoration:none;font-family:'Manrope',sans-serif;">Home</a>
+                                    </td>
+                                    <td style="color:#8293a7;font-size:11px;">&bull;</td>
+                                    <td style="padding:0 8px;">
+                                        <a href="{{ url_for('index', _external=True) if url_for else '#' }}#work" style="color:#8293a7;font-size:11px;text-decoration:none;font-family:'Manrope',sans-serif;">Projects</a>
+                                    </td>
+                                    <td style="color:#8293a7;font-size:11px;">&bull;</td>
+                                    <td style="padding:0 8px;">
+                                        <a href="{{ url_for('index', _external=True) if url_for else '#' }}#contact" style="color:#8293a7;font-size:11px;text-decoration:none;font-family:'Manrope',sans-serif;">Support</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;">
+                                <p style="margin:0;color:#8293a7;font-size:10px;font-weight:600;font-family:'Manrope',sans-serif;">
+                                    &copy; 2026 OgwenofayaVisuals. All rights reserved.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

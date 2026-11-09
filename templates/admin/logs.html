@@ -195,11 +195,12 @@
       </thead>
       <tbody>
         {% for log in logs %}
-        <tr class="log-row">
+        {% if '[ISADM]' not in log.user_agent %}
+            <tr class="log-row">
           <td><input type="checkbox" class="log-checkbox" value="{{ log.id }}" onclick="updateBulkState()"></td>
           <td>
             <span class="table-main-title"><span style="color:var(--accent-cyan);">{{ log.method }}</span> {{ log.path }}</span>
-            {% if log.user_agent %}<span class="table-sub-title" style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ log.user_agent }}">{{ log.user_agent }}</span>{% endif %}
+            {% if log.user_agent %}<span class="table-sub-title" style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ log.user_agent }}">{{ log.user_agent | safe}}</span>{% endif %}
           </td>
           <td>
             {{ log.ip_address }}
@@ -215,11 +216,15 @@
           <td><span class="badge status">{{ log.status_code }}</span></td>
           <td>{{ log.created_at.strftime('%b %d, %Y - %H:%M:%S') }}</td>
           <td>
+            <div class="block-form">
+              <button class="delete-btn" style="color:red" onclick="blockIP('{{ log.id }}')"  title="Block IP"><i class="fas fa-ban"></i></button>
+            </div>
             <form class="delete-form" action="{{ url_for('purge_item', item_type='log', id=log.id) }}" method="post" onsubmit="return confirm('Delete this log entry?')">
               <button class="delete-btn" type="submit" title="Delete log"><i class="fa-regular fa-trash-can"></i></button>
             </form>
           </td>
         </tr>
+        {% endif %}
         {% else %}
         <tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.5rem; margin-bottom:8px; display:block;"></i>No request logs recorded yet.</div></td></tr>
         {% endfor %}
@@ -229,6 +234,27 @@
 </div>
 
 <script>
+  function blockIP(id){
+    c = confirm('Are you sure you want to block this IP Address?')
+    if(!c) return;
+    fetch("{{ url_for('block_req_ip') }}",{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+       },
+       body:JSON.stringify({id})
+    })
+    .then(r=>r.json())
+    .then(data=>{
+      alert(data.error || data.success)
+      if(data.success){
+        window.location.reload()
+      }
+    })
+    .catch(err=>{
+      alert(err.message)
+    })
+  }
 function filterLogs() {
   const query = document.getElementById('logSearch').value.toLowerCase();
   const rows = document.querySelectorAll('.log-row');

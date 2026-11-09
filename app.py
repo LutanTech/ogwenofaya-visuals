@@ -2,15 +2,20 @@ from datetime import datetime, timedelta
 from functools import wraps
 import hashlib
 import hmac
+import ipaddress
+import json
 import json
 import math
+import os
 import os
 import re
 import secrets
 import string
 import subprocess
+import urllib.parse
 import urllib.request
-from mailer import send_mail
+import urllib.request
+
 from flask import (
     Flask,
     Response,
@@ -33,9 +38,25 @@ import requests
 from sqlalchemy import func
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
-from mailer import mail  
-from known_bots import detect_bot
-from models import db, Project, User, Admin, Service, Testimonial, Comment, Inquiry, RequestLog, ProjectImage, ProjectVideo
+
+from known_bots import detect_bot, verify_bot_ip
+from mailer import send_mail
+from mailer import mail
+from models import (
+    Admin,
+    BlockedIP,
+    Comment,
+    Inquiry,
+    Project,
+    ProjectImage,
+    ProjectVideo,
+    Registration,
+    RequestLog,
+    Service,
+    Testimonial,
+    User,
+    db,
+)
 
 app = Flask(__name__)
 COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE","0")=="1"
@@ -57,8 +78,15 @@ app.config.update(
     MAIL_PASSWORD=os.getenv("MAIL_PASS"),
     MAIL_DEFAULT_SENDER="library@tunupublishers.com"
 )
-print(app.config["MAIL_PASSWORD"])
 RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_SECRET_KEY')
+
+
+ADMIN_EMAILS = [
+    email.strip().lower()
+    for email in os.getenv("ADMIN_EMAILS", "").split(",")
+    if email.strip()
+]
+
 delta = 3
 
 db.init_app(app)
@@ -144,8 +172,26 @@ migrate = Migrate(app, db)
 limiter = Limiter(
     key_func=get_remote_address,
     app=app,
-    default_limits=["2000 per day", "500 per hour"]
+    default_limits=["200 per day", "50 per hour"]
 )
+
+
+def create_reg():
+    ex_reg = Registration.query.first()
+    if ex_reg:
+        return ex_reg
+
+    new_reg = Registration(status=False)
+    db.session.add(new_reg)
+    db.session.commit()
+    return new_reg
+
+
+
+    
+with app.app_context():
+    create_reg()
+    
 
 
 
@@ -217,62 +263,196 @@ def save_image_upload(file):
         return None
     return save_upload(file, IMAGE_DIR, "IMG_")
 
-def get_location_by_ip(ip):
-    if not ip or ip in ('127.0.0.1', '::1', 'localhost'):
-        return "Localhost"
-    try:
-        url = f"http://ip-api.com/json/{ip}?fields=status,country,city"
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=1.5) as response:
-            data = json.loads(response.read().decode())
-            if data.get('status') == 'success':
-                city = data.get('city', '')
-                country = data.get('country', '')
-                return f"{city}, {country}".strip(', ')
-    except Exception:
-        pass
-    return "Unknown"
+
 
 def admin_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if not session.get("admin"):
             return redirect(url_for("login"))
+        admin = Admin.query.filter_by(id=session.get("admin_id")).first()
+        if not admin:
+            flash("Please login to continue", "error")
+            session.clear()
+            return redirect(url_for("login")) 
+        if not admin.is_active:
+            flash("Account Inactive. Please contact support", "error")
+            return redirect(url_for("login")) 
         return f(*args, **kwargs)
     return wrapper
 
+
+def get_location_by_ip(ip):
+    if not ip:
+        return {"status": "error", "location": "Unknown"}
+
+    try:
+        ip_obj = ipaddress.ip_address(ip)
+
+        if ip_obj.is_loopback:
+            return {
+                "status": "local",
+                "ip": ip,
+                "location": "Localhost"
+            }
+
+        if not ip_obj.is_global:
+            return {
+                "status": "private",
+                "ip": ip,
+                "location": "Private Network"
+            }
+
+        fields = ",".join([
+            "status", "message", "query",
+            "continent", "continentCode",
+            "country", "countryCode",
+            "region", "regionName",
+            "city", "district", "zip",
+            "lat", "lon", "timezone", "offset",
+            "currency", "isp", "org", "as",
+            "asname", "reverse",
+            "mobile", "proxy", "hosting"
+        ])
+
+        url = (
+            f"http://ip-api.com/json/"
+            f"{urllib.parse.quote(str(ip_obj), safe='')}"
+            f"?fields={fields}"
+        )
+
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        with urllib.request.urlopen(req, timeout=3) as response:
+            data = json.loads(response.read().decode())
+
+        if data.get("status") != "success":
+            return {
+                "status": "error",
+                "ip": ip,
+                "location": "Unknown",
+                "message": data.get("message")
+            }
+
+        return {
+            "status": "success",
+            "ip": data.get("query"),
+            "location": ", ".join(filter(None, [
+                data.get("district"),
+                data.get("city"),
+                data.get("regionName"),
+                data.get("country")
+            ])),
+            "continent": data.get("continent"),
+            "continent_code": data.get("continentCode"),
+            "country": data.get("country"),
+            "country_code": data.get("countryCode"),
+            "region": data.get("regionName"),
+            "region_code": data.get("region"),
+            "city": data.get("city"),
+            "district": data.get("district"),
+            "postal_code": data.get("zip"),
+            "latitude": data.get("lat"),
+            "longitude": data.get("lon"),
+            "timezone": data.get("timezone"),
+            "utc_offset": data.get("offset"),
+            "currency": data.get("currency"),
+            "isp": data.get("isp"),
+            "organization": data.get("org"),
+            "asn": data.get("as"),
+            "asn_name": data.get("asname"),
+            "hostname": data.get("reverse"),
+            "is_mobile": data.get("mobile"),
+            "is_proxy": data.get("proxy"),
+            "is_hosting": data.get("hosting")
+        }
+
+    except Exception:
+        return {
+            "status": "error",
+            "ip": ip,
+            "location": "Unknown"
+        }
+
 @app.context_processor
 def globals():
+    reg = Registration.query.first()
+
     return {
         "site_name": "OgwenofayaVisuals",
-        "year": datetime.utcnow().year
+        "year": datetime.utcnow().year,
+        "r_b": bool(reg and reg.status)
     }
 
 @app.after_request
 def log_request(response):
-    if request.path.startswith('/static/') or request.path.startswith('/video/') or request.path == '/favicon.ico':
+    paths = [
+        "/json/version",
+        "/.well-known/appspecific/com.chrome.devtools.json",
+        "/favicon.ico"
+    ]
+
+    if request.path.startswith(('/static/', '/video/')) or request.path in paths:
         return response
+
+    sa = session.get('is_super_admin')
+    li = session.get('username')
+    pref = ''
+
+    if sa:
+        pref = f'[ISADM] : {session.get("username")} &bull; '
+
+    if li and not sa:
+        pref = f"{li} &bull; "
+
     try:
-        ua = request.user_agent.string if request.user_agent else ""
-        is_bot, bot_name = detect_bot(ua)
+        ua = request.user_agent.string
         ip = request.remote_addr
+
+        is_bot, bot_name = detect_bot(ua)
+        verified = False
+        hostname = None
+
+        if is_bot:
+            verified, verified_name, hostname = verify_bot_ip(ip, ua)
+
+            if verified:
+                bot_name = verified_name
+
         location = get_location_by_ip(ip)
+
         log_entry = RequestLog(
             method=request.method,
             path=request.path,
             status_code=response.status_code,
             ip_address=ip,
-            location=location,
-            user_agent=ua[:255],
+            location=location.get("location"),
+            user_agent=pref + ua[:255],
             is_bot=is_bot,
             bot_name=bot_name
         )
+
         db.session.add(log_entry)
         db.session.commit()
+
     except Exception as e:
         db.session.rollback()
         print(f"Logging error: {e}", flush=True)
+
     return response
+
+def is_ip_blocked(ip):
+    return BlockedIP.query.filter_by(ip_address=ip).first() is not None
+
+def block_ip(ip):
+    if not is_ip_blocked(ip):
+        db.session.add(BlockedIP(ip_address=ip))
+        db.session.commit()
+        return True
+    return False
 
 @app.route("/")
 def index():
@@ -341,39 +521,318 @@ def contact():
     return redirect(url_for("index") + "#contact")
 
 @app.route("/register", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("50 per minute")
+@captcha_verify
 def register():
+    r = Registration.query.first()
     
-    if Admin.query.count() > 1:
-       return redirect(url_for("login"))
-   
+    if not r:
+        create_reg()
+    
+    if not r.status:
+        return redirect(url_for('login'))
+    
     if request.method == "POST":
         username = request.form.get("username", "").strip()
+        email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         confirm = request.form.get("confirm_password", "")
-        if not username or not password:
-            flash("Username and password are required.")
+
+        if not username or not email or not password:
+            flash("All fields are required.", "error")
             return render_template("register.html")
+
         if len(password) < 8:
-            flash("Password must be at least 8 characters.")
+            flash("Password must be at least 8 characters.", "error")
             return render_template("register.html")
+
         if password != confirm:
-            flash("Passwords do not match.")
+            flash("Passwords do not match.", "error")
             return render_template("register.html")
+
         if Admin.query.filter_by(username=username).first():
-            flash("An account with that username already exists.")
+            flash("An account with that username already exists.", "error")
             return render_template("register.html")
+
+        if Admin.query.filter_by(email=email).first():
+            flash("An account with that email already exists.", "error")
+            return render_template("register.html")
+
         admin = Admin(
             username=username,
-            password=generate_password_hash(password)
+            email=email,
+            password=generate_password_hash(password),
+            email_method=True,
+            is_admin=True,
+            is_super_admin=False,
+            is_active=False
         )
+
         db.session.add(admin)
         db.session.commit()
-        flash("Admin account created. You can now login.")
+
+        token = serializer.dumps(admin.id, salt="register-account")
+        auth_url = url_for("authorize_account", token=token, _external=True)
+
+        for e in ADMIN_EMAILS:
+            adm = Admin.query.filter_by(email=e).first()
+
+            if adm:
+                email_html = f"""
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f8fafc;padding:30px 0;font-family:'Manrope',Arial,sans-serif;">
+    <tr>
+        <td align="center">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #d8e2ed;box-shadow:0 10px 30px rgba(7,13,22,0.05);overflow:hidden;">
+                <tr>
+                    <td style="padding:36px;">
+                        <h2 style="margin:0 0 16px 0;color:#070d16;font-size:20px;font-weight:800;letter-spacing:-0.02em;">Confirm Account Creation</h2>
+
+                        <p style="color:#475569;font-size:14px;line-height:1.6;margin:0 0 14px 0;">A request was made to create an admin account using:</p>
+
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:16px;">
+                            <tr>
+                                <td style="padding:12px 16px;font-size:15px;color:#0f172a;font-weight:700;">
+                                    {admin.email}
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p style="color:#475569;font-size:14px;margin:0 0 24px 0;">
+                            <strong style="color:#0f172a;">Username:</strong> {admin.username}
+                        </p>
+
+                        <h3 style="color:#070d16;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 12px 0;border-top:1px solid #e2e8f0;padding-top:20px;">Location & Device Details</h3>
+
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:24px;">
+                            <tr>
+                                <td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:12px;font-weight:700;width:30%;">Device</td>
+                                <td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:13px;">{request.user_agent}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:12px;font-weight:700;">IP Address</td>
+                                <td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:13px;">{request.remote_addr}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:12px;font-weight:700;">Location</td>
+                                <td style="padding:10px 16px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:13px;">{get_location_by_ip(request.remote_addr)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px 16px;color:#64748b;font-size:12px;font-weight:700;">Time</td>
+                                <td style="padding:10px 16px;color:#0f172a;font-size:13px;">{datetime.utcnow() + timedelta(hours=3)}</td>
+                            </tr>
+                        </table>
+
+                        <p style="margin:0 0 16px 0;color:#0f172a;font-weight:600;font-size:14px;">
+                            Do you want to authorize this account?
+                        </p>
+
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+                            <tr>
+                                <td align="center" style="border-radius:10px;background-color:#368bff;">
+                                    <a href="{auth_url}" target="_blank" style="display:inline-block;padding:12px 24px;font-family:'Manrope',Arial,sans-serif;font-size:13px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:10px;background-color:#368bff;box-shadow:0 4px 12px rgba(54,139,255,0.25);">
+                                        Review Request &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p style="margin:0;font-size:12px;color:#64748b;border-top:1px solid #e2e8f0;padding-top:16px;line-height:1.5;">
+                            This security link expires in 30 minutes. If you did not initiate this request, you can safely ignore this email.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table> """
+
+                send_mail(adm.id, "Account Confirmation", email_html)
+
+        flash("Admin account created. Authorization is required before you can login.", "success")
         return redirect(url_for("login"))
+
     return render_template("register.html")
 
+@app.route('/control/ip/block', methods=['POST'])
+@admin_required
+def block_req_ip():
+    my_ip = request.remote_addr
+    data = request.get_json()
+    id = data.get("id")
+    ip = ''
+    log = RequestLog.query.filter_by(id=id).first()
+    if log:
+        ip = log.ip_address
+    if ip == my_ip:
+        return jsonify({'error': "Oops... You can not block your own IP"}), 400
+    if block_ip(ip):
+        return jsonify({'success':'IP blocked successfully'})
+    else:
+        return jsonify({'error':'Failed to block IP'})
+    
+    
+
+@app.route("/authorize-account/<token>")
+def authorize_account(token):
+    try:
+        admin_id = serializer.loads(
+            token,
+            salt="register-account",
+            max_age=1800
+        )
+    except Exception:
+        return render_template(
+            "admin/authorize_account.html",
+            expired=True
+        )
+
+    admin = Admin.query.get(admin_id)
+
+    if not admin:
+        return render_template(
+            "admin/authorize_account.html",
+            expired=True
+        )
+
+    if admin.is_active:
+        return render_template(
+            "admin/authorize_account.html",
+            already_authorized=True,
+            admin=admin
+        )
+
+    return render_template(
+        "admin/authorize_account.html",
+        admin=admin,
+        token=token
+    )
+
+
+@app.route("/authorize-account/<token>/yes", methods=["POST"])
+def authorize_account_yes(token):
+    try:
+        admin_id = serializer.loads(
+            token,
+            salt="register-account",
+            max_age=1800
+        )
+    except Exception:
+        return render_template(
+            "admin/authorize_account.html",
+            expired=True
+        )
+
+    admin = Admin.query.get(admin_id)
+
+    if not admin:
+        return render_template(
+            "admin/authorize_account.html",
+            expired=True
+        )
+
+    if admin.is_active:
+        return render_template(
+            "admin/authorize_account.html",
+            already_authorized=True,
+            admin=admin
+        )
+
+    admin.is_active = True
+    db.session.commit()
+    
+    email_html = f"""
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f8fafc;padding:30px 0;font-family:'Plus Jakarta Sans',Arial,sans-serif;">
+        <tr>
+            <td align="center">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;border:1px solid #cbd5e1;box-shadow:0 4px 20px rgba(15,23,42,0.06);overflow:hidden;">
+                    <tr>
+                        <td style="padding:36px;">
+                            <h2 style="margin:0 0 16px 0;color:#0f172a;font-size:20px;font-weight:800;letter-spacing:-0.02em;">Account Authorized</h2>
+                            
+                            <p style="color:#475569;font-size:14px;line-height:1.6;margin:0 0 20px 0;">
+                                Great news! Your administrator registration request for <strong style="color:#0f172a;">OgwenofayaVisuals</strong> has been reviewed and approved by management.
+                            </p>
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:24px;">
+                                <tr>
+                                    <td style="padding:14px 18px;font-size:13px;color:#475569;">
+                                        <strong style="color:#0f172a;display:block;margin-bottom:4px;text-transform:uppercase;font-size:11px;letter-spacing:0.05em;">Assigned Username</strong>
+                                        {admin.username}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+                                <tr>
+                                    <td align="center" style="border-radius:6px;background-color:#2563eb;">
+                                        <a href="{url_for('login', _external=True)}" target="_blank" style="display:inline-block;padding:12px 24px;font-family:'Plus Jakarta Sans',Arial,sans-serif;font-size:13px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:6px;background-color:#2563eb;">
+                                            Sign In to Control Center &rarr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0;font-size:12px;color:#64748b;border-top:1px solid #e2e8f0;padding-top:16px;line-height:1.5;">
+                                If you did not make this request or have any questions, please contact your studio administrator immediately.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>    
+"""
+    
+    send_mail(admin.id, "Account Verified", email_html)
+    print('mail sent', admin.id, "Account Verified", email_html)
+
+    return render_template(
+        "admin/authorize_account.html",
+        authorized=True,
+        admin=admin
+    )
+
+
+@app.route("/authorize-account/<token>/no", methods=["POST"])
+def authorize_account_no(token):
+    try:
+        admin_id = serializer.loads(
+            token,
+            salt="register-account",
+            max_age=1800
+        )
+    except Exception:
+        return render_template(
+            "admin/authorize_account.html",
+            expired=True
+        )
+
+    admin = Admin.query.get(admin_id)
+
+    if not admin:
+        return render_template(
+            "admin/authorize_account.html",
+            expired=True
+        )
+
+    if admin.is_active:
+        return render_template(
+            "admin/authorize_account.html",
+            already_authorized=True,
+            admin=admin
+        )
+
+    db.session.delete(admin)
+    db.session.commit()
+
+    return render_template(
+        "admin/authorize_account.html",
+        rejected=True
+    )
+    
+
 @app.route("/login", methods=["GET", "POST"])
+@captcha_verify
 @limiter.limit("5 per minute")
 def login():
     if request.method == "POST":
@@ -382,15 +841,17 @@ def login():
         admin = Admin.query.filter_by(username=username).first()
         if admin and check_password_hash(admin.password, password):
             session["admin"] = True
+            if admin.is_super_admin:
+                session["is_super_admin"] = True
             session["admin_id"] = admin.id
+            session["username"] = admin.username
             return redirect(url_for("control"))
-        flash("Invalid username or password.")
+        flash("Invalid username or password.", 'error')
     return render_template("login.html")
 
 @app.get("/logout")
 def logout():
-    session.pop("admin", None)
-    session.pop("admin_id", None)
+    session.clear()
     return redirect(url_for("index"))
 
 
@@ -615,7 +1076,6 @@ def stream_video(id, quality):
     return Response(generate(), mimetype="video/mp4", headers=headers)
 
 
-
 @app.route("/control/testimonials/new", methods=["GET", "POST"])
 def add_testimonial_page():
     if not session.get("admin"):
@@ -698,6 +1158,15 @@ def restore_item(item_type, id):
     db.session.commit()
     flash("Item restored successfully.")
     return redirect(url_for("cache_page"))
+
+@app.route("/toggle-registration", methods=["POST"])
+@admin_required
+def toggle_registration():
+    reg = create_reg()
+    reg.status = not reg.status
+    db.session.commit()
+
+    return jsonify(success=True, status=bool(reg.status))
 
 @app.post("/control/cache/purge/<item_type>/<id>")
 @admin_required
@@ -913,32 +1382,73 @@ def google_login():
 
 serializer=URLSafeTimedSerializer(app.secret_key)
 
-@app.route("/reset-password",methods=["GET","POST"])
+
+@app.route("/reset-password", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
 def reset_password():
-    if request.method=="POST":
-        email=request.form.get("email","").strip().lower()
-        user=Admin.query.filter_by(username=email).first()
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        user = Admin.query.filter_by(email=email).first()
 
         if user:
-            token=serializer.dumps(user.id,salt="password-reset")
-            reset_url=url_for("reset_password_token",token=token,_external=True)
+            if not user.is_active:
+                return render_template(
+                    "reset_feedback.html",
+                    title="Account Inactive",
+                    is_error=True,
+                    message="Account inactive. Please contact Admin."
+                )
 
-            email_html=f"""
-            <div>
-                <h2>Reset your password</h2>
-                <p>We received a request to reset your password.</p>
-                <p><a href="{reset_url}">Reset Password</a></p>
-                <p>This link expires in 30 minutes.</p>
-                <p>If you did not request this, you can safely ignore this email.</p>
-            </div>
+            token = serializer.dumps(user.id, salt="password-reset")
+            reset_url = url_for("reset_password_token", token=token, _external=True)
+
+            email_html = f"""
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f8fafc;padding:30px 0;font-family:'Manrope',Arial,sans-serif;">
+                <tr>
+                    <td align="center">
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;border:1px solid #d8e2ed;box-shadow:0 10px 30px rgba(7,13,22,0.05);overflow:hidden;">
+                            <tr>
+                                <td style="padding:36px;">
+                                    <h2 style="margin:0 0 16px 0;color:#070d16;font-size:20px;font-weight:800;letter-spacing:-0.02em;">Reset Your Password</h2>
+                                    <p style="color:#475569;font-size:14px;line-height:1.6;margin:0 0 24px 0;">
+                                        We received a request to reset the password for your OgwenofayaVisuals admin account. Click the button below to choose a new password.
+                                    </p>
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+                                        <tr>
+                                            <td align="center" style="border-radius:10px;background-color:#368bff;">
+                                                <a href="{reset_url}" target="_blank" style="display:inline-block;padding:12px 24px;font-family:'Manrope',Arial,sans-serif;font-size:13px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:10px;background-color:#368bff;box-shadow:0 4px 12px rgba(54,139,255,0.25);">
+                                                    Reset Password &rarr;
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin:0;font-size:12px;color:#64748b;border-top:1px solid #e2e8f0;padding-top:16px;line-height:1.5;">
+                                        This link expires in 30 minutes. If you did not request a password reset, you can safely ignore this email.
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
             """
 
-            send_mail(user.id,'Password Reset',email_html)
+            send_mail(user.id, "Password Reset", email_html)
+            return render_template(
+                "reset_feedback.html",
+                title="Reset Link Sent",
+                is_error=False,
+                message="Link sent. Please check your email inbox."
+            )
 
-        return redirect(url_for("reset_password"))
+        return render_template(
+            "reset_feedback.html",
+            title="Account Not Found",
+            is_error=True,
+            message="No account found with that email address."
+        )
 
     return render_template("reset_password.html")
-
 
 @app.route("/reset-password/<token>",methods=["GET","POST"])
 def reset_password_token(token):
@@ -970,7 +1480,7 @@ def reset_password_token(token):
 def callback():
         if "google_state" not in session or "google_code_verifier" not in session:
             flash("Google login session expired. Please try again.","error")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
 
         flow=Flow.from_client_secrets_file(
             GOOGLE_CLIENT_SECRETS_FILE,
@@ -1007,7 +1517,7 @@ def callback():
             db.session.add(user)
         elif not user.is_active:
             flash("Your account has been suspended. Please contact support.","error")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
         else:
             user.google_id=google_id
             user.username=name
@@ -1051,6 +1561,55 @@ def edit_testimonial(id):
         flash("Testimonial updated successfully.")
         return redirect(url_for("testimonials_page"))
     return render_template("admin/edit_testimonial.html", testimonial=testimonial)
+
+
+@app.route("/control/users")
+@admin_required
+def users_page():
+    # if not session.get("is_super_admin"):
+    #     flash("Super admin privileges required.", "error")
+    #     return redirect(url_for("control"))
+    
+    admins = Admin.query.order_by(Admin.id.desc()).all()
+    users = User.query.order_by(User.id.desc()).all()
+    
+    return render_template(
+        "admin/users.html",
+        admins=admins,
+        users=users
+    )
+
+@app.post("/control/admin/toggle/<id>")
+@admin_required
+def toggle_admin_status(id):
+    # if not session.get("is_super_admin"):
+    #     return jsonify(ok=False, message="Unauthorized"), 403
+    
+    admin = Admin.query.get_or_404(id)
+    if admin.id == session.get("admin_id"):
+        return jsonify(ok=False, message="You cannot modify your own status."), 400
+
+    if admin.is_super_admin:
+        return jsonify(ok=False, message="You cannot modify this account."), 400
+        
+    admin.is_active = not admin.is_active
+    db.session.commit()
+    
+    status_text = "activated" if admin.is_active else "suspended"
+    return jsonify(ok=True, message=f"Admin account successfully {status_text}.")
+
+@app.post("/control/user/toggle/<id>")
+@admin_required
+def toggle_user_status(id):
+    # if not session.get("is_super_admin"):
+    #     return jsonify(ok=False, message="Unauthorized"), 403
+        
+    user = User.query.get_or_404(id)
+    user.is_active = not user.is_active
+    db.session.commit()
+    
+    status_text = "activated" if user.is_active else "suspended"
+    return jsonify(ok=True, message=f"User account successfully {status_text}.")
 
 @app.route("/control/logs")
 @admin_required

@@ -21,7 +21,7 @@ class Project(db.Model):
     video = db.Column(db.String(255))
     featured = db.Column(db.Boolean, default=False)
     is_deleted = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
     images = db.relationship(
         "ProjectImage",
         backref="project",
@@ -33,14 +33,14 @@ class ProjectImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.String(30), db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True)
     filename = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
     
     
 class ProjectVideo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.String(30), db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True)
     filename = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
     
 
 class User(db.Model):
@@ -55,10 +55,9 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     is_super_admin = db.Column(db.Boolean, default=False, nullable=False)
     tkv = db.Column(db.String(50), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
     password = db.Column(db.String(255), nullable=True)
     
-
 
 Project.videos = db.relationship(
     "ProjectVideo",
@@ -88,7 +87,7 @@ class Comment(db.Model):
     project_id = db.Column(db.String(30), db.ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     message = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
 
     author = db.relationship("User", backref=db.backref("comments", cascade="all, delete-orphan"))
     
@@ -110,13 +109,21 @@ class Inquiry(db.Model):
     service = db.Column(db.String(120))
     message = db.Column(db.Text, nullable=False)
     is_deleted = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
 
 class Admin(db.Model):
     id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("ADM_"))
+    google_id = db.Column(db.String(100), unique=True, nullable=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(180), nullable=True, unique=True)
     password = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
+    google_method = db.Column(db.Boolean, default=False)
+    email_method = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    is_super_admin = db.Column(db.Boolean, default=False, nullable=False)
+    tkv = db.Column(db.String(50), nullable=True)
 
 class RequestLog(db.Model):
     id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("LOG_"))
@@ -129,4 +136,17 @@ class RequestLog(db.Model):
     is_bot = db.Column(db.Boolean, default=False)
     bot_name = db.Column(db.String(100), nullable=True)
     is_deleted = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow() + timedelta(hours=delta))
+    created_at = db.Column(db.DateTime, default=lambda:datetime.utcnow() + timedelta(hours=delta))
+    is_verified_bot = db.Column(db.Boolean, default=False, nullable=False)
+    bot_hostname = db.Column(db.String(255))
+    
+    
+class BlockedIP(db.Model):
+    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("BL_"))
+    ip_address = db.Column(db.String(50), unique=True, nullable=False, index=True)
+    blocked_at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=delta))
+    
+    
+class Registration(db.Model):
+    id = db.Column(db.String(30), primary_key=True, default=lambda: gen_id("REG_"))
+    status = db.Column(db.Boolean, default=False)

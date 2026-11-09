@@ -1,11 +1,288 @@
-{% extends "base.html" %}
-{% block title %}Admin login — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
-{% block extra_css %}
-.auth-section{min-height:calc(100vh - 190px);display:grid;place-items:center;padding:76px 0;background:radial-gradient(ellipse at 80% 10%,rgba(54,139,255,.12),transparent 35%),#f1f5fa}.auth-card{width:min(100%,480px);background:#fff;border:1px solid #e2eaf3;border-radius:24px;padding:clamp(27px,6vw,45px);box-shadow:0 25px 80px rgba(9,30,55,.12)}.auth-mark{width:58px;height:58px;border-radius:18px;background:#e8f3ff;color:#267ee8;display:grid;place-items:center;font-size:1.4rem;margin-bottom:24px}.auth-card h1{font:800 2rem/1.1 'Manrope',sans-serif;letter-spacing:-.05em;margin:12px 0}.auth-card>p{color:#68788d;line-height:1.7;margin:0 0 27px}.auth-card .form-group{margin-bottom:17px}.auth-card .form-group label{display:block;font-weight:700;font-size:.84rem;margin-bottom:8px}.auth-card .form-group input{width:100%;padding:14px;border:1px solid #dce5ef;border-radius:11px;background:#f9fbfd}.auth-card .form-group input:focus{outline:0;border-color:#368bff;box-shadow:0 0 0 3px #368bff20}.auth-card .btn{width:100%;margin-top:5px}.auth-foot{border-top:1px solid #e8eef5;margin-top:23px;padding-top:19px;text-align:center;font-size:.86rem;color:#718196}.auth-foot a{color:#176fd1;font-weight:700}.auth-secure{margin-top:19px;color:#8391a1;font-size:.76rem;display:flex;align-items:center;justify-content:center;gap:7px}
-{% endblock %}
-{% block content %}
-<section class="auth-section"><div class="auth-card"><div class="auth-mark"><i class="fa-solid fa-lock"></i></div><span class="eyebrow">Studio administration</span><h1>Welcome back.</h1><p>Sign in to manage your portfolio, services, testimonials and project enquiries.</p>
-  <form method="post" action="{{ url_for('login') }}"><div class="form-group"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" required autofocus></div><div class="form-group"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required></div><button class="btn btn-dark" type="submit">Sign in <i class="fa-solid fa-arrow-right"></i></button></form>
-  <div class="auth-foot">Need an administrator account? <a href="/register">Register</a></div><div class="auth-secure"><i class="fa-solid fa-shield-halved"></i> Private studio dashboard</div>
-</div></section>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — {{ site_name|default('OgwenofayaVisuals') }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .auth-split-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      background: #f8fafc;
+    }
+    .auth-brand-side {
+      background: #070d16;
+      color: #f4f7fb;
+      padding: 60px clamp(40px, 6vw, 80px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-brand-side::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(54, 139, 255, 0.18), transparent 70%);
+      bottom: -100px;
+      left: -100px;
+      pointer-events: none;
+    }
+    .brand-header .studio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(54, 139, 255, 0.15);
+      border: 1px solid rgba(54, 139, 255, 0.3);
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #68b2ff;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 24px;
+    }
+    .brand-header h2 {
+      font: 800 clamp(2rem, 3.5vw, 3rem)/1.1 'Manrope', sans-serif;
+      letter-spacing: -.03em;
+      margin: 0 0 16px;
+      color: #fff;
+    }
+    .brand-header p {
+      color: #9aaabd;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 420px;
+      margin: 0;
+    }
+    .brand-footer {
+      color: #64748b;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .auth-form-side {
+      padding: 60px clamp(30px, 5vw, 70px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #ffffff;
+    }
+    .form-wrap {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .form-header {
+      margin-bottom: 28px;
+    }
+    .form-header h1 {
+      font: 800 1.75rem/1.2 'Manrope', sans-serif;
+      color: #0f172a;
+      letter-spacing: -.03em;
+      margin: 0 0 8px;
+    }
+    .form-header p {
+      color: #64748b;
+      font-size: 0.88rem;
+      margin: 0;
+    }
+    .flash-list {
+      margin-bottom: 20px;
+    }
+    .flash-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .flash-item.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+    .flash-item.success {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #475569;
+      margin-bottom: 7px;
+    }
+    .form-group label a {
+      font-size: 0.75rem;
+      color: #2563eb;
+      text-decoration: none;
+      text-transform: none;
+      font-weight: 600;
+    }
+    .form-group label a:hover {
+      text-decoration: underline;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #0f172a;
+      font-family: inherit;
+      font-size: 0.91rem;
+      transition: all 0.2s ease;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #368bff;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(54, 139, 255, 0.15);
+    }
+    .auth-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.91rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      margin-top: 6px;
+    }
+    .auth-btn:hover {
+      background: #1e293b;
+    }
+    .auth-btn:active {
+      transform: scale(0.99);
+    }
+    .auth-foot {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .auth-foot a {
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .auth-foot a:hover {
+      text-decoration: underline;
+    }
+    .auth-secure {
+      margin-top: 16px;
+      color: #64748b;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    @media(max-width: 960px) {
+      .auth-split-layout { grid-template-columns: 1fr; }
+      .auth-brand-side { display: none; }
+      .auth-form-side { padding: 40px 20px; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-split-layout">
+    <div class="auth-brand-side">
+      <div class="brand-header">
+        <div class="studio-badge"><i class="fa-solid fa-clapperboard"></i> {{ site_name|default('OgwenofayaVisuals') }}</div>
+        <h2>Welcome back to the studio control center.</h2>
+        <p>Sign in to manage your professional media portfolio, view client inquiries, track analytics, and curate project showcases.</p>
+      </div>
+      <div class="brand-footer">
+        &copy; {{ year|default(2026) }} {{ site_name|default('OgwenofayaVisuals') }} &bull; All Rights Reserved
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="form-wrap">
+        <div class="form-header">
+          <h1>Admin Sign In</h1>
+          <p>Enter your credentials to access the administrative dashboard.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-list">
+              {% for category, message in messages %}
+                <div class="flash-item {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('login') }}">
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <input id="username" name="username" type="text" autocomplete="username" required autofocus placeholder="admin or email@domain.com">
+          </div>
+          <div class="form-group">
+            <label for="password">
+              Password
+              <a href="{{ url_for('reset_password') }}">Forgot password?</a>
+            </label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+          </div>
+          
+			<div class="form-group" style="display: flex; align-items: center; justify-content: center;">
+        <div class="g-recaptcha" data-sitekey="6Lf17xYuAAAAALNaMUQF2xBwZR6wDvZR2Vh4J7Qp"></div>
+    </div>
+          <button class="auth-btn" type="submit">Sign In <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+
+        <div class="auth-secure">
+          <i class="fa-solid fa-shield-halved"></i> Secure private studio session
+        </div>
+
+        <div class="auth-foot">
+          Need an administrator account? <a href="{{ url_for('register') }}">Register here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

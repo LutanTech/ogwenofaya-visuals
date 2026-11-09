@@ -1,0 +1,423 @@
+{% extends "admin/base.html" %}
+{% block title %}User & Admin Management — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
+{% block extra_css %}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 16px;
+}
+.dashboard-title h1 {
+  font: 800 1.4rem 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.dashboard-title p {
+  color: var(--text-muted);
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+}
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.panel-head h2 {
+  font: 800 0.95rem 'Plus Jakarta Sans', sans-serif;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+}
+.panel-head h2 i { color: var(--accent); }
+.panel-head p {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  margin: 2px 0 0;
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: -4px;
+  padding: 4px;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 540px;
+}
+.data-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-active);
+  color: var(--text-muted);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+.data-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+  font-size: 0.78rem;
+  color: var(--text-main);
+}
+.data-table tr:hover td {
+  background: var(--bg-surface-hover);
+}
+.data-table tr:last-child td {
+  border-bottom: 0;
+}
+.table-main-title {
+  font-weight: 700;
+  color: var(--text-main);
+  display: block;
+}
+.table-sub-title {
+  display: block;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  margin-top: 2px;
+}
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.modal-content{
+    background:var(--bg-surface);
+    color:var(--text-main);
+    padding:25px;
+    border-radius:12px;
+    width:min(90%,400px);
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    padding:10px 18px;
+    border:0;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+#reg-confirm{
+    background:#7c3aed;
+    color:white;
+}
+
+#reg-cancel{
+    background:#444;
+    color:white;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-glow);
+  border: 1px solid var(--border-subtle);
+}
+.badge.muted {
+  color: var(--text-muted);
+  background: transparent;
+  border-color: var(--border-subtle);
+}
+.badge.danger {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+.badge.success {
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: var(--success);
+}
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  color: var(--text-main);
+}
+.action-btn:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.action-btn.danger:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 24px 10px;
+  font-size: 0.78rem;
+}
+.empty-state i {
+  display: block;
+  color: var(--border-active);
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+{% endblock %}
+
+{% set title = "User & Admin Management" %}
+{% block content %}
+<div class="dashboard-header">
+  <div class="dashboard-title">
+    <h1>Platform Accounts</h1>
+    <p>Manage system administrators and authenticated community client profiles.</p>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h2><i class="fa-solid fa-shield-halved"></i> Administrator Accounts</h2>
+      <p>Authorized staff with backend control access.</p>
+    </div>
+    {% set adms = admins|rejectattr('is_super_admin')|list %}
+
+    <div>
+        <label title="When set to 'Allow', new users can create accounts as Admin but can not proceed without your approval. A link is sent to your email when they register for you to approve or disapprove. When set to 'Block', the registration page is not accessible to anyone"> <i class="fas fa-info-circle"></i> Registration "
+            <span id="reg-status" style="color:{{ 'green' if r_b else 'red' }};font-weight:bolder">
+                {{ 'Allowed' if r_b else 'Blocked' }}
+            </span>"
+        </label>
+        <button class="action-btn" id="reg-toggle">
+            {{ 'Block' if r_b else 'Allow' }}
+        </button>
+    </div>
+    
+    <div id="reg-modal" class="modal" style="display:none">
+        <div class="modal-content">
+            <h3 id="reg-modal-title">Confirm Action</h3>
+            <p id="reg-modal-message"></p>
+            <div class="modal-actions">
+                <button type="button" id="reg-cancel">Cancel</button>
+                <button type="button" id="reg-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Username / Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for admin in admins %}
+        {% if not admin.is_super_admin %}
+
+        <tr>
+          <td>
+            <span class="table-main-title">{{ admin.username }}</span>
+            <span class="table-sub-title">{{ admin.email }}</span>
+          </td>
+          <td>
+            {% if admin.is_super_admin %}
+              <span class="badge"><i class="fa-solid fa-crown"></i> Super Admin</span>
+            {% else %}
+              <span class="badge muted"><i class="fa-solid fa-user-shield"></i> Admin</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if admin.is_active %}
+              <span class="badge success"><i class="fa-solid fa-circle-check"></i> Active</span>
+            {% else %}
+              <span class="badge danger"><i class="fa-solid fa-circle-xmark"></i> Inactive / Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if admin.id != session.get('admin_id') %}
+              <button type="button" class="action-btn {% if admin.is_active %}danger{% endif %}" onclick="toggleAdmin('{{ admin.id }}', this)">
+                {% if admin.is_active %}
+                  <i class="fa-solid fa-ban"></i> Suspend
+                {% else %}
+                  <i class="fa-solid fa-check"></i> Activate
+                {% endif %}
+              </button>
+            {% else %}
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-style: italic;">Current Session</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
+
+        {% else %}
+        <tr><td colspan="4"><div class="empty-state"><i class="fa-solid fa-user-shield"></i>No administrators found.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h2><i class="fa-solid fa-users"></i> Client User Profiles</h2>
+      <p>Google OAuth authenticated community users.</p>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>User Profile</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              {% if user.avatar_url %}
+                <img src="{{ user.avatar_url }}" alt="" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+              {% else %}
+                <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--border-active); display: grid; place-items: center; font-size: 0.7rem; font-weight: 700;">{{ user.username[:1].upper() }}</span>
+              {% endif %}
+              <span class="table-main-title">{{ user.username }}</span>
+            </div>
+          </td>
+          <td><span class="table-sub-title" style="font-size: 0.75rem;">{{ user.email }}</span></td>
+          <td>
+            {% if user.is_active %}
+              <span class="badge success"><i class="fa-solid fa-circle-check"></i> Active</span>
+            {% else %}
+              <span class="badge danger"><i class="fa-solid fa-circle-xmark"></i> Suspended</span>
+            {% endif %}
+          </td>
+          <td>
+            <button type="button" class="action-btn {% if user.is_active %}danger{% endif %}" onclick="toggleUser('{{ user.id }}', this)">
+              {% if user.is_active %}
+                <i class="fa-solid fa-ban"></i> Suspend
+              {% else %}
+                <i class="fa-solid fa-check"></i> Activate
+              {% endif %}
+            </button>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4"><div class="empty-state"><i class="fa-regular fa-user"></i>No registered users found.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleAdmin(id, btn) {
+  if (!confirm("Are you sure you want to change this admin's status?")) return;
+  fetch('/control/admin/toggle/' + id, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(res => res.json())
+    .then(data => {
+      if (data.ok) {
+        location.reload();
+      } else {
+        alert(data.message || 'Action failed.');
+      }
+    }).catch(() => alert('Network error occurred.'));
+}
+
+function toggleUser(id, btn) {
+  if (!confirm("Are you sure you want to change this user's status?")) return;
+  fetch('/control/user/toggle/' + id, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(res => res.json())
+    .then(data => {
+      if (data.ok) {
+        location.reload();
+      } else {
+        alert(data.message || 'Action failed.');
+      }
+    }).catch(() => alert('Network error occurred.'));
+}
+const regToggle=document.getElementById('reg-toggle');
+const regModal=document.getElementById('reg-modal');
+const regConfirm=document.getElementById('reg-confirm');
+const regCancel=document.getElementById('reg-cancel');
+const regStatus=document.getElementById('reg-status');
+
+regToggle.addEventListener('click',()=>{
+    const allowed=regStatus.textContent.trim()==='Allowed';
+    document.getElementById('reg-modal-title').textContent=allowed?'Block Registration?':'Allow Registration?';
+    document.getElementById('reg-modal-message').textContent=allowed?'New users will no longer be able to register.':'New users will be able to create accounts.';
+    regConfirm.textContent=allowed?'Block':'Allow';
+    regModal.style.display='flex';
+});
+
+regCancel.addEventListener('click',()=>{
+    regModal.style.display='none';
+});
+
+regConfirm.addEventListener('click',async()=>{
+    regConfirm.disabled=true;
+    try{
+        const res=await fetch('/toggle-registration',{method:'POST'});
+        const data=await res.json();
+        if(!res.ok||!data.success) throw new Error();
+
+        regStatus.textContent=data.status?'Allowed':'Blocked';
+        regStatus.style.color=data.status?'green':'red';
+        regToggle.textContent=data.status?'Block':'Allow';
+        regModal.style.display='none';
+    }catch{
+        alert('Failed to update registration status.');
+    }finally{
+        regConfirm.disabled=false;
+    }
+});
+
+regModal.addEventListener('click',e=>{
+    if(e.target===regModal) regModal.style.display='none';
+});
+</script>
+{% endblock %}

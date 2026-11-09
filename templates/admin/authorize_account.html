@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#060913">
+  <title>Authorize Account — {{ site_name|default('OgwenofayaVisuals') }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script>
+    (function() {
+      const saved = localStorage.getItem('studio_admin_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+  <style>
+    :root, [data-theme="dark"] {
+      color-scheme: dark;
+      --bg-base: #060913;
+      --bg-grid: rgba(255, 255, 255, 0.025);
+      --bg-surface: #0b1120;
+      --bg-surface-hover: #131c33;
+      --border-subtle: #1e293b;
+      --border-active: #334155;
+      --accent: #22d3ee;
+      --accent-contrast: #060913;
+      --accent-glow: rgba(34, 211, 238, 0.14);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #fb7185;
+      --danger-bg: rgba(251, 113, 133, 0.12);
+      --success: #34d399;
+      --success-bg: rgba(52, 211, 153, 0.12);
+      --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg-base: #f1f5f9;
+      --bg-grid: rgba(15, 23, 42, 0.035);
+      --bg-surface: #ffffff;
+      --bg-surface-hover: #f8fafc;
+      --border-subtle: #cbd5e1;
+      --border-active: #94a3b8;
+      --accent: #2563eb;
+      --accent-contrast: #ffffff;
+      --accent-glow: rgba(37, 99, 235, 0.1);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --danger: #e11d48;
+      --danger-bg: #fff1f2;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-base);
+      background-image: linear-gradient(to right, var(--bg-grid) 1px, transparent 1px),
+                        linear-gradient(to bottom, var(--bg-grid) 1px, transparent 1px);
+      background-size: 32px 32px;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.82rem;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .auth-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+    }
+    .studio-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .studio-brand img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border-active);
+    }
+    .studio-brand span { color: var(--accent); }
+
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--border-active);
+      background: var(--bg-surface-hover);
+      color: var(--accent);
+    }
+
+    .auth-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-top: 2px solid var(--accent);
+      border-radius: 10px;
+      padding: 36px 32px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .status-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      margin: 0 auto 20px;
+    }
+    .status-icon.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+    .status-icon.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+    .status-icon.neutral {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid var(--border-subtle);
+    }
+    h1 {
+      font: 800 1.35rem 'Plus Jakarta Sans', sans-serif;
+      margin: 0 0 10px;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+    }
+    p {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 0 0 20px;
+    }
+    .email-box {
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      word-break: break-word;
+      margin-bottom: 20px;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .actions form {
+      flex: 1;
+      margin: 0;
+    }
+    .btn {
+      width: 100%;
+      border: 0;
+      padding: 11px 16px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s ease, transform 0.1s ease;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .btn-yes {
+      background: var(--success);
+      color: #060913;
+    }
+    .btn-yes:hover {
+      opacity: 0.9;
+    }
+    .btn-no {
+      background: var(--bg-base);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+    .btn-no:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+    .auth-footer {
+      text-align: center;
+      padding: 20px 32px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      border-top: 1px solid var(--border-subtle);
+    }
+  </style>
+</head>
+<body>
+  <header class="auth-topbar">
+    <a href="{{ url_for('index') }}" class="studio-brand">
+      <img src="{{ url_for('static', filename='logos/logo.png') }}" alt="">
+      <span>{{ site_name|default('OgwenofayaVisuals') }}</span>
+    </a>
+    <button type="button" class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Light/Dark Mode" title="Toggle Theme">
+      <i class="fa-solid fa-sun" id="theme-icon"></i>
+    </button>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      {% if authorized %}
+        <div class="status-icon success">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h1>Account Authorized</h1>
+        <p>The admin account for <span style="font-family:'JetBrains Mono',monospace; color:var(--text-main);">{{ admin.email }}</span> has been successfully authorized.</p>
+        <p>The user can now sign in to the control center.</p>
+
+      {% elif rejected %}
+        <div class="status-icon danger">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+        <h1>Account Rejected</h1>
+        <p>The account creation request has been rejected and the record has been permanently removed.</p>
+
+      {% elif expired %}
+        <div class="status-icon danger">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h1>Link Expired</h1>
+        <p>This authorization security link is invalid or has expired after 30 minutes.</p>
+
+      {% elif already_authorized %}
+        <div class="status-icon success">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h1>Already Authorized</h1>
+        <p>The account for <span style="font-family:'JetBrains Mono',monospace; color:var(--text-main);">{{ admin.email }}</span> has already been approved and authorized.</p>
+
+      {% else %}
+        <div class="status-icon neutral">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h1>Authorize Account?</h1>
+        <p>A new administrator account request was submitted with the following email:</p>
+        
+        <div class="email-box">{{ admin.email }}</div>
+
+        <p>Do you want to authorize this staff member?</p>
+
+        <div class="actions">
+          <form method="POST" action="{{ url_for('authorize_account_yes', token=token) }}">
+            <button type="submit" class="btn btn-yes"><i class="fa-solid fa-check"></i> Yes</button>
+          </form>
+
+          <form method="POST" action="{{ url_for('authorize_account_no', token=token) }}">
+            <button type="submit" class="btn btn-no"><i class="fa-solid fa-xmark"></i> No</button>
+          </form>
+        </div>
+
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-top:20px; font-family:'JetBrains Mono',monospace;">
+          Link expires in 30 minutes.
+        </p>
+      {% endif %}
+    </div>
+  </main>
+
+  <footer class="auth-footer">
+    &copy; {{ year|default(2026) }} {{ site_name|default('OgwenofayaVisuals') }} &bull; Security Verification Portal
+  </footer>
+
+  <script>
+    (function(){
+      const toggleBtn = document.getElementById('theme-toggle');
+      const icon = document.getElementById('theme-icon');
+      const root = document.documentElement;
+
+      function updateIcon(theme) {
+        if (theme === 'light') {
+          icon.className = 'fa-solid fa-moon';
+        } else {
+          icon.className = 'fa-solid fa-sun';
+        }
+      }
+
+      updateIcon(root.getAttribute('data-theme') || 'dark');
+
+      toggleBtn.addEventListener('click', function() {
+        const current = root.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('studio_admin_theme', next);
+        updateIcon(next);
+      });
+    })();
+  </script>
+</body>
+</html>

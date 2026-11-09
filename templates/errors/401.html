@@ -1,28 +1,185 @@
-{% extends "base.html" %}
-{% block title %}Unauthorized — {{ site_name|default('OgwenofayaVisuals') }}{% endblock %}
-{% block extra_css %}
-.error-page{background:#070d16;color:#f4f7fb;min-height:75vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
-.error-card{max-width:540px;width:100%;background:#0c1522;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:48px 32px;box-shadow:0 22px 65px rgba(0,0,0,.4)}
-.error-code{font:800 clamp(3.5rem,8vw,5.5rem)/1 'Manrope',sans-serif;color:#68b2ff;margin:0 0 12px;letter-spacing:-.04em}
-.error-card h1{font:700 1.35rem 'Manrope',sans-serif;margin:0 0 10px;color:#fff}
-.error-card p{color:#9aaabd;font-size:.9rem;line-height:1.7;margin:0 0 28px}
-.error-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-.error-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;font-weight:700;font-size:.85rem;text-decoration:none;transition:all .2s ease}
-.error-btn-primary{background:#368bff;color:#fff}
-.error-btn-primary:hover{background:#5ba7ff}
-.error-btn-secondary{background:#111d2b;color:#c3d0df;border:1px solid rgba(255,255,255,.12)}
-.error-btn-secondary:hover{background:#1b2d42;color:#fff}
-{% endblock %}
-{% block content %}
-<main class="error-page">
-  <div class="error-card">
-    <div class="error-code">401</div>
-    <h1>Authentication Required</h1>
-    <p>You need to sign in with your Google account to access this page or perform this action.</p>
-    <div class="error-actions">
-      <a href="{{ url_for('google_login') }}" class="error-btn error-btn-primary"><i class="fa-brands fa-google"></i> Sign in with Google</a>
-      <a href="{{ url_for('index') }}" class="error-btn error-btn-secondary"><i class="fa-solid fa-house"></i> Back to Home</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>401 Unauthorized — {{ site_name|default('OgwenofayaVisuals') }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(ellipse at 80% 10%, rgba(54, 139, 255, 0.08), transparent 45%),
+                  radial-gradient(ellipse at 15% 90%, rgba(54, 139, 255, 0.05), transparent 45%),
+                  #f8fafc;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(24px, 5vw, 48px) clamp(20px, 6vw, 64px);
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .studio-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #0f172a;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .studio-brand i {
+      color: #368bff;
+    }
+    .error-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .page-main {
+      max-width: 600px;
+      margin: 40px 0;
+    }
+    .status-code {
+      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: #368bff;
+      margin: 0 0 16px;
+    }
+    .page-main h1 {
+      font: 800 clamp(1.85rem, 4vw, 2.75rem)/1.1 'Manrope', sans-serif;
+      color: #0f172a;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+    .error-desc {
+      color: #475569;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin: 0 0 32px;
+    }
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      border-radius: 11px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: #0f172a;
+      color: #ffffff;
+      border: 1px solid #0f172a;
+    }
+    .btn-primary:hover {
+      background: #1e293b;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-secondary:hover {
+      background: #ffffff;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+    .page-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 20px;
+    }
+    .page-footer a {
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .page-footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 540px) {
+      .action-group {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+      .page-footer {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="{{ url_for('index') }}" class="studio-brand">
+      <i class="fa-solid fa-clapperboard"></i> {{ site_name|default('OgwenofayaVisuals') }}
+    </a>
+    <span class="error-badge">
+      <i class="fa-solid fa-lock"></i> Unauthorized
+    </span>
+  </header>
+
+  <main class="page-main">
+    <div class="status-code">401</div>
+    <h1>Authentication Required.</h1>
+    <p class="error-desc">
+      You need to sign in with your Google account to access this page or perform this action.
+    </p>
+    <div class="action-group">
+      <a href="{{ url_for('google_login') }}" class="btn btn-primary">
+        <i class="fa-brands fa-google"></i> Sign in with Google
+      </a>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-house"></i> Back to Home
+      </a>
     </div>
-  </div>
-</main>
-{% endblock %}
+  </main>
+
+  <footer class="page-footer">
+    <span>&copy; {{ year|default(2026) }} {{ site_name|default('OgwenofayaVisuals') }}</span>
+    <a href="{{ url_for('index') }}#contact">Contact Support</a>
+  </footer>
+</body>
+</html>
