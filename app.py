@@ -1343,7 +1343,7 @@ def edit_project(id):
 
         db.session.commit()
         flash("Project updated successfully.")
-        return redirect(url_for("projects_page"))
+        return render_template("admin/edit_project.html", project=project)
     return render_template("admin/edit_project.html", project=project)
 
 @app.post("/control/projects/video/delete/<int:video_id>")
